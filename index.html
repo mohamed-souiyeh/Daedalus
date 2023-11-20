@@ -43,6 +43,7 @@
       #canvas {
         width: 100%;
         height: 100%;
+		image-rendering: pixelated;
       }
 
       select:focus {
@@ -80,52 +81,8 @@
     </nav>
     <div id="maze">
       <!-- Add your canvas and other content here -->
-      <canvas id="canvas" width="100%" height="100%"></canvas>
+      <canvas id="canvas"></canvas>
     </div>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Get the select elements and the button
-        let mazeAlgorithmSelect = document.getElementById("build");
-        let solveAlgorithmSelect = document.getElementById("solve");
-        let launchButton = document.getElementById("launch");
-
-        window.addEventListener("resize", resizeCanvas);
-
-        // Add an event listener to the mazeAlgorithm select
-        mazeAlgorithmSelect.addEventListener("change", function () {
-          // Enable the solveAlgorithm select when a maze algorithm is selected
-          solveAlgorithmSelect.disabled = false;
-          checkSelections();
-        });
-
-        // Add an event listener to the solveAlgorithm select
-        solveAlgorithmSelect.addEventListener("change", function () {
-          checkSelections();
-        });
-
-        function checkSelections() {
-          // If both selects have a value, enable the button
-          if (mazeAlgorithmSelect.value && solveAlgorithmSelect.value) {
-            launchButton.disabled = false;
-          }
-        }
-        resizeCanvas();
-      });
-      function resizeCanvas() {
-        let canvas = document.getElementById("canvas");
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-      }
-
-      //write a function that draw an empty maze inside the canvas
-      function drawMaze() {
-        //get the canvas element
-        let canvas = document.getElementById("canvas");
-        //get the context of the canvas
-        let ctx = canvas.getContext("2d");
-        //set the fill color of the canvas
-        ctx.fillStyle = "#000000";
-      }
-    </script>
+    <script src="index.js"></script>
   </body>
 </html>
