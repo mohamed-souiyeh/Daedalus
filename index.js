@@ -79,7 +79,8 @@ ctx.fillRect(120, 100, canvas.width, canvas.height);
 ctx.strokeStyle = "rgba(150, 0, 0, 0.5)";
 // ctx.stroke();
 
-
+const FPS = 60;
+const DELTA = 1 / FPS;
 
 // ctx.beginPath();
 // ctx.arc(1000, 400, 40, torad(0), torad(200));
@@ -92,21 +93,27 @@ let mouse = {
 window.addEventListener("mousemove", function(event) {
 	mouse.x = event.x;
 	mouse.y = event.y;
-	console.log("mouse moved", mouse);
+	// console.log("mouse moved", mouse);
 });
 
 let cercles = [];
 
-for (let i = 0; i < 1000; i++) {
+for (let i = 0; i < 50; i++) {
 	let cercle = {};
 	
 	cercle.r = (Math.random() * 20) + 15;
 	cercle.or = cercle.r;
 	cercle.x = (Math.random() * (canvas.width - cercle.r * 2) + cercle.r);
-	cercle.y = (Math.random() * (canvas.height - cercle.r * 2) + cercle.r);
-	cercle.color = `rgba(${(cercle.x / canvas.width) * 255}, ${(cercle.y / canvas.height) * 255}, ${((cercle.x * cercle.y) / (canvas.width * canvas.height)) * 255}, 1)`;
-	cercle.xvelocity = (Math.random() - 0.5) * 1;
-	cercle.yvelocity = (Math.random() - 0.5) * 1;
+	cercle.y = (Math.random() * (canvas.height - (cercle.r + (canvas.height * 0.8))) + (canvas.height * 0.8));
+	cercle.color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 1})`;
+	cercle.xvelocity = (Math.random() - 0.5) < 0 ? 200 * -1 : 200;
+	cercle.yvelocity = (Math.random() - 0.5) < 0 ? 200 : 200;
+
+		
+	console.log(cercle.xvelocity, cercle.yvelocity);
+
+	cercle.xacceleration = cercle.xvelocity * 0;
+	cercle.yacceleration = cercle.yvelocity * 0.8;
 	cercle.draw = function() {
 		ctx.beginPath();
 		ctx.arc(this.x, this.y, this.r, torad(0), torad(360), false);
@@ -117,19 +124,15 @@ for (let i = 0; i < 1000; i++) {
 
 	cercle.update = function() {
 		// console.log("updating");
-		if (this.x + this.r > canvas.width || this.x - this.r < 0) {
+		if ((this.x + this.r > canvas.width && this.xvelocity > 0) || (this.x - this.r < 0 && this.xvelocity < 0)) {
 			this.xvelocity = -this.xvelocity;
 		}
 
-		if (this.y + this.r > canvas.height || this.y - this.r < 0) {
+		if ((this.y + this.r > canvas.height && this.yvelocity > 0) || (this.y - this.r < 0 && this.yvelocity < 0)) {
 			this.yvelocity = -this.yvelocity;
 		}
 
 		if (typeof(mouse.x) !== undefined && Math.sqrt(Math.pow(mouse.x - this.x, 2) + Math.pow(mouse.y - this.y, 2)) - this.r < 30) {
-			// console.log("shit");
-			// this.xvelocity = -this.xvelocity;
-			// this.yvelocity = -this.yvelocity;
-			// this.x = 
 			if (this.r < this.or * 4)
 				this.r += 4;
 		}
@@ -137,10 +140,15 @@ for (let i = 0; i < 1000; i++) {
 			this.r -= 2;
 		}
 
-		this.x += this.xvelocity;
-		this.y += this.yvelocity;
+		this.xvelocity = this.xvelocity + (this.xacceleration * DELTA);
+		this.yvelocity = this.yvelocity + (this.yacceleration * DELTA);
+
+		// console.log(this.xvelocity, this.yvelocity);
+
+		this.x = this.x + (this.xvelocity * DELTA);
+		this.y = this.y + (this.yvelocity * DELTA);
 		// this.color = `rgba(${(cercle.x / canvas.width) * 255}, ${(cercle.y / canvas.height) * 255}, ${(((cercle.x + cercle.y) / (canvas.width + canvas.height)) * 0)}, 1)`;
-		this.color = `rgba(0, 0, 0, 1)`;
+		// this.color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 1})`;
 		this.draw();
 	}
 	cercles.push(cercle);
@@ -153,8 +161,8 @@ function draw() {
 	
 	
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.fillStyle = "rgba(0, 200, 0, 1)";
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	// ctx.fillStyle = "rgba(0, 0, 0, 1)";
+	// ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 	for (i = 0; i < cercles.length; i++) {
 		cercles[i].update();
