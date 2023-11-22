@@ -98,38 +98,52 @@ window.addEventListener("mousemove", function(event) {
 
 let cercles = [];
 
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 300; i++) {
 	let cercle = {};
 	
 	cercle.r = (Math.random() * 20) + 15;
 	cercle.or = cercle.r;
-	cercle.x = (Math.random() * (canvas.width - cercle.r * 2) + cercle.r);
-	cercle.y = (Math.random() * (canvas.height - (cercle.r + (canvas.height * 0.8))) + (canvas.height * 0.8));
+	cercle.x = Math.random() * (canvas.width - (cercle.r + (canvas.width * 0.2))) + (canvas.width * 0.2);
+	cercle.y = Math.random() * (canvas.height - (cercle.r + (canvas.height * 0.2))) + (canvas.height * 0.2);
 	cercle.color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 1})`;
-	cercle.xvelocity = (Math.random() - 0.5) < 0 ? 200 * -1 : 200;
-	cercle.yvelocity = (Math.random() - 0.5) < 0 ? 200 : 200;
-
-		
-	console.log(cercle.xvelocity, cercle.yvelocity);
-
+	
+	// cercle.xvelocity = (Math.random() - 0.5) < 0 ? 200 * 1 : 200;
+	// cercle.yvelocity = (Math.random() - 0.5) < 0 ? 200 * 1 : 200;
+	cercle.xvelocity = Math.random() * 200;
+	cercle.yvelocity = Math.random() * 200;
+	
+	
 	cercle.xacceleration = cercle.xvelocity * 0;
-	cercle.yacceleration = cercle.yvelocity * 0.8;
+	cercle.yacceleration = cercle.yvelocity * 4;
 	cercle.draw = function() {
 		ctx.beginPath();
 		ctx.arc(this.x, this.y, this.r, torad(0), torad(360), false);
 		ctx.fillStyle = this.color;
+		// console.log(this.color);
 		// ctx.stroke();
 		ctx.fill();
 	}
 
 	cercle.update = function() {
 		// console.log("updating");
-		if ((this.x + this.r > canvas.width && this.xvelocity > 0) || (this.x - this.r < 0 && this.xvelocity < 0)) {
+		if ((this.x + this.r > canvas.width && this.xvelocity > 0)) {
+			// console.log("hit the wall x");
 			this.xvelocity = -this.xvelocity;
+			this.x = canvas.width - this.r;
+		}
+		if (this.x - this.r < 0 && this.xvelocity < 0) {
+			this.xvelocity = -this.xvelocity;
+			this.x = this.r;
 		}
 
-		if ((this.y + this.r > canvas.height && this.yvelocity > 0) || (this.y - this.r < 0 && this.yvelocity < 0)) {
+		if ((this.y + this.r > canvas.height && this.yvelocity > 0)){
+			// console.log("hit the wall y");
 			this.yvelocity = -this.yvelocity;
+			this.y = canvas.height - this.r;
+		}
+		if (this.y - this.r < 0 && this.yvelocity < 0) {
+			this.yvelocity = -this.yvelocity;
+			this.y = this.r;
 		}
 
 		if (typeof(mouse.x) !== undefined && Math.sqrt(Math.pow(mouse.x - this.x, 2) + Math.pow(mouse.y - this.y, 2)) - this.r < 30) {
@@ -140,13 +154,18 @@ for (let i = 0; i < 50; i++) {
 			this.r -= 2;
 		}
 
+		// this.xacceleration = this.xacceleration * DELTA;
+		// this.yacceleration = this.yacceleration * DELTA;
+
 		this.xvelocity = this.xvelocity + (this.xacceleration * DELTA);
 		this.yvelocity = this.yvelocity + (this.yacceleration * DELTA);
 
-		// console.log(this.xvelocity, this.yvelocity);
-
+		
 		this.x = this.x + (this.xvelocity * DELTA);
 		this.y = this.y + (this.yvelocity * DELTA);
+		// console.log("the velocity: ", this.xvelocity, this.yvelocity);
+		// console.log("the acceleration: ", this.xacceleration, this.yacceleration);
+		// console.log("coordinates: ", this.x, this.y);
 		// this.color = `rgba(${(cercle.x / canvas.width) * 255}, ${(cercle.y / canvas.height) * 255}, ${(((cercle.x + cercle.y) / (canvas.width + canvas.height)) * 0)}, 1)`;
 		// this.color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 1})`;
 		this.draw();
