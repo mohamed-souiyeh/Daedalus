@@ -79,7 +79,7 @@ ctx.fillRect(120, 100, canvas.width, canvas.height);
 ctx.strokeStyle = "rgba(150, 0, 0, 0.5)";
 // ctx.stroke();
 
-const FPS = 60;
+const FPS = 120;
 const DELTA = 1 / FPS;
 
 // ctx.beginPath();
@@ -126,26 +126,7 @@ for (let i = 0; i < 300; i++) {
 
 	cercle.update = function() {
 		// console.log("updating");
-		if ((this.x + this.r > canvas.width && this.xvelocity > 0)) {
-			// console.log("hit the wall x");
-			this.xvelocity = -this.xvelocity;
-			this.x = canvas.width - this.r;
-		}
-		if (this.x - this.r < 0 && this.xvelocity < 0) {
-			this.xvelocity = -this.xvelocity;
-			this.x = this.r;
-		}
-
-		if ((this.y + this.r > canvas.height && this.yvelocity > 0)){
-			// console.log("hit the wall y");
-			this.yvelocity = -this.yvelocity;
-			this.y = canvas.height - this.r;
-		}
-		if (this.y - this.r < 0 && this.yvelocity < 0) {
-			this.yvelocity = -this.yvelocity;
-			this.y = this.r;
-		}
-
+		
 		if (typeof(mouse.x) !== undefined && Math.sqrt(Math.pow(mouse.x - this.x, 2) + Math.pow(mouse.y - this.y, 2)) - this.r < 30) {
 			if (this.r < this.or * 4)
 				this.r += 4;
@@ -156,7 +137,7 @@ for (let i = 0; i < 300; i++) {
 
 		// this.xacceleration = this.xacceleration * DELTA;
 		// this.yacceleration = this.yacceleration * DELTA;
-
+		
 		this.xvelocity = this.xvelocity + (this.xacceleration * DELTA);
 		this.yvelocity = this.yvelocity + (this.yacceleration * DELTA);
 
@@ -168,6 +149,25 @@ for (let i = 0; i < 300; i++) {
 		// console.log("coordinates: ", this.x, this.y);
 		// this.color = `rgba(${(cercle.x / canvas.width) * 255}, ${(cercle.y / canvas.height) * 255}, ${(((cercle.x + cercle.y) / (canvas.width + canvas.height)) * 0)}, 1)`;
 		// this.color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 1})`;
+		if ((this.x + this.r > canvas.width && this.xvelocity > 0)) {
+			// console.log("hit the wall x");
+			this.xvelocity = -this.xvelocity;
+			this.x = canvas.width - this.r;
+		}
+		if (this.x - this.r < 0 && this.xvelocity < 0) {
+			this.xvelocity = -this.xvelocity;
+			this.x = this.r;
+		}
+		
+		if ((this.y + this.r > canvas.height && this.yvelocity > 0)){
+			// console.log("hit the wall y");
+			this.yvelocity = -this.yvelocity;
+			this.y = canvas.height - this.r;
+		}
+		if (this.y - this.r < 0 && this.yvelocity < 0) {
+			this.yvelocity = -this.yvelocity;
+			this.y = this.r;
+		}
 		this.draw();
 	}
 	cercles.push(cercle);
@@ -175,7 +175,7 @@ for (let i = 0; i < 300; i++) {
 
 
 function draw() {
-
+	
 	
 	
 	
