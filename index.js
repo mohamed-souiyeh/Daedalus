@@ -1,6 +1,6 @@
 import * as input from './input.js';
 import * as utils from './utils.js';
-import { Cell } from './cell.js';
+import { Cell, INWARDS, OUTWARDS, STOPPED } from './cell.js';
 
 
 //get the canvas element
@@ -46,8 +46,35 @@ let refreshRate = {
 // console.log("this is the refreshRate = >", refreshRate);
 
 
-let cell = new Cell(0, 0, 300, 300, 100);
-let cell2 = new Cell(0, 0, 100, 100, 100);
 
-cell.draw(ctx);
-cell2.draw(ctx);
+let cell  = new Cell(0, 0, 100, 100, 50);
+// let cell1 = new Cell(0, 0, 150, 100, 50);
+// let cell2 = new Cell(0, 0, 200, 100, 50);
+// let cell3 = new Cell(0, 0, 250, 100, 50);
+// let cell4 = new Cell(0, 0, 300, 100, 50);
+// let cell5 = new Cell(0, 0, 350, 100, 50);
+
+let counter = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  cell.update(ctx);
+  // cell.draw(ctx);
+  if (cell.animation == STOPPED)
+    cell.animation = OUTWARDS;
+  // if (counter > 0)
+  //   cell1.update(ctx);
+  // if (counter > 10)
+  //   cell2.update(ctx);
+  // if (counter > 15)
+  //   cell3.update(ctx);
+  // if (counter > 20)
+  //   cell4.update(ctx);
+  // if (counter > 25)
+  //   cell5.update(ctx);
+  counter++;
+}
+
+animate();
