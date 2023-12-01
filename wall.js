@@ -9,36 +9,40 @@ export const ABSENT  = -1;
 export const wallMoves = [
   {
     xd: 0, yd: 0,
-    cl: (currentlength) => { return currentlength },
-    cw: (currentlength) => { return currentlength * WALL_PERSENTAGE }
+    cl: (currentlength) => { return currentlength - (currentlength * (WALL_PERSENTAGE * 2)) },
+    cw: (currentlength) => { return currentlength * WALL_PERSENTAGE },
+    xcornerOffset: 1, ycornerOffset: 0,
   },
   {
     xd: 1, yd: 0,
     cl: (currentlength) => { return currentlength * WALL_PERSENTAGE },
-    cw: (currentlength) => { return currentlength }
+    cw: (currentlength) => { return currentlength - (currentlength * (WALL_PERSENTAGE * 2)) },
+    xcornerOffset: 0, ycornerOffset: 1,
   },
   {
     xd: 0, yd: 1,
-    cl: (currentlength) => { return currentlength },
-    cw: (currentlength) => { return currentlength * WALL_PERSENTAGE }
+    cl: (currentlength) => { return currentlength - (currentlength * (WALL_PERSENTAGE * 2)) },
+    cw: (currentlength) => { return currentlength * WALL_PERSENTAGE },
+    xcornerOffset: 1, ycornerOffset: 0,
   },
   {
     xd: 0, yd: 0,
     cl: (currentlength) => { return currentlength * WALL_PERSENTAGE },
-    cw: (currentlength) => { return currentlength }
+    cw: (currentlength) => { return currentlength - (currentlength * (WALL_PERSENTAGE * 2)) },
+    xcornerOffset: 0, ycornerOffset: 1,
   },
 ];
 
 export class Wall {
 
-  state;
   x;
   y;
   length;
   width;
   
   posInCell;
-
+  
+  state = PRESENT;
   animation = STOPPED;
   color = {
     r: 0,
@@ -52,17 +56,23 @@ export class Wall {
   
   constructor(pos, cellx, celly, currentCellLength, color, state = PRESENT) {
     this.posInCell = pos;
-    this.x = cellx + (wallMoves[pos].xd * (currentCellLength * (1 - WALL_PERSENTAGE)));
-    this.y = celly + (wallMoves[pos].yd * (currentCellLength * (1 - WALL_PERSENTAGE)));
-
+    
     this.calculateLength = wallMoves[pos].cl;
     this.calculateWidth  = wallMoves[pos].cw;
     this.length = this.calculateLength(currentCellLength);
     this.width  = this.calculateWidth(currentCellLength);
+    
+    let offsetWidth = this.length < this.width ? this.length : this.width;
+
+    this.x = (cellx + (offsetWidth * wallMoves[pos].xcornerOffset)) + (wallMoves[pos].xd * (currentCellLength * (1 - WALL_PERSENTAGE)));
+    this.y = (celly + (offsetWidth * wallMoves[pos].ycornerOffset)) + (wallMoves[pos].yd * (currentCellLength * (1 - WALL_PERSENTAGE)));
+
     this.color  = color;
     this.color.alpha = state == PRESENT ? 0 : 1;
     this.animation = state == PRESENT ? FADEIN : FADEOUT;
     this.state = state;
+
+    this.debug();
   }
 
   debug() {
@@ -78,22 +88,26 @@ export class Wall {
   }
 
   update(cellCurrentx, cellCurrenty, currentlength, alpha) {
-    this.x = cellCurrentx + (wallMoves[this.posInCell].xd * (currentlength * (1 - WALL_PERSENTAGE)));
-    this.y = cellCurrenty + (wallMoves[this.posInCell].yd * (currentlength * (1 - WALL_PERSENTAGE)));
-
     this.length = this.calculateLength(currentlength);
     this.width  = this.calculateWidth(currentlength);
+
+    let offsetWidth = this.length < this.width ? this.length : this.width;
+
+    this.x = (cellCurrentx + (offsetWidth * wallMoves[this.posInCell].xcornerOffset)) + (wallMoves[this.posInCell].xd * (currentlength * (1 - WALL_PERSENTAGE)));
+    this.y = (cellCurrenty + (offsetWidth * wallMoves[this.posInCell].ycornerOffset)) + (wallMoves[this.posInCell].yd * (currentlength * (1 - WALL_PERSENTAGE)));
+
     this.color.alpha = alpha;
   }
 
 
-  draw(ctx) {
+  draw(ctx, ctx2) {
     // console.log("drawing wall");
     // this.debug();
-
+  
     ctx.beginPath();
     ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.color.alpha})`;
     ctx.fillRect(this.x, this.y, this.length, this.width);
     ctx.fill();
+    ctx.closePath();
   }
 }

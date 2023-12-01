@@ -1,18 +1,21 @@
 import * as input from './input.js';
 import * as utils from './utils.js';
-import { Cell, INWARDS, NORTH, OUTWARDS, SOUTH, STOPPED } from './cell.js';
+import { Cell, EAST, INWARDS, NORTH, OUTWARDS, SOUTH, STOPPED, WEST } from './cell.js';
 import { ABSENT, PRESENT } from './wall.js';
 
 
 //get the canvas element
-let canvas = document.getElementById("canvas");
+const canvas = document.getElementById("canvas");
 //get the context of the canvas
-let ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d");
 ctx.linejoin = "round";
 
 //resize the canvas to fill browser window dynamically
 canvas.width  = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
+
+const detached = canvas.cloneNode();
+const ctx2 = detached.getContext("2d");
 
 console.log("we got the canvas and the context of the canvas, and resized it");
 console.log(canvas.width, canvas.height);
@@ -31,16 +34,20 @@ let counter = 0;
 function animate() {
   requestAnimationFrame(animate);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx2.clearRect(0, 0, canvas.width, canvas.height);
 
-  cell.update(ctx);
+  cell.update(ctx, ctx2);
   if (counter == 0 && cell.animation == STOPPED){
-    cell.walls[NORTH].setWallState(ABSENT);
-    cell.setVelocityAnimation(OUTWARDS);
+    cell.toggleWallState(EAST);
+    // cell.toggleWallState(SOUTH);
     counter++;
   }
-  // cell1.update(ctx);
-  // if (cell1.animation == STOPPED)
-  //   cell1.setVelocityAnimation(OUTWARDS);
+  cell1.update(ctx, ctx2);
+  if (counter == 1 && cell1.animation == STOPPED){
+    cell1.toggleWallState(WEST);
+    // cell1.toggleWallState(SOUTH);
+    counter++;
+  }
   // cell2.update(ctx);
   // if (cell2.animation == STOPPED)
   //   cell2.setVelocityAnimation(OUTWARDS);

@@ -1,3 +1,4 @@
+import { Corner } from "./corner.js";
 import { FADEIN, FADEOUT, Wall } from "./wall.js";
 
 export const OUTWARDS = 0;
@@ -9,6 +10,11 @@ export const NORTH = 0;
 export const EAST = 1;
 export const SOUTH = 2;
 export const WEST = 3;
+
+export const NORTHWEST = 0;
+export const NORTHEAST = 1;
+export const SOUTHEAST = 2;
+export const SOUTHWEST = 3;
 
 export class Cell {
   gridX;
@@ -47,6 +53,9 @@ export class Cell {
   };
 
   walls = [];
+  avgWallAlpha = 0;
+
+  corners = [];
 
   constructor(gridX, gridY, x, y, length, wallsState) {
     this.gridX = gridX; // x position in the grid
@@ -86,15 +95,19 @@ export class Cell {
     this.firstCellVector.currentlength = this.length - (this.length * this.inwardScallingFactor * 2);
 
 
-
+    let totalWallAlpha = 0;
     for (let i = NORTH; i < 4; i++) {
       let wall = new Wall(i, this.x, this.y, this.length, { r: 12, g: 53, b: 71, alpha: 0 }, wallsState);
-
+      totalWallAlpha += wall.color.alpha;
       this.walls.push(wall);
-    }
 
-    console.log("constructor debug");
-    this.debug();
+      let corner = new Corner(i, this.x, this.y, this.length, { r: 12, g: 53, b: 71, alpha: 0 });
+
+      this.corners.push(corner);
+    }
+    this.avgWallAlpha = totalWallAlpha / 4;
+    // console.log("constructor debug");
+    // this.debug();
   }
 
   debug() {
@@ -133,11 +146,11 @@ export class Cell {
     this.Velocity = this.Velocity < 0 ? -this.Velocity : this.Velocity;
   }
 
-  update(ctx) {
+  update(ctx, ctx2) {
 
 
     if (this.animation == STOPPED) {
-      this.draw(ctx);
+      this.draw(ctx, ctx2);
       return;
     }
 
@@ -193,11 +206,17 @@ export class Cell {
       this.xOutwardWidth = endLength * 2;
 
       //REVIEW - this is really bad, we need to find a better way to do this
+      let totalWallAlpha = 0;
       for (let i = NORTH; i < 4; i++) {
         this.walls[i].color.alpha = this.walls[i].animation;
         this.walls[i].animation = STOPPED;
+        totalWallAlpha += this.walls[i].color.alpha;
+
+        this.corners[i].color.alpha = this.corners[i].animation;
+        this.corners[i].animation = STOPPED;
         // this.walls[i].update(this.firstCellVector.currentx, this.firstCellVector.currenty, this.firstCellVector.currentlength, this.walls[i].color.alpha);
       }
+      this.avgWallAlpha = totalWallAlpha / 4;
     }
     else {
       this.firstCellVector.currentx += step;
@@ -208,6 +227,7 @@ export class Cell {
     }
 
 
+    let totalWallAlpha = 0;
     for (let i = NORTH; i < 4; i++) {
       if (this.walls[i].animation == FADEIN)
         this.walls[i].color.alpha = this.xOutwardSteps / this.xOutwardWidth;
@@ -231,15 +251,29 @@ export class Cell {
       // console.log("1 - (this.xOutwardSteps / (this.xOutwardWidth)) = ", 1 - (this.xOutwardSteps / this.xOutwardWidth));
       // console.log("-------------------------------");
 
+      totalWallAlpha += this.walls[i].color.alpha;
       this.walls[i].update(this.firstCellVector.currentx, this.firstCellVector.currenty, this.firstCellVector.currentlength, this.walls[i].color.alpha);
+
+      if (this.corners[i].animation == FADEIN){
+        this.corners[i].color.alpha = this.walls[i].color.alpha;
+        this.corners[i].update(this.firstCellVector.currentx, this.firstCellVector.currenty, this.firstCellVector.currentlength, this.corners[i].color.alpha);
+      }
     }
+    this.avgWallAlpha = totalWallAlpha / 4;
     // this.debug();
     // console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
-    this.draw(ctx);
+    this.draw(ctx, ctx2);
   }
 
-  draw(ctx) {
+  toggleWallState(wallpos) {
+    if (wallpos < NORTH || wallpos > WEST)
+      return;
+    this.walls[wallpos].setWallState(-this.walls[wallpos].state);
+    this.setVelocityAnimation(OUTWARDS);
+  }
+
+  draw(ctx, ctx2) {
     ctx.beginPath();
     ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.color.alpha})`;
     ctx.rect(
@@ -252,8 +286,14 @@ export class Cell {
 
     for (let i = NORTH; i < 4; i++) {
       // if (this.walls[i].animation != STOPPED)
-      this.walls[i].draw(ctx);
+      this.walls[i].draw(ctx, ctx2);
     }
+
+    for (let i = NORTH; i < 4; i++) {
+      // if (this.corners[i].animation != STOPPED)
+      this.corners[i].draw(ctx, ctx2);
+    }
+    
 
     // ctx.beginPath();
     // ctx.strokeRect(
