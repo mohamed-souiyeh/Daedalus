@@ -11,7 +11,7 @@ const ctx = canvas.getContext("2d");
 ctx.linejoin = "round";
 
 //resize the canvas to fill browser window dynamically
-canvas.width  = canvas.offsetWidth;
+canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
 
 const detached = canvas.cloneNode();
@@ -22,12 +22,13 @@ console.log(canvas.width, canvas.height);
 
 
 
-let cell  = new Cell(0, 0, 100, 100, 100, PRESENT);
-let cell1 = new Cell(0, 0, 200, 100, 100, PRESENT);
-let cell2 = new Cell(0, 0, 300, 100, 100, PRESENT);
-let cell3 = new Cell(0, 0, 400, 100, 100, PRESENT);
-let cell4 = new Cell(0, 0, 500, 100, 100, PRESENT);
-let cell5 = new Cell(0, 0, 600, 100, 100, PRESENT);
+let cell = new Cell(0, 0, 100, 100, 50, PRESENT);
+cell.debug();
+let cell1 = new Cell(0, 0, 150, 100, 50, PRESENT);
+let cell2 = new Cell(0, 0, 200, 100, 50, PRESENT);
+let cell3 = new Cell(0, 0, 250, 100, 50, PRESENT);
+let cell4 = new Cell(0, 0, 300, 100, 50, PRESENT);
+let cell5 = new Cell(0, 0, 350, 100, 50, PRESENT);
 
 let counter = 0;
 
@@ -37,29 +38,31 @@ function animate() {
   ctx2.clearRect(0, 0, canvas.width, canvas.height);
 
   cell.update(ctx, ctx2);
-  if (counter == 0 && cell.animation == STOPPED){
-    cell.toggleWallState(EAST);
+  if (cell.animation == STOPPED) {
+    cell.setOutwardsVelocityAnimation(OUTWARDS);
+    // cell.toggleWallState(EAST);
     // cell.toggleWallState(SOUTH);
     counter++;
   }
   cell1.update(ctx, ctx2);
-  if (counter == 1 && cell1.animation == STOPPED){
-    cell1.toggleWallState(WEST);
+  if (cell1.animation == STOPPED) {
+    cell1.setOutwardsVelocityAnimation(OUTWARDS);
+    // cell1.toggleWallState(WEST);
     // cell1.toggleWallState(SOUTH);
     counter++;
   }
   // cell2.update(ctx);
   // if (cell2.animation == STOPPED)
-  //   cell2.setVelocityAnimation(OUTWARDS);
+  //   cell2.setOutwardsVelocityAnimation(OUTWARDS);
   // cell3.update(ctx);
   // if (cell3.animation == STOPPED)
-  //   cell3.setVelocityAnimation(OUTWARDS);
+  //   cell3.setOutwardsVelocityAnimation(OUTWARDS);
   // cell4.update(ctx);
   // if (cell4.animation == STOPPED)
-  //   cell4.setVelocityAnimation(OUTWARDS);
+  //   cell4.setOutwardsVelocityAnimation(OUTWARDS);
   // cell5.update(ctx);
   // if (cell5.animation == STOPPED)
-  //   cell5.setVelocityAnimation(OUTWARDS);
+  //   cell5.setOutwardsVelocityAnimation(OUTWARDS);
 }
 
 animate();

@@ -32,8 +32,8 @@ export class Cell {
     r: 175,
     g: 216,
     b: 248,
-    //NOTE - revisit this becuase it is not very tidy
-    alpha: 0.5,
+    //NOTE - implement the interpolation from a color to another
+    alpha: 1,
   };
 
   inwardScallingFactor;
@@ -65,11 +65,11 @@ export class Cell {
     this.x = x; // x position on canvas
     this.y = y; // y position on canvas
     this.length = length; // length of the cell on canvas
-    this.Velocity = 40; // velocity of the cell
+    this.Velocity = 20; // velocity of the cell
     this.Acceleration = 0; // acceleration of the cell
     this.animation = OUTWARDS; // animation state
 
-    this.inwardScallingFactor = 0.2; // how much to scale the cell inwards
+    this.inwardScallingFactor = 0.05; // how much to scale the cell inwards
     this.outwardScallingFactor = 0.2; // how much to scale the cell outwards
 
 
@@ -96,14 +96,18 @@ export class Cell {
 
 
     let totalWallAlpha = 0;
+    for (let i = NORTHWEST; i < 4; i++) {
+      // corner
+      let corner = new Corner(i, this.x, this.y, this.firstCellVector.currentlength, { r: 12, g: 53, b: 71, alpha: 0 });
+      
+      this.corners.push(corner);
+    }
+
     for (let i = NORTH; i < 4; i++) {
-      let wall = new Wall(i, this.x, this.y, this.length, { r: 12, g: 53, b: 71, alpha: 0 }, wallsState);
+      // wall
+      let wall = new Wall(i, this.x, this.y, this.firstCellVector.currentlength, { r: 12, g: 53, b: 71, alpha: 0 }, wallsState);
       totalWallAlpha += wall.color.alpha;
       this.walls.push(wall);
-
-      let corner = new Corner(i, this.x, this.y, this.length, { r: 12, g: 53, b: 71, alpha: 0 });
-
-      this.corners.push(corner);
     }
     this.avgWallAlpha = totalWallAlpha / 4;
     // console.log("constructor debug");
@@ -134,16 +138,20 @@ export class Cell {
     console.log("this is the this.firstCellVector.currentlength = >", this.firstCellVector.currentlength);
     console.log("this is the this.firstCellVector.moves = >", this.firstCellVector.moves);
     console.log("this is the walls = >", this.walls);
+    console.log("this is the this.avgWallAlpha = >", this.avgWallAlpha);
+    console.log("this is the corners = >", this.corners);
     console.log("--------------------------------");
   }
 
-  setVelocityAnimation(animation) {
+  setOutwardsVelocityAnimation(animation) {
 
     if (animation != OUTWARDS)
       return;
 
     this.animation = animation;
     this.Velocity = this.Velocity < 0 ? -this.Velocity : this.Velocity;
+
+
   }
 
   update(ctx, ctx2) {
@@ -166,9 +174,7 @@ export class Cell {
       (this.firstCellVector.currentx + step >= this.firstCellVector.startx ||
         this.firstCellVector.currenty + step >= this.firstCellVector.starty)) {
 
-      this.animation = OUTWARDS;
-      this.Velocity = this.Velocity < 0 ? -this.Velocity : this.Velocity;
-
+      this.setOutwardsVelocityAnimation(OUTWARDS);
       this.firstCellVector.currentx = this.firstCellVector.startx;
       this.firstCellVector.currenty = this.firstCellVector.starty;
 
@@ -182,11 +188,6 @@ export class Cell {
 
       this.firstCellVector.currentx = this.firstCellVector.endx;
       this.firstCellVector.currenty = this.firstCellVector.endy;
-
-      // let startLength = this.length * this.inwardScallingFactor * this.firstCellVector.moves.d;
-      // let endLength = this.length * this.outwardScallingFactor * this.firstCellVector.moves.d;
-
-      // this.xOutwardSteps = startLength + endLength;
 
     }
     else if (this.animation == TOORIGINAL &&
@@ -214,7 +215,6 @@ export class Cell {
 
         this.corners[i].color.alpha = this.corners[i].animation;
         this.corners[i].animation = STOPPED;
-        // this.walls[i].update(this.firstCellVector.currentx, this.firstCellVector.currenty, this.firstCellVector.currentlength, this.walls[i].color.alpha);
       }
       this.avgWallAlpha = totalWallAlpha / 4;
     }
@@ -238,26 +238,14 @@ export class Cell {
       this.walls[i].color.alpha = this.walls[i].color.alpha > 1 ? 1 : this.walls[i].color.alpha;
       this.walls[i].color.alpha = this.walls[i].color.alpha < 0 ? 0 : this.walls[i].color.alpha;
 
-      //NOTE - revisit this becuase it is not very tidy
-      this.color.alpha += (this.xOutwardSteps / this.xOutwardWidth) * 0.5;
-
-      //we need to make sure that the alpha is between 0 and 1
-      this.color.alpha = this.color.alpha > 1 ? 1 : this.color.alpha;
-      this.color.alpha = this.color.alpha < 0 ? 0 : this.color.alpha;
-      // console.log("this.walls[i].color.alpha = ", this.walls[i].color.alpha);
-      // console.log("this.xOutwardSteps = ", this.xOutwardSteps);
-      // console.log("this.xOutwardWidth = ", this.xOutwardWidth);
-      // console.log("this.xOutwardSteps / (this.xOutwardWidth) = ", this.xOutwardSteps / this.xOutwardWidth);
-      // console.log("1 - (this.xOutwardSteps / (this.xOutwardWidth)) = ", 1 - (this.xOutwardSteps / this.xOutwardWidth));
-      // console.log("-------------------------------");
-
       totalWallAlpha += this.walls[i].color.alpha;
+
       this.walls[i].update(this.firstCellVector.currentx, this.firstCellVector.currenty, this.firstCellVector.currentlength, this.walls[i].color.alpha);
 
-      if (this.corners[i].animation == FADEIN){
+
+      if (this.corners[i].animation == FADEIN)
         this.corners[i].color.alpha = this.walls[i].color.alpha;
-        this.corners[i].update(this.firstCellVector.currentx, this.firstCellVector.currenty, this.firstCellVector.currentlength, this.corners[i].color.alpha);
-      }
+      this.corners[i].update(this.firstCellVector.currentx, this.firstCellVector.currenty, this.firstCellVector.currentlength, this.corners[i].color.alpha);
     }
     this.avgWallAlpha = totalWallAlpha / 4;
     // this.debug();
@@ -270,7 +258,7 @@ export class Cell {
     if (wallpos < NORTH || wallpos > WEST)
       return;
     this.walls[wallpos].setWallState(-this.walls[wallpos].state);
-    this.setVelocityAnimation(OUTWARDS);
+    this.setOutwardsVelocityAnimation(OUTWARDS);
   }
 
   draw(ctx, ctx2) {
@@ -284,16 +272,17 @@ export class Cell {
     );
     ctx.fill();
 
+    
     for (let i = NORTH; i < 4; i++) {
       // if (this.walls[i].animation != STOPPED)
       this.walls[i].draw(ctx, ctx2);
+      this.corners[i].draw(ctx, ctx2);
     }
 
     for (let i = NORTH; i < 4; i++) {
       // if (this.corners[i].animation != STOPPED)
-      this.corners[i].draw(ctx, ctx2);
     }
-    
+
 
     // ctx.beginPath();
     // ctx.strokeRect(
@@ -302,7 +291,9 @@ export class Cell {
     //   this.length,
     //   this.length
     // );
-    // ctx.strokeStyle = "blue";
+    // ctx.strokeStyle = "black";
     // ctx.stroke();
   }
 }
+
+// ctx.closePath();

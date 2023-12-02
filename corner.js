@@ -1,6 +1,5 @@
 import { FADEIN, WALL_PERSENTAGE } from "./wall.js";
 
-
 const calculateWidth = (currentlength) => { return currentlength * WALL_PERSENTAGE };
 
 const cornerMoves = [
@@ -63,9 +62,19 @@ export class Corner {
   draw(ctx, ctx2) {
     ctx.beginPath();
     ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.color.alpha})`;
-    ctx.fillRect(this.x, this.y, this.length, this.width);
+    // ctx.strokeStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.color.alpha})`;
+    ctx.rect(this.x, this.y, this.length, this.width);
     ctx.fill();
-    ctx.closePath();
+    // ctx.stroke();
+    // ctx.closePath();
   }
 
+  debug() {
+    
+    console.log("corner debug");
+    console.log("x: ", this.x, "y: ", this.y, "length: ", this.length, "width: ", this.width);
+    console.log("pos: ", this.posInCell, "color: ", this.color);
+    console.log("animation: ", this.animation);
+    console.log("---------------------");
+  }
 }

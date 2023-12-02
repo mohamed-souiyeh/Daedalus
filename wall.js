@@ -72,13 +72,16 @@ export class Wall {
     this.animation = state == PRESENT ? FADEIN : FADEOUT;
     this.state = state;
 
+    console.log("wall created");
     this.debug();
   }
 
   debug() {
+    console.log("---------------------");
     console.log("wall debug");
     console.log("x: ", this.x, "y: ", this.y, "length: ", this.length, "width: ", this.width);
     console.log("pos: ", this.posInCell, "color: ", this.color);
+    console.log("state: ", this.state, "animation: ", this.animation);
     console.log("---------------------");
   }
 
@@ -106,8 +109,10 @@ export class Wall {
   
     ctx.beginPath();
     ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.color.alpha})`;
-    ctx.fillRect(this.x, this.y, this.length, this.width);
+    // ctx.strokeStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.color.alpha})`;
+    ctx.rect(this.x, this.y, this.length, this.width);
     ctx.fill();
-    ctx.closePath();
+    // ctx.stroke();
+    // ctx.closePath();
   }
 }
