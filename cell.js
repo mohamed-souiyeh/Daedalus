@@ -1,5 +1,10 @@
 import { Corner } from "./corner.js";
-import { FADEIN, FADEOUT, Wall } from "./wall.js";
+import { FADEIN, FADEOUT, PRESENT, Wall } from "./wall.js";
+
+const INWARDSSCALINGFACTOR = 0.4;
+const OUTWARDSSCALINGFACTOR = 0.1;
+const VELOCITY = 35;
+const ACCELERATION = 0;
 
 export const OUTWARDS = 0;
 export const INWARDS = 1;
@@ -57,7 +62,14 @@ export class Cell {
 
   corners = [];
 
-  constructor(gridX, gridY, x, y, length, wallsState) {
+  constructor() {
+    for (let i = NORTH; i < 4; i++) {
+      this.walls.push(new Wall());
+      this.corners.push(new Corner());
+    }
+  }
+  
+  initialize(gridX, gridY, x, y, length, wallsState) {
     this.gridX = gridX; // x position in the grid
     this.gridY = gridY; // y position in the grid
     this.visited = false; // has this cell been visited by the algorithm?
@@ -65,17 +77,19 @@ export class Cell {
     this.x = x; // x position on canvas
     this.y = y; // y position on canvas
     this.length = length; // length of the cell on canvas
-    this.Velocity = 20; // velocity of the cell
-    this.Acceleration = 0; // acceleration of the cell
+    this.Velocity = VELOCITY; // velocity of the cell
+    this.Acceleration = ACCELERATION; // acceleration of the cell
     this.animation = OUTWARDS; // animation state
 
-    this.inwardScallingFactor = 0.05; // how much to scale the cell inwards
-    this.outwardScallingFactor = 0.2; // how much to scale the cell outwards
+    this.inwardScallingFactor = INWARDSSCALINGFACTOR; // how much to scale the cell inwards
+    this.outwardScallingFactor = OUTWARDSSCALINGFACTOR; // how much to scale the cell outwards
 
 
     this.firstCellVector.x = this.x;
     this.firstCellVector.y = this.y;
 
+    //!SECTION revisit this calculation because when inwards shrinkng factor reaches more than 0.5 it will start to shrink outwards
+    //FIXME - the scaling calculation is wrong, we need to find a better way to do this
     let startLength = this.length * this.inwardScallingFactor * this.firstCellVector.moves.d;
 
     this.firstCellVector.startx = this.firstCellVector.x + startLength;
@@ -98,16 +112,13 @@ export class Cell {
     let totalWallAlpha = 0;
     for (let i = NORTHWEST; i < 4; i++) {
       // corner
-      let corner = new Corner(i, this.x, this.y, this.firstCellVector.currentlength, { r: 12, g: 53, b: 71, alpha: 0 });
-      
-      this.corners.push(corner);
+      this.corners[i].initialize(i, this.x, this.y, this.firstCellVector.currentlength, { r: 12, g: 53, b: 71, alpha: 0 });
     }
 
     for (let i = NORTH; i < 4; i++) {
       // wall
-      let wall = new Wall(i, this.x, this.y, this.firstCellVector.currentlength, { r: 12, g: 53, b: 71, alpha: 0 }, wallsState);
-      totalWallAlpha += wall.color.alpha;
-      this.walls.push(wall);
+      this.walls[i].initialize(i, this.x, this.y, this.firstCellVector.currentlength, { r: 12, g: 53, b: 71, alpha: 0 }, wallsState);
+      totalWallAlpha += this.walls[i].color.alpha;
     }
     this.avgWallAlpha = totalWallAlpha / 4;
     // console.log("constructor debug");
@@ -155,13 +166,11 @@ export class Cell {
   }
 
   update(ctx, ctx2) {
-
-
-    if (this.animation == STOPPED) {
-      this.draw(ctx, ctx2);
-      return;
-    }
-
+    if (this.animation == STOPPED)
+    return;
+  
+    // console.log("updating cell");
+    //!SECTION this delta time will be calculated in the animation loop
     const FPS = 60; // Frames per second
     const DELTA = 1 / FPS; // Delta time
 
@@ -251,7 +260,7 @@ export class Cell {
     // this.debug();
     // console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
-    this.draw(ctx, ctx2);
+    // this.draw(ctx, ctx2);
   }
 
   toggleWallState(wallpos) {
@@ -262,6 +271,9 @@ export class Cell {
   }
 
   draw(ctx, ctx2) {
+    // console.log("drawing cell");
+    // this.debug();
+
     ctx.beginPath();
     ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.color.alpha})`;
     ctx.rect(
@@ -293,6 +305,11 @@ export class Cell {
     // );
     // ctx.strokeStyle = "black";
     // ctx.stroke();
+  }
+
+  reset() {
+    // console.log("resetting cell");
+    this.initialize(this.gridX, this.gridY, this.x, this.y, this.length, PRESENT);
   }
 }
 

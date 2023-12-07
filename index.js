@@ -2,6 +2,7 @@ import * as input from './input.js';
 import * as utils from './utils.js';
 import { Cell, EAST, INWARDS, NORTH, OUTWARDS, SOUTH, STOPPED, WEST } from './cell.js';
 import { ABSENT, PRESENT } from './wall.js';
+import { CELL_SIZE, Grid } from './Grid.js';
 
 
 //get the canvas element
@@ -18,51 +19,36 @@ const detached = canvas.cloneNode();
 const ctx2 = detached.getContext("2d");
 
 console.log("we got the canvas and the context of the canvas, and resized it");
-console.log(canvas.width, canvas.height);
+console.log("this is the canvas width => ", canvas.width);
+console.log("this is the canvas height => ", canvas.height);
 
+let grid = new Grid(canvas.width, canvas.height);
 
-
-let cell = new Cell(0, 0, 100, 100, 50, PRESENT);
-cell.debug();
-let cell1 = new Cell(0, 0, 150, 100, 50, PRESENT);
-let cell2 = new Cell(0, 0, 200, 100, 50, PRESENT);
-let cell3 = new Cell(0, 0, 250, 100, 50, PRESENT);
-let cell4 = new Cell(0, 0, 300, 100, 50, PRESENT);
-let cell5 = new Cell(0, 0, 350, 100, 50, PRESENT);
+grid.initialize(canvas.width, canvas.height);
 
 let counter = 0;
-
 function animate() {
   requestAnimationFrame(animate);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx2.clearRect(0, 0, canvas.width, canvas.height);
+  grid.update(ctx, ctx2);
+  if (counter == 0 && grid.grid[0][0].animation == STOPPED) {
+    for (let y = 1; y < grid.width - 1; y++) {
+      for (let x = 1; x < grid.length - 1; x++) {
+        grid.grid[y][x].toggleWallState(NORTH);
+        grid.grid[y][x].toggleWallState(SOUTH);
+      }
+    }
+    counter++;
+  }
 
-  cell.update(ctx, ctx2);
-  if (cell.animation == STOPPED) {
-    cell.setOutwardsVelocityAnimation(OUTWARDS);
-    // cell.toggleWallState(EAST);
-    // cell.toggleWallState(SOUTH);
+  //!SECTION this is a very shity reset needs to reset smouthly from 
+  //!SECTION normal lenght outwards back to original lenght inwards
+  if (counter == 1 && grid.grid[0][0].animation == STOPPED) {
+    grid.reset();
     counter++;
   }
-  cell1.update(ctx, ctx2);
-  if (cell1.animation == STOPPED) {
-    cell1.setOutwardsVelocityAnimation(OUTWARDS);
-    // cell1.toggleWallState(WEST);
-    // cell1.toggleWallState(SOUTH);
-    counter++;
-  }
-  // cell2.update(ctx);
-  // if (cell2.animation == STOPPED)
-  //   cell2.setOutwardsVelocityAnimation(OUTWARDS);
-  // cell3.update(ctx);
-  // if (cell3.animation == STOPPED)
-  //   cell3.setOutwardsVelocityAnimation(OUTWARDS);
-  // cell4.update(ctx);
-  // if (cell4.animation == STOPPED)
-  //   cell4.setOutwardsVelocityAnimation(OUTWARDS);
-  // cell5.update(ctx);
-  // if (cell5.animation == STOPPED)
-  //   cell5.setOutwardsVelocityAnimation(OUTWARDS);
+  // grid.grid[0][0].draw(ctx, ctx2);
 }
 
 animate();

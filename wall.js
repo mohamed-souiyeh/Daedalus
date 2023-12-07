@@ -1,5 +1,5 @@
 
-export const WALL_PERSENTAGE = 0.12;
+export const WALL_PERSENTAGE = 0.1;
 export const FADEOUT = 0;
 export const FADEIN  = 1;
 export const STOPPED = 2;
@@ -54,7 +54,9 @@ export class Wall {
   calculateLength;
   calculateWidth;
   
-  constructor(pos, cellx, celly, currentCellLength, color, state = PRESENT) {
+  constructor() {}
+
+  initialize (pos, cellx, celly, currentCellLength, color, state = PRESENT) {
     this.posInCell = pos;
     
     this.calculateLength = wallMoves[pos].cl;
@@ -72,8 +74,8 @@ export class Wall {
     this.animation = state == PRESENT ? FADEIN : FADEOUT;
     this.state = state;
 
-    console.log("wall created");
-    this.debug();
+    // console.log("wall created");
+    // this.debug();
   }
 
   debug() {

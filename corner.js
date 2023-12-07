@@ -38,7 +38,8 @@ export class Corner {
   animation = FADEIN;
 
   //TODO - calculate the x and y of the corner
-  constructor(pos, cellx, celly, currentCellLength, color) {
+  constructor() {}
+  initialize(pos, cellx, celly, currentCellLength, color) {
     this.posInCell = pos;
     this.length = calculateWidth(currentCellLength);
     this.width  = calculateWidth(currentCellLength);
