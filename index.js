@@ -24,31 +24,22 @@ console.log("this is the canvas height => ", canvas.height);
 
 let grid = new Grid(canvas.width, canvas.height);
 
-grid.initialize(canvas.width, canvas.height);
 
 let counter = 0;
-function animate() {
+function animate(timestamp) {
   requestAnimationFrame(animate);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx2.clearRect(0, 0, canvas.width, canvas.height);
   grid.update(ctx, ctx2);
-  if (counter == 0 && grid.grid[0][0].animation == STOPPED) {
-    for (let y = 1; y < grid.width - 1; y++) {
-      for (let x = 1; x < grid.length - 1; x++) {
-        grid.grid[y][x].toggleWallState(NORTH);
-        grid.grid[y][x].toggleWallState(SOUTH);
-      }
-    }
-    counter++;
-  }
+  
 
   //!SECTION this is a very shity reset needs to reset smouthly from 
   //!SECTION normal lenght outwards back to original lenght inwards
-  if (counter == 1 && grid.grid[0][0].animation == STOPPED) {
-    grid.reset();
-    counter++;
-  }
+  // if (counter == 1 && grid.grid[0][0].animation == STOPPED) {
+  //   grid.reset();
+  //   counter++;
+  // }
   // grid.grid[0][0].draw(ctx, ctx2);
 }
 
-animate();
+requestAnimationFrame(animate);

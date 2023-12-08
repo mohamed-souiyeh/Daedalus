@@ -61,6 +61,50 @@ export class Cell {
   avgWallAlpha = 0;
 
   corners = [];
+  
+  //NOTE - the cell neighbors
+  north = null;
+  south = null;
+  east  = null;
+  west  = null;
+
+  links = new Map();
+
+  link(cell, bidirectional = true) {
+    if (cell == null)
+      return;
+
+    this.links.set(cell, true);
+    if (bidirectional)
+      cell.link(this, false);
+  }
+
+  unlink(cell, bidirectional = true) {
+    if (cell == null)
+      return;
+    
+    this.links.delete(cell);
+    if (bidirectional)
+      cell.unlink(this, false);
+  }
+
+  isliked(cell) {
+    return this.links.has(cell);
+  }
+
+  links() {
+    return this.links;
+  }
+
+  neighbors() {
+    let neighbors = [];
+
+    neighbors[NORTH] = this.north;
+    neighbors[EAST] = this.east;
+    neighbors[SOUTH] = this.south;
+    neighbors[WEST] = this.west;
+    return neighbors;
+  }
 
   constructor() {
     for (let i = NORTH; i < 4; i++) {
