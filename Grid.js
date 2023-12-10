@@ -1,5 +1,5 @@
-import { Cell } from "./cell.js";
-import { PRESENT } from "./wall.js";
+import { Cell, EAST, NORTH, SOUTH, WEST } from "./cell.js";
+import { PRESENT, STOPPED } from "./wall.js";
 
 
 //NOTE - needed for calculating the grid length and width outside of the class
@@ -11,20 +11,27 @@ export class Grid {
   starty = 0;
   length = 0;
   width = 0;
+  initialWallState = PRESENT;
   
   grid = [];
 
 
   configureCells() {
-    for (let y = 0; y < this.width; y++) {
-      for (let x = 0; x < this.length; x++) {
-        let cell = this.grid[y][x];
+    for (let cell of this.eachCell()) {
+      let x = cell.gridX;
+      let y = cell.gridY;
+      
+      // cons
+      cell.north = this.at(x, y - 1);
+      cell.south = this.at(x, y + 1);
+      cell.west = this.at(x - 1, y);
+      cell.east = this.at(x + 1, y);
 
-        cell.north = this.at(y - 1, x);
-        cell.south = this.at(y + 1, x);
-        cell.west = this.at(y, x - 1);
-        cell.east = this.at(y, x + 1);
-      }
+      //FIXME - this is still not working properly
+      if (x == 0) cell.walls[WEST].state = PRESENT;
+      if (y == 0) cell.walls[NORTH].state = PRESENT;
+      if (x == this.length - 1) cell.walls[EAST].state = PRESENT;
+      if (y == this.width - 1) cell.walls[SOUTH].state = PRESENT;
     }
   }
 
@@ -72,9 +79,10 @@ export class Grid {
   }
 
 
-  constructor(canvasLength, canvasWidth) {
+  constructor(canvasLength, canvasWidth, initialWallState = PRESENT) {
     this.length = Math.floor(canvasLength / CELL_SIZE);
     this.width  = Math.floor(canvasWidth / CELL_SIZE);
+    this.initialWallState = initialWallState;
 
     this.prepareGrid();
     this.initialize(canvasLength, canvasWidth);
@@ -91,11 +99,13 @@ export class Grid {
       for (let x = 0; x < this.length; x++) {
         let cellx = this.startx + (x * CELL_SIZE);
         let celly = this.starty + (y * CELL_SIZE);
-        console.log(cellx, celly);
-        this.grid[y][x].initialize(x, y, cellx, celly, CELL_SIZE, PRESENT);
+
+        this.grid[y][x].initialize(x, y, cellx, celly, CELL_SIZE, this.initialWallState);
       }
     }
     this.configureCells();
+    // console.log("grid initialized");
+    // console.log('the grid => ', this);
   }
 
   update(ctx, ctx2) {
@@ -110,9 +120,18 @@ export class Grid {
 
   draw(ctx, ctx2) {
     // console.log("drawing grid");
+    //NOTE - drawing the grid in two parts, first the stopped cells and then the moving cells
     for (let y = 0; y < this.width; y++) {
       for (let x = 0; x < this.length; x++) {
-        this.grid[y][x].draw(ctx, ctx2);
+        if (this.grid[y][x].animation == STOPPED)
+          this.grid[y][x].draw(ctx, ctx2);
+      }
+    }
+
+    for (let y = 0; y < this.width; y++) {
+      for (let x = 0; x < this.length; x++) {
+        if (this.grid[y][x].animation != STOPPED)
+          this.grid[y][x].draw(ctx, ctx2);
       }
     }
   }

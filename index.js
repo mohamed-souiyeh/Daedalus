@@ -22,7 +22,7 @@ console.log("we got the canvas and the context of the canvas, and resized it");
 console.log("this is the canvas width => ", canvas.width);
 console.log("this is the canvas height => ", canvas.height);
 
-let grid = new Grid(canvas.width, canvas.height);
+let grid = new Grid(canvas.width, canvas.height, PRESENT);
 
 
 let counter = 0;
@@ -30,8 +30,31 @@ function animate(timestamp) {
   requestAnimationFrame(animate);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx2.clearRect(0, 0, canvas.width, canvas.height);
+
   grid.update(ctx, ctx2);
   
+  if (counter == 0 && grid.grid[0][0].animation == STOPPED) {
+    let randomCell = grid.randomCell();
+    // let randomCell = grid.at(5, 10);
+
+    let cellneighbours = randomCell.neighbors();
+    
+    for (let cell of cellneighbours) {
+      randomCell.link(cell, true);
+    } 
+
+    // for (let cell of cellneighbours) {
+    //   randomCell.unlink(cell, true);
+    // }
+    
+    // let cell = cellneighbours[NORTH];
+
+    // randomCell.unlink(cell, true);
+
+    // console.log('random cell => ', randomCell);
+    // console.log('cell neighbours => ', cellneighbours);
+    // counter++;
+  }
 
   //!SECTION this is a very shity reset needs to reset smouthly from 
   //!SECTION normal lenght outwards back to original lenght inwards

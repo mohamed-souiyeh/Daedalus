@@ -37,7 +37,6 @@ export class Corner {
   posInCell;
   animation = FADEIN;
 
-  //TODO - calculate the x and y of the corner
   constructor() {}
   initialize(pos, cellx, celly, currentCellLength, color) {
     this.posInCell = pos;

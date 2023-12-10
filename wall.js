@@ -44,6 +44,7 @@ export class Wall {
   
   state = PRESENT;
   animation = STOPPED;
+  targetedAlpha = 1;
   color = {
     r: 0,
     g: 0,
@@ -72,6 +73,7 @@ export class Wall {
     this.color  = color;
     this.color.alpha = state == PRESENT ? 0 : 1;
     this.animation = state == PRESENT ? FADEIN : FADEOUT;
+    this.targetedAlpha = state == PRESENT ? 1 : 0;
     this.state = state;
 
     // console.log("wall created");
@@ -88,8 +90,11 @@ export class Wall {
   }
 
   setWallState(state) {
+    if (this.state == state) return false;
     this.state = state;
     this.animation = state == PRESENT ? FADEIN : FADEOUT;
+    this.targetedAlpha = state == PRESENT ? 1 : 0;
+    return true;
   }
 
   update(cellCurrentx, cellCurrenty, currentlength, alpha) {

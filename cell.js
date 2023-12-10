@@ -1,9 +1,9 @@
 import { Corner } from "./corner.js";
-import { FADEIN, FADEOUT, PRESENT, Wall } from "./wall.js";
+import { ABSENT, FADEIN, FADEOUT, PRESENT, Wall } from "./wall.js";
 
 const INWARDSSCALINGFACTOR = 0.4;
-const OUTWARDSSCALINGFACTOR = 0.1;
-const VELOCITY = 35;
+const OUTWARDSSCALINGFACTOR = 0.2;
+const VELOCITY = 40;
 const ACCELERATION = 0;
 
 export const OUTWARDS = 0;
@@ -34,11 +34,11 @@ export class Cell {
   Acceleration;
   animation;
   color = {
-    r: 175,
-    g: 216,
-    b: 248,
+    r: 175, //175
+    g: 216, //216
+    b: 248, //248
     //NOTE - implement the interpolation from a color to another
-    alpha: 1,
+    alpha: 0.25,
   };
 
   inwardScallingFactor;
@@ -74,7 +74,16 @@ export class Cell {
     if (cell == null)
       return;
 
+    console.log("linking cell");
     this.links.set(cell, true);
+
+    let neighbors = this.neighbors();
+    for (let i = NORTH; i < 4; i++) {
+      if (neighbors[i] == cell) {
+        this.setWallState(i, ABSENT);
+      }
+    }
+
     if (bidirectional)
       cell.link(this, false);
   }
@@ -83,6 +92,13 @@ export class Cell {
     if (cell == null)
       return;
     
+    let neighbors = this.neighbors();
+    for (let i = NORTH; i < 4; i++) {
+      if (neighbors[i] == cell) {
+        this.setWallState(i, PRESENT);
+      }
+    }
+
     this.links.delete(cell);
     if (bidirectional)
       cell.unlink(this, false);
@@ -165,8 +181,6 @@ export class Cell {
       totalWallAlpha += this.walls[i].color.alpha;
     }
     this.avgWallAlpha = totalWallAlpha / 4;
-    // console.log("constructor debug");
-    // this.debug();
   }
 
   debug() {
@@ -262,7 +276,7 @@ export class Cell {
       //REVIEW - this is really bad, we need to find a better way to do this
       let totalWallAlpha = 0;
       for (let i = NORTH; i < 4; i++) {
-        this.walls[i].color.alpha = this.walls[i].animation;
+        this.walls[i].color.alpha = this.walls[i].targetedAlpha;
         this.walls[i].animation = STOPPED;
         totalWallAlpha += this.walls[i].color.alpha;
 
@@ -307,11 +321,11 @@ export class Cell {
     // this.draw(ctx, ctx2);
   }
 
-  toggleWallState(wallpos) {
+  setWallState(wallpos, newWallState) {
     if (wallpos < NORTH || wallpos > WEST)
       return;
-    this.walls[wallpos].setWallState(-this.walls[wallpos].state);
-    this.setOutwardsVelocityAnimation(OUTWARDS);
+    if (this.walls[wallpos].setWallState(newWallState))
+      this.setOutwardsVelocityAnimation(OUTWARDS);
   }
 
   draw(ctx, ctx2) {
@@ -338,6 +352,16 @@ export class Cell {
     for (let i = NORTH; i < 4; i++) {
       // if (this.corners[i].animation != STOPPED)
     }
+
+    // ctx.textAlign = "center";
+    // ctx.textBaseline = "middle";
+    // ctx.fillStyle = "black";
+    // ctx.font = "15px Arial";
+    // ctx.fillText(
+    //   `${this.gridX},${this.gridY}`,
+    //   this.firstCellVector.currentx + (this.firstCellVector.currentlength / 2),
+    //   this.firstCellVector.currenty + (this.firstCellVector.currentlength / 2)
+    // );
 
 
     // ctx.beginPath();
