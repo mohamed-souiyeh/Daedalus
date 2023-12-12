@@ -1,5 +1,5 @@
-import { Corner } from "./corner.js";
-import { ABSENT, FADEIN, FADEOUT, PRESENT, Wall } from "./wall.js";
+import { Corner } from "../corner.js";
+import { ABSENT, FADEIN, FADEOUT, PRESENT, Wall } from "../wall.js";
 
 const INWARDSSCALINGFACTOR = 0.4;
 const OUTWARDSSCALINGFACTOR = 0.2;
@@ -24,7 +24,7 @@ export const SOUTHWEST = 3;
 export class Cell {
   gridX;
   gridY;
-  visited;
+  state;
 
   x;
   y;
@@ -61,17 +61,17 @@ export class Cell {
   avgWallAlpha = 0;
 
   corners = [];
-  
+
   //NOTE - the cell neighbors
   north = null;
   south = null;
-  east  = null;
-  west  = null;
+  east = null;
+  west = null;
 
   links = new Map();
 
   link(cell, bidirectional = true) {
-    if (cell == null)
+    if (cell == null || this.islinked(cell))
       return;
 
     console.log("linking cell");
@@ -89,9 +89,9 @@ export class Cell {
   }
 
   unlink(cell, bidirectional = true) {
-    if (cell == null)
+    if (cell == null || !this.islinked(cell))
       return;
-    
+
     let neighbors = this.neighbors();
     for (let i = NORTH; i < 4; i++) {
       if (neighbors[i] == cell) {
@@ -104,7 +104,7 @@ export class Cell {
       cell.unlink(this, false);
   }
 
-  isliked(cell) {
+  islinked(cell) {
     return this.links.has(cell);
   }
 
@@ -128,11 +128,10 @@ export class Cell {
       this.corners.push(new Corner());
     }
   }
-  
+
   initialize(gridX, gridY, x, y, length, wallsState) {
     this.gridX = gridX; // x position in the grid
     this.gridY = gridY; // y position in the grid
-    this.visited = false; // has this cell been visited by the algorithm?
 
     this.x = x; // x position on canvas
     this.y = y; // y position on canvas
@@ -225,8 +224,8 @@ export class Cell {
 
   update(ctx, ctx2) {
     if (this.animation == STOPPED)
-    return;
-  
+      return;
+
     // console.log("updating cell");
     //!SECTION this delta time will be calculated in the animation loop
     const FPS = 60; // Frames per second
@@ -342,7 +341,7 @@ export class Cell {
     );
     ctx.fill();
 
-    
+
     for (let i = NORTH; i < 4; i++) {
       // if (this.walls[i].animation != STOPPED)
       this.walls[i].draw(ctx, ctx2);
@@ -353,15 +352,15 @@ export class Cell {
       // if (this.corners[i].animation != STOPPED)
     }
 
-    // ctx.textAlign = "center";
-    // ctx.textBaseline = "middle";
-    // ctx.fillStyle = "black";
-    // ctx.font = "15px Arial";
-    // ctx.fillText(
-    //   `${this.gridX},${this.gridY}`,
-    //   this.firstCellVector.currentx + (this.firstCellVector.currentlength / 2),
-    //   this.firstCellVector.currenty + (this.firstCellVector.currentlength / 2)
-    // );
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "black";
+    ctx.font = "15px Arial";
+    ctx.fillText(
+      `${this.gridX},${this.gridY}`,
+      this.firstCellVector.currentx + (this.firstCellVector.currentlength / 2),
+      this.firstCellVector.currenty + (this.firstCellVector.currentlength / 2)
+    );
 
 
     // ctx.beginPath();
