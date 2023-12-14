@@ -61,7 +61,7 @@ export const wallMoves = [
   },
 ];
 
-type color = {
+export type color = {
   r: number;
   g: number;
   b: number;
@@ -90,6 +90,13 @@ export class Wall {
 
   constructor() {}
 
+  #initState = (state: wallState) => {
+    this.#state = state;
+    this.#color.a = state === wallState.PRESENT ? 0 : 1;
+
+    this.#setAnimationAndTAlpha(state);
+  };
+
   public init(
     pos: number,
     cellx: number,
@@ -107,7 +114,61 @@ export class Wall {
 
     let offsetWidth = this.#length < this.#width ? this.#length : this.#width;
 
-    this.#x = (cellx + (offsetWidth * wallMoves[pos].xcornerOffset)) + (wallMoves[pos].xd * (currentCellLength * (1 - WALL_PERSENTAGE)));
-    //NOTE - this is where we are so far
+    this.#x =
+      cellx +
+      offsetWidth * wallMoves[pos].xcornerOffset +
+      wallMoves[pos].xd * (currentCellLength * (1 - WALL_PERSENTAGE));
+    this.#y =
+      celly +
+      offsetWidth * wallMoves[pos].ycornerOffset +
+      wallMoves[pos].yd * (currentCellLength * (1 - WALL_PERSENTAGE));
+
+    this.#color = color;
+
+    this.#initState(state);
+  }
+
+  #setAnimationAndTAlpha = (state: wallState) => {
+    this.#targetedAlpha = state === wallState.PRESENT ? 1 : 0;
+    this.#animation =
+      state === wallState.PRESENT
+        ? WallAnimation.FADEIN
+        : WallAnimation.FADEOUT;
+  };
+
+  public setWallState(state: wallState) {
+    if (state === this.#state) return false;
+
+    this.#state = state;
+    this.#setAnimationAndTAlpha(state);
+    return true;
+  }
+
+  public update(
+    cellCurrentx: number,
+    cellCurrenty: number,
+    currentCellLength: number,
+    alpha: number
+  ) {
+    this.#length = this.#calculateLength(currentCellLength);
+    this.#width = this.#calculateWidth(currentCellLength);
+
+    let offsetWidth = this.#length < this.#width ? this.#length : this.#width;
+
+    this.#x =
+      cellCurrentx +
+      offsetWidth * wallMoves[this.#posInCell].xcornerOffset +
+      wallMoves[this.#posInCell].xd * (currentCellLength * (1 - WALL_PERSENTAGE));
+    this.#y =
+      cellCurrenty +
+      offsetWidth * wallMoves[this.#posInCell].ycornerOffset +
+      wallMoves[this.#posInCell].yd * (currentCellLength * (1 - WALL_PERSENTAGE));
+    
+    this.#color.a = alpha;
+  }
+
+  public draw(ctx: CanvasRenderingContext2D) {
+    ctx.fillStyle = `rgba(${this.#color.r},${this.#color.g},${this.#color.b},${this.#color.a})`;
+    ctx.fillRect(this.#x, this.#y, this.#length, this.#width);
   }
 }

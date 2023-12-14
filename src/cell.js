@@ -1,5 +1,5 @@
-import { Corner } from "../corner.js";
-import { ABSENT, FADEIN, FADEOUT, PRESENT, Wall } from "../wall.js";
+import { Corner } from "./corner.js";
+import { ABSENT, FADEIN, FADEOUT, PRESENT, Wall } from "./wall.js";
 
 const INWARDSSCALINGFACTOR = 0.4;
 const OUTWARDSSCALINGFACTOR = 0.2;

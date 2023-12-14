@@ -71,10 +71,12 @@ export class Wall {
     this.y = (celly + (offsetWidth * wallMoves[pos].ycornerOffset)) + (wallMoves[pos].yd * (currentCellLength * (1 - WALL_PERSENTAGE)));
 
     this.color  = color;
+    this.state = state;
+    
     this.color.alpha = state == PRESENT ? 0 : 1;
+
     this.animation = state == PRESENT ? FADEIN : FADEOUT;
     this.targetedAlpha = state == PRESENT ? 1 : 0;
-    this.state = state;
 
     // console.log("wall created");
     // this.debug();
@@ -92,6 +94,7 @@ export class Wall {
   setWallState(state) {
     if (this.state == state) return false;
     this.state = state;
+
     this.animation = state == PRESENT ? FADEIN : FADEOUT;
     this.targetedAlpha = state == PRESENT ? 1 : 0;
     return true;

@@ -1,7 +1,7 @@
-import * as input from '../input.js';
-import * as utils from '../utils.js';
+import * as input from './input.js';
+import * as utils from './utils.js';
 import { Cell, EAST, INWARDS, NORTH, OUTWARDS, SOUTH, STOPPED, WEST } from './cell.js';
-import { ABSENT, PRESENT } from '../wall.js';
+import { ABSENT, PRESENT } from './wall.js';
 import { CELL_SIZE, Grid } from './Grid.js';
 
 
@@ -22,7 +22,7 @@ console.log("we got the canvas and the context of the canvas, and resized it");
 console.log("this is the canvas width => ", canvas.width);
 console.log("this is the canvas height => ", canvas.height);
 
-let grid = new Grid(canvas.width, canvas.height, ABSENT);
+let grid = new Grid(canvas.width, canvas.height, PRESENT);
 
 
 let counter = 0;
@@ -48,17 +48,17 @@ function animate(timestamp) {
 
 
 
-    // for (let cell of cellneighbours) {
-    //   randomCell.link(cell, true);
-    // } 
+    for (let cell of cellneighbours) {
+      randomCell.link(cell, true);
+    } 
 
-    // randomCell= grid.randomCell();
+    randomCell= grid.randomCell();
 
-    // cellneighbours = randomCell.neighbors();
+    cellneighbours = randomCell.neighbors();
 
-    // for (let cell of cellneighbours) {
-    //   randomCell.unlink(cell, true);
-    // }
+    for (let cell of cellneighbours) {
+      randomCell.unlink(cell, true);
+    }
 
     // let cell = cellneighbours[NORTH];
 

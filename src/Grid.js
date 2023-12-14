@@ -1,5 +1,5 @@
 import { Cell, EAST, NORTH, SOUTH, WEST } from "./cell.js";
-import { PRESENT, STOPPED } from "../wall.js";
+import { PRESENT, STOPPED } from "./wall.js";
 
 
 //NOTE - needed for calculating the grid length and width outside of the class
