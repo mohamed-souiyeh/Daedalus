@@ -1,4 +1,5 @@
 export const WALL_PERSENTAGE = 0.1;
+const WALL_TARGETEDALPHA = 1;
 export enum WallAnimation {
   FADEOUT,
   FADEIN,
@@ -88,11 +89,12 @@ export class Wall {
   #calculateLength: (currentlength: number) => number;
   #calculateWidth: (currentlength: number) => number;
 
+//SECTION - initialization methods
   constructor() {}
 
   #initState = (state: wallState) => {
     this.#state = state;
-    this.#color.a = state === wallState.PRESENT ? 0 : 1;
+    this.#color.a = state === wallState.PRESENT ? 0 : WALL_TARGETEDALPHA;
 
     this.#setAnimationAndTAlpha(state);
   };
@@ -127,9 +129,11 @@ export class Wall {
 
     this.#initState(state);
   }
+//!SECTION
 
+//SECTION - animation methods
   #setAnimationAndTAlpha = (state: wallState) => {
-    this.#targetedAlpha = state === wallState.PRESENT ? 1 : 0;
+    this.#targetedAlpha = state === wallState.PRESENT ? WALL_TARGETEDALPHA : 0;
     this.#animation =
       state === wallState.PRESENT
         ? WallAnimation.FADEIN
@@ -171,4 +175,5 @@ export class Wall {
     ctx.fillStyle = `rgba(${this.#color.r},${this.#color.g},${this.#color.b},${this.#color.a})`;
     ctx.fillRect(this.#x, this.#y, this.#length, this.#width);
   }
+//!SECTION
 }

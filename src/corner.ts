@@ -1,5 +1,7 @@
 import { WALL_PERSENTAGE, WallAnimation, color } from "./wall";
 
+const CELLTARGETEDALPHA = 1;
+
 const calculateWidth = (currentlength: number) => {
   return currentlength * WALL_PERSENTAGE;
 };
@@ -47,7 +49,7 @@ export class Corner {
   };
 
   #animation: number = WallAnimation.FADEIN;
-
+//SECTION - initialization methods
   constructor() {}
 
   public init(
@@ -68,7 +70,10 @@ export class Corner {
 
     this.#color = color;
   }
+//!SECTION
 
+
+//SECTION - animation methods
   public update(
     cellCurrentx: number,
     cellCurrenty: number,
@@ -96,4 +101,5 @@ export class Corner {
     })`;
     ctx.fillRect(this.#x, this.#y, this.#length, this.#width);
   }
+//!SECTION
 }
