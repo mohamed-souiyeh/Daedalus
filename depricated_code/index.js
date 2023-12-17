@@ -1,15 +1,14 @@
-import * as input from './input.js';
-import * as utils from './utils.js';
-import { Cell, EAST, INWARDS, NORTH, OUTWARDS, SOUTH, STOPPED, WEST } from './cell.js';
-import { ABSENT, PRESENT } from './wall.js';
-import { CELL_SIZE, Grid } from './Grid.js';
+import * as input from '../input.js';
+import * as utils from '../utils.js';
+import { Cell, EAST, INWARDS, NORTH, OUTWARDS, SOUTH, STOPPED, WEST } from '../cell.js';
+import { ABSENT, PRESENT } from '../wall.js';
+import { CELL_SIZE, Grid } from '../Grid.js';
 
 
 //get the canvas element
 const canvas = document.getElementById("canvas");
 //get the context of the canvas
 const ctx = canvas.getContext("2d");
-ctx.linejoin = "round";
 
 //resize the canvas to fill browser window dynamically
 canvas.width = canvas.offsetWidth;

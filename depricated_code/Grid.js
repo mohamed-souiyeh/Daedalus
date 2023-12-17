@@ -1,5 +1,5 @@
-import { Cell, EAST, NORTH, SOUTH, WEST } from "./cell.js";
-import { PRESENT, STOPPED } from "./wall.js";
+import { Cell, EAST, NORTH, SOUTH, WEST } from "../cell.js";
+import { PRESENT, STOPPED } from "../wall.js";
 
 
 //NOTE - needed for calculating the grid length and width outside of the class
@@ -15,6 +15,41 @@ export class Grid {
 
   grid = [];
 
+  constructor(canvasLength, canvasWidth, initialWallState = PRESENT) {
+    this.initialWallState = initialWallState;
+
+    this.prepareGrid();
+    this.initialize(canvasLength, canvasWidth);
+  }
+
+  prepareGrid() {
+    for (let y = 0; y < this.width; y++) {
+      this.grid[y] = [];
+      for (let x = 0; x < this.length; x++) {
+        this.grid[y][x] = new Cell();
+      }
+    }
+  }
+
+  initialize(canvasLength, canvasWidth) {
+    this.length = Math.floor(canvasLength / CELL_SIZE);
+    this.width = Math.floor(canvasWidth / CELL_SIZE);
+
+    this.startx = Math.floor((canvasLength - (this.length * CELL_SIZE)) / 2);
+    this.starty = Math.floor((canvasWidth - (this.width * CELL_SIZE)) / 2);
+
+    for (let y = 0; y < this.width; y++) {
+      for (let x = 0; x < this.length; x++) {
+        let cellx = this.startx + (x * CELL_SIZE);
+        let celly = this.starty + (y * CELL_SIZE);
+
+        this.grid[y][x].initialize(x, y, cellx, celly, CELL_SIZE, this.initialWallState);
+      }
+    }
+    this.configureCells();
+    // //console.log("grid initialized");
+    // //console.log('the grid => ', this);
+  }
 
   configureCells() {
     for (let cell of this.eachCell()) {
@@ -27,7 +62,6 @@ export class Grid {
       cell.west = this.at(x - 1, y);
       cell.east = this.at(x + 1, y);
 
-      //FIXME - this is still not working properly
       if (cell.west === null) {
         //console.log("filling the west wall");
         cell.walls[WEST].setWallState(PRESENT);
@@ -47,14 +81,7 @@ export class Grid {
     }
   }
 
-  prepareGrid() {
-    for (let y = 0; y < this.width; y++) {
-      this.grid[y] = [];
-      for (let x = 0; x < this.length; x++) {
-        this.grid[y][x] = new Cell();
-      }
-    }
-  }
+
 
   randomCell() {
     let x = Math.floor(Math.random() * this.length);
@@ -82,7 +109,6 @@ export class Grid {
     }
   }
 
-
   at(x, y) {
     if (x < 0 || x >= this.length) return null;
     if (y < 0 || y >= this.width) return null;
@@ -91,35 +117,7 @@ export class Grid {
   }
 
 
-  constructor(canvasLength, canvasWidth, initialWallState = PRESENT) {
-    this.length = Math.floor(canvasLength / CELL_SIZE);
-    this.width = Math.floor(canvasWidth / CELL_SIZE);
-    this.initialWallState = initialWallState;
-
-    this.prepareGrid();
-    this.initialize(canvasLength, canvasWidth);
-  }
-
-  initialize(canvasLength, canvasWidth) {
-    this.length = Math.floor(canvasLength / CELL_SIZE);
-    this.width = Math.floor(canvasWidth / CELL_SIZE);
-
-    this.startx = Math.floor((canvasLength - (this.length * CELL_SIZE)) / 2);
-    this.starty = Math.floor((canvasWidth - (this.width * CELL_SIZE)) / 2);
-
-    for (let y = 0; y < this.width; y++) {
-      for (let x = 0; x < this.length; x++) {
-        let cellx = this.startx + (x * CELL_SIZE);
-        let celly = this.starty + (y * CELL_SIZE);
-
-        this.grid[y][x].initialize(x, y, cellx, celly, CELL_SIZE, this.initialWallState);
-      }
-    }
-    this.configureCells();
-    // //console.log("grid initialized");
-    // //console.log('the grid => ', this);
-  }
-
+  //todo
   update(ctx, ctx2) {
     // //console.log("updating grid");
     for (let y = 0; y < this.width; y++) {

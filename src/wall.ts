@@ -77,13 +77,13 @@ export class Wall {
   #width: number;
 
   #state: wallState = wallState.PRESENT;
-  #animation: WallAnimation = WallAnimation.STOPPED;
-  #targetedAlpha: number = 1;
+  #animation: WallAnimation = WallAnimation.FADEIN;
+  #targetedAlpha: number = WALL_TARGETEDALPHA;
   #color: color = {
     r: 0,
     g: 0,
     b: 0,
-    a: 1,
+    a: 0,
   };
 
   #calculateLength: (currentlength: number) => number;
@@ -131,7 +131,19 @@ export class Wall {
   }
 //!SECTION
 
-//SECTION - animation methods
+//SECTION - getters and setters
+  getState() {
+    return this.#state;
+  }
+
+  getAnimation() {
+    return this.#animation;
+  }
+
+  getTargetedAlpha() {
+    return this.#targetedAlpha;
+  }
+
   #setAnimationAndTAlpha = (state: wallState) => {
     this.#targetedAlpha = state === wallState.PRESENT ? WALL_TARGETEDALPHA : 0;
     this.#animation =
@@ -139,14 +151,23 @@ export class Wall {
         ? WallAnimation.FADEIN
         : WallAnimation.FADEOUT;
   };
-
+  
   public setWallState(state: wallState) {
     if (state === this.#state) return false;
-
+  
     this.#state = state;
     this.#setAnimationAndTAlpha(state);
     return true;
   }
+
+  public setStoppedAnimationRequirements() {
+    this.#animation = WallAnimation.STOPPED;
+    this.#color.a = this.#targetedAlpha;
+  }
+
+//!SECTION
+
+//SECTION - animation methods
 
   public update(
     cellCurrentx: number,

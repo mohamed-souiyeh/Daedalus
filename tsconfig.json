@@ -3,7 +3,8 @@
     "outDir": "./build",
     "allowJs": true,
     "target": "esnext",
-    "module": "commonjs",
+    "module": "esnext",
+    "moduleResolution": "node",
     "alwaysStrict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -13,3 +14,4 @@
   },
   "include": ["./src/**/*"]
 }
+

@@ -1,4 +1,4 @@
-import { FADEIN, WALL_PERSENTAGE } from "./wall.js";
+import { FADEIN, WALL_PERSENTAGE } from "../wall.js";
 
 const calculateWidth = (currentlength) => { return currentlength * WALL_PERSENTAGE };
 

@@ -1,5 +1,5 @@
-import { Corner } from "./corner.js";
-import { ABSENT, FADEIN, FADEOUT, PRESENT, Wall } from "./wall.js";
+import { Corner } from "../corner.js";
+import { ABSENT, FADEIN, FADEOUT, PRESENT, Wall } from "../wall.js";
 
 const INWARDSSCALINGFACTOR = 0.4;
 const OUTWARDSSCALINGFACTOR = 0.2;
@@ -144,8 +144,8 @@ export class Cell {
     this.outwardScallingFactor = OUTWARDSSCALINGFACTOR; // how much to scale the cell outwards
 
 
-    this.firstCellVector.x = this.x;
-    this.firstCellVector.y = this.y;
+    // this.firstCellVector.x = this.x;
+    // this.firstCellVector.y = this.y;
 
     //!SECTION revisit this calculation because when inwards shrinkng factor reaches more than 0.5 it will start to shrink outwards
     //FIXME - the scaling calculation is wrong, we need to find a better way to do this
@@ -272,7 +272,6 @@ export class Cell {
       this.xOutwardSteps = 0;
       this.xOutwardWidth = endLength * 2;
 
-      //REVIEW - this is really bad, we need to find a better way to do this
       let totalWallAlpha = 0;
       for (let i = NORTH; i < 4; i++) {
         this.walls[i].color.alpha = this.walls[i].targetedAlpha;

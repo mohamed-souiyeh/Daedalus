@@ -1,4 +1,4 @@
-import { WALL_PERSENTAGE, WallAnimation, color } from "./wall";
+import { WALL_PERSENTAGE, WallAnimation, color, wallState } from "./wall.js";
 
 const CELLTARGETEDALPHA = 1;
 
@@ -41,6 +41,9 @@ export class Corner {
   #length: number;
   #width: number;
 
+  #state: wallState = wallState.PRESENT;
+  #animation: number = WallAnimation.FADEIN;
+  #targetedAlpha: number = CELLTARGETEDALPHA;
   #color: color = {
     r: 0,
     g: 0,
@@ -48,16 +51,24 @@ export class Corner {
     a: 0,
   };
 
-  #animation: number = WallAnimation.FADEIN;
-//SECTION - initialization methods
-  constructor() {}
+
+  //SECTION - initialization methods
+  constructor() { }
+
+  #initState = (state: wallState) => {
+    this.#state = state;
+    this.#targetedAlpha = state === wallState.PRESENT ? 0 : 1;
+
+    this.#setAnimationAndTAlpha(state);
+  }
 
   public init(
     pos: number,
     cellx: number,
     celly: number,
     currentCellLength: number,
-    color: color
+    color: color,
+    state: wallState
   ) {
     this.#posInCell = pos;
     this.#length = calculateWidth(currentCellLength);
@@ -69,37 +80,69 @@ export class Corner {
       celly + cornerMoves[pos].yd * (currentCellLength * (1 - WALL_PERSENTAGE));
 
     this.#color = color;
+
+    this.#initState(state);
   }
-//!SECTION
+  //!SECTION
 
+  //SECTION - getters and setters
 
-//SECTION - animation methods
-  public update(
-    cellCurrentx: number,
-    cellCurrenty: number,
-    cellCurrentLength: number,
-    alpha: number
-  ) {
+  getState() {
+    return this.#state;
+  }
+
+  getAnimation() {
+    return this.#animation;
+  }
+
+  getTargetedAlpha() {
+    return this.#targetedAlpha;
+  }
+
+  #setAnimationAndTAlpha = (state: wallState) => {
+    this.#targetedAlpha = state === wallState.PRESENT ? CELLTARGETEDALPHA : 0;
+
+    this.#animation =
+      state === wallState.PRESENT
+        ? WallAnimation.FADEIN
+        : WallAnimation.FADEOUT;
+  };
+
+  public setcornerState(state: wallState) {
+    if (this.#state === state) return;
+
+    this.#state = state;
+    this.#setAnimationAndTAlpha(state);
+  }
+
+  public setStoppedAnimationRequirements() {
+    this.#animation = WallAnimation.STOPPED;
+    this.#color.a = this.#targetedAlpha;
+  }
+  //!SECTION
+
+  //SECTION - animation methods
+
+  public update(cellCurrentx: number, cellCurrenty: number, cellCurrentLength: number, alpha: number) {
     this.#length = calculateWidth(cellCurrentLength);
     this.#width = calculateWidth(cellCurrentLength);
 
     this.#x =
       cellCurrentx +
       cornerMoves[this.#posInCell].xd *
-        (cellCurrentLength * (1 - WALL_PERSENTAGE));
+      (cellCurrentLength * (1 - WALL_PERSENTAGE));
     this.#y =
       cellCurrenty +
       cornerMoves[this.#posInCell].yd *
-        (cellCurrentLength * (1 - WALL_PERSENTAGE));
+      (cellCurrentLength * (1 - WALL_PERSENTAGE));
 
     this.#color.a = alpha;
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = `rgba(${this.#color.r},${this.#color.g},${this.#color.b},${
-      this.#color.a
-    })`;
+    ctx.fillStyle = `rgba(${this.#color.r},${this.#color.g},${this.#color.b},${this.#color.a
+      })`;
     ctx.fillRect(this.#x, this.#y, this.#length, this.#width);
   }
-//!SECTION
+  //!SECTION
 }
