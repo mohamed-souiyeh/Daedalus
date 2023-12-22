@@ -1,8 +1,8 @@
 import { Corner } from "./corner.js";
 import { Wall, WallAnimation, color, wallState } from "./wall.js";
 
-const INWARDSSCALINGFACTOR = 0.4;
-const OUTWARDSSCALINGFACTOR = 0.2;
+const INWARDSSCALINGFACTOR = 0.5;
+const OUTWARDSSCALINGFACTOR = 0.3;
 
 const VELOCITY = 40;
 const ACCELERATION = 0;
@@ -92,6 +92,7 @@ export class Cell {
 
   #state: CellStates = CellStates.unvisited;
 
+  walls: Wall[];
   north: Cell | null = null;
   east: Cell | null = null;
   south: Cell | null = null;
@@ -99,8 +100,7 @@ export class Cell {
 
   #links: Map<Cell, link> = new Map();
 
-  walls: Wall[] = [];
-  corners: Corner[] = [];
+  corners: Corner[];
   //!SECTION
 
   public link(cell: Cell | null, bidi: boolean = true) {
@@ -165,6 +165,8 @@ export class Cell {
   }
 
   constructor() {
+    this.walls = new Array<Wall>();
+    this.corners = new Array<Corner>();
     for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
       this.walls.push(new Wall());
       this.corners.push(new Corner());
@@ -248,6 +250,16 @@ export class Cell {
         color,
         wallState
       );
+    }
+
+    for (let i = CornerDirections.NORTHWEST; i <= CornerDirections.SOUTHWEST; i++) {
+
+      let color: color = {
+        r: 12,
+        g: 53,
+        b: 71,
+        a: 0,
+      };
 
       this.corners[i].init(
         i,
@@ -266,6 +278,11 @@ export class Cell {
   public getAnimation() {
     return this.#animation;
   }
+
+  setOutwardAnimation() {
+    this.#setOutwardsAnimationRequirements();
+  }
+
   #setOutwardsAnimationRequirements() {
     if (this.#animation === CellAnimation.OUTWARDS) return;
 
@@ -294,7 +311,7 @@ export class Cell {
 
     this.#cellVector.currentlength = this.#length;
 
-    let endlength = this.#length * this.#outwardScalingFactor;
+    let endlength = (this.#length * this.#outwardScalingFactor) / 2;
 
     this.#xOutwardSteps = 0;
     this.#xOutwardWidth = endlength * 2;
@@ -311,12 +328,12 @@ export class Cell {
 
     if (this.walls[wallpos].setWallState(state)) {
       this.#setOutwardsAnimationRequirements();
-      if (this.#decideCornerState(wallRelations[wallpos].first, state)) {
-        this.corners[wallRelations[wallpos].first].setcornerState(state);
-      }
-      if (this.#decideCornerState(wallRelations[wallpos].second, state)) {
-        this.corners[wallRelations[wallpos].second].setcornerState(state);
-      }
+      // if (this.#decideCornerState(wallRelations[wallpos].first, state)) {
+      //   this.corners[wallRelations[wallpos].first].setcornerState(state);
+      // }
+      // if (this.#decideCornerState(wallRelations[wallpos].second, state)) {
+      //   this.corners[wallRelations[wallpos].second].setcornerState(state);
+      // }
     }
   }
   //!SECTION
@@ -404,7 +421,8 @@ export class Cell {
     //NOTE - update the walls and corners
     for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
       let currentAlpha: number = 0;
-      if (this.walls[i].getAnimation() === WallAnimation.STOPPED) continue;
+      if (this.walls[i].getAnimation() === WallAnimation.STOPPED) 
+        currentAlpha = this.walls[i].getTargetedAlpha();
       if (this.walls[i].getAnimation() === WallAnimation.FADEIN)
         currentAlpha = this.#xOutwardSteps / this.#xOutwardWidth;
       if (this.walls[i].getAnimation() === WallAnimation.FADEOUT)
@@ -416,7 +434,8 @@ export class Cell {
     //NOTE - update the corners
     for (let i = CornerDirections.NORTHWEST; i <= CornerDirections.SOUTHWEST; i++) {
       let currentAlpha: number = 0;
-      if (this.corners[i].getAnimation() === WallAnimation.STOPPED) continue;
+      if (this.corners[i].getAnimation() === WallAnimation.STOPPED) 
+        currentAlpha = this.corners[i].getTargetedAlpha();
       if (this.corners[i].getAnimation() === WallAnimation.FADEIN)
         currentAlpha = this.#xOutwardSteps / this.#xOutwardWidth;
       if (this.corners[i].getAnimation() === WallAnimation.FADEOUT)

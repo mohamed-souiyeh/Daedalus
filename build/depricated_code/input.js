@@ -32,22 +32,3 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     // resizeCanvas();
 });
-/*// function resizeCanvas() {
-// 	let canvas = document.getElementById("canvas");
-// 	// let ctx = canvas.getContext("2d");
-    
-// 	// Create an offscreen canvas and draw the current content onto it
-// 	// let offscreenCanvas = document.createElement("canvas");
-// 	// offscreenCanvas.width = canvas.width;
-// 	// offscreenCanvas.height = canvas.height;
-// 	// offscreenCanvas.getContext("2d").drawImage(canvas, 0, 0);
-    
-    
-//   // Resize the original canvas
-//   canvas.width = canvas.offsetWidth;
-//   canvas.height = canvas.offsetHeight;
-
-//   // Draw the content from the offscreen canvas back onto the original canvas
-// //   ctx.drawImage(offscreenCanvas, 0, 0, canvas.width, canvas.height);
-//   console.log("resized canvas");
-// }*/

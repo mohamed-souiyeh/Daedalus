@@ -188,7 +188,6 @@ export class Wall {
       cellCurrenty +
       offsetWidth * wallMoves[this.#posInCell].ycornerOffset +
       wallMoves[this.#posInCell].yd * (currentCellLength * (1 - WALL_PERSENTAGE));
-    
     this.#color.a = alpha;
   }
 
@@ -197,4 +196,19 @@ export class Wall {
     ctx.fillRect(this.#x, this.#y, this.#length, this.#width);
   }
 //!SECTION
+
+//SECTION - debug methods
+// write a debug function that will print all the wall information
+// to the console line by line in an organized manner
+  public debug() {
+    console.log(`pos: ${this.#posInCell}`);
+    console.log(`x: ${this.#x}`);
+    console.log(`y: ${this.#y}`);
+    console.log(`length: ${this.#length}`);
+    console.log(`width: ${this.#width}`);
+    console.log(`state: ${this.#state}`);
+    console.log(`animation: ${this.#animation}`);
+    console.log(`targetedAlpha: ${this.#targetedAlpha}`);
+    console.log(`color: `, this.#color);
+  }
 }
