@@ -1,5 +1,13 @@
 {
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
   "dependencies": {
     "typescript": "^5.3.3"
-  }
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.0"
+  },
+  "homepage": "http://mohamed-souiyeh.github.io/Daedalus_JS"
 }
