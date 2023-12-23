@@ -1,4 +1,6 @@
 import { Cell, CellAnimation, Directions } from "./cell.js";
+import { Debuger } from "./debugger.js";
+import { debugModeOn, mouse, mouseCellPossIsLocked } from "./input.js";
 import { wallState } from "./wall.js";
 
 
@@ -10,10 +12,19 @@ export class Grid {
   #startY: number;
   #length: number;
   #width: number;
+  #offsetLeft: number;
+  #offsetTop: number;
+
+  #mousex: number = 0;
+  #mousey: number = 0;
+  #mouseCellx: number = 0;
+  #mouseCelly: number = 0;
 
   #initialWallState: wallState = wallState.PRESENT;
 
   grid: Cell[][] = [];
+
+  debuger: Debuger = new Debuger();
 
 //SECTION - initialization methods
   constructor(canvasLength: number, canvasWidth: number, initialWallState: wallState = wallState.PRESENT) {
@@ -37,7 +48,10 @@ export class Grid {
   #initialize(canvasLength: number, canvasWidth: number, wallState: wallState) {
 
     this.#startX = Math.floor((canvasLength - (this.#length * CELLSIZE)) / 2);
-    this.#startY = Math.floor((canvasWidth - (this.#width * CELLSIZE)) / 2);
+    this.#startY = Math.floor((canvasWidth - (this.#width * CELLSIZE)) * 0.9);
+
+    this.#offsetLeft = this.#startX;
+    this.#offsetTop = this.#startY;
 
     for (let y = 0; y < this.#width; y++) {
       for (let x = 0; x < this.#length; x++) {
@@ -112,15 +126,21 @@ export class Grid {
 
   //SECTION - animation methods
 
-  public update(ctx: CanvasRenderingContext2D, deltaTime: number) {
-
-    const FPS = 60;
-    deltaTime = 1 / FPS;
+  public update(ctx: CanvasRenderingContext2D) {
 
     for (let cell of this.eachCell()) {
-      cell.update(deltaTime);
+      cell.update();
     }
-    this.draw(ctx);
+  }
+  
+  public writeMousePosition(ctx: CanvasRenderingContext2D) {
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "15px Arial";
+    ctx.fillStyle = "black";
+
+
+    ctx.fillText("x: " + this.#mouseCellx + " y: " + this.#mouseCelly, 200, this.#offsetTop - 10);
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
@@ -134,6 +154,29 @@ export class Grid {
         cell.draw(ctx);
     }
   }
+  
 
+
+  public updateDebuger(ctx: CanvasRenderingContext2D) {
+    if (!debugModeOn) return;
+
+    this.#mousex = mouse.x;
+    this.#mousey = mouse.y;
+
+    this.#mouseCellx = Math.floor(this.#mousex / CELLSIZE);
+    this.#mouseCelly = Math.floor(this.#mousey / CELLSIZE);
+
+    this.debuger.update(this.#mousex, this.#mousey);
+    
+    this.drawDebuger(ctx);
+  }
+  
+  public drawDebuger(ctx: CanvasRenderingContext2D) {
+    if (!debugModeOn) return;
+    this.writeMousePosition(ctx);
+    this.debuger.draw(ctx);
+  }
+
+  //write the current mouss position on the arria at the top of the canvas between 0 ana #offsetTop
   //!SECTION
 }

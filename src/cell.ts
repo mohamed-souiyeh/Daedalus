@@ -1,10 +1,11 @@
 import { Corner } from "./corner.js";
+import { debugModeOn } from "./input.js";
 import { Wall, WallAnimation, color, wallState } from "./wall.js";
 
 const INWARDSSCALINGFACTOR = 0.5;
 const OUTWARDSSCALINGFACTOR = 0.3;
 
-const VELOCITY = 40;
+const VELOCITY = 0.4;
 const ACCELERATION = 0;
 
 export enum CellAnimation {
@@ -344,13 +345,13 @@ export class Cell {
     const firstWallState = this.walls[cornerRelations[cornerPos].first].getState();
     const secondWallState = this.walls[cornerRelations[cornerPos].second].getState();
 
-    if (state === wallState.PRESENT){
+    if (state === wallState.PRESENT) {
       return (
         firstWallState === state ||
         secondWallState === state
       );
     }
-    else if (state === wallState.ABSENT){
+    else if (state === wallState.ABSENT) {
       return (
         firstWallState === state &&
         secondWallState === state
@@ -377,16 +378,16 @@ export class Cell {
   }
 
   #checkifcellVectorIsPastOrigine(step: number): boolean {
-    if (this.#cellVector.currentx + step >= this.#x) return true;
-    if (this.#cellVector.currenty + step >= this.#y) return true;
+    if (Math.floor(this.#cellVector.currentx + step) >= this.#x) return true;
+    if (Math.floor(this.#cellVector.currenty + step) >= this.#y) return true;
     return false;
   }
 
 
-  public update(deltaTime: number) {
+  public update() {
     if (this.#animation === CellAnimation.STOPPED) return;
 
-    let step = this.#velocity * deltaTime;
+    let step = this.#velocity;
 
     if (this.#animation === CellAnimation.INWARDS &&
       this.#checkifcellVectorIsPastStart(step)) {
@@ -421,27 +422,27 @@ export class Cell {
     //NOTE - update the walls and corners
     for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
       let currentAlpha: number = 0;
-      if (this.walls[i].getAnimation() === WallAnimation.STOPPED) 
+      if (this.walls[i].getAnimation() === WallAnimation.STOPPED)
         currentAlpha = this.walls[i].getTargetedAlpha();
       if (this.walls[i].getAnimation() === WallAnimation.FADEIN)
         currentAlpha = this.#xOutwardSteps / this.#xOutwardWidth;
       if (this.walls[i].getAnimation() === WallAnimation.FADEOUT)
         currentAlpha = 1 - this.#xOutwardSteps / this.#xOutwardWidth;
 
-      this.walls[i].update(this.#cellVector.currentx, this.#cellVector.currenty, this.#cellVector.currentlength, currentAlpha);      
+      this.walls[i].update(this.#cellVector.currentx, this.#cellVector.currenty, this.#cellVector.currentlength, currentAlpha);
     }
 
     //NOTE - update the corners
     for (let i = CornerDirections.NORTHWEST; i <= CornerDirections.SOUTHWEST; i++) {
       let currentAlpha: number = 0;
-      if (this.corners[i].getAnimation() === WallAnimation.STOPPED) 
+      if (this.corners[i].getAnimation() === WallAnimation.STOPPED)
         currentAlpha = this.corners[i].getTargetedAlpha();
       if (this.corners[i].getAnimation() === WallAnimation.FADEIN)
         currentAlpha = this.#xOutwardSteps / this.#xOutwardWidth;
       if (this.corners[i].getAnimation() === WallAnimation.FADEOUT)
         currentAlpha = 1 - this.#xOutwardSteps / this.#xOutwardWidth;
 
-      this.corners[i].update(this.#cellVector.currentx, this.#cellVector.currenty, this.#cellVector.currentlength, currentAlpha);      
+      this.corners[i].update(this.#cellVector.currentx, this.#cellVector.currenty, this.#cellVector.currentlength, currentAlpha);
     }
   }
 
@@ -465,15 +466,17 @@ export class Cell {
       this.corners[i].draw(ctx);
     }
 
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "black";
-    ctx.font = "15px Arial";
-    ctx.fillText(
-      `${this.gridx},${this.gridy}`,
-      this.#cellVector.currentx + (this.#cellVector.currentlength / 2),
-      this.#cellVector.currenty + (this.#cellVector.currentlength / 2)
-    );
+    if (debugModeOn) {
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "black";
+      ctx.font = "15px Arial";
+      ctx.fillText(
+        `${this.gridx},${this.gridy}`,
+        this.#cellVector.currentx + (this.#cellVector.currentlength / 2),
+        this.#cellVector.currenty + (this.#cellVector.currentlength / 2)
+      );
+    }
   }
   //!SECTION
 }

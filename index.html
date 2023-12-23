@@ -59,6 +59,22 @@
       #number {
         text-align: center;
       }
+
+      #delayInput {
+        margin: 0px;
+        text-align: center;
+        color: #e3eef0;
+      }
+
+      button {
+        /* margin: 0px;
+        border: none; */
+        /* padding: 5px; */
+        margin-right: 5px;
+        margin-left: 5px;
+        cursor: pointer;
+      }
+
     </style>
   </head>
   <body>
@@ -67,8 +83,15 @@
         <h1>Daedalus</h1>
       </header>
       <div>
+        <button id="debugButton">Debug Off</button>
+      </div>
+      <div>
+        <button id="pauseButton">Pause</button>
+      </div>
+      <div>
+        <h6 id="delayInput" placeholder="delay in ms">delay in ms</h6>
         <button id="decrement">-</button>
-        <input type="" id="number" size="1" min="0" max="60" placeholder="fps" value="0" />
+        <input type="text" id="number" size="1" placeholder="ms" value="16" />
         <button id="increment">+</button>
       </div>
       <select id="build">

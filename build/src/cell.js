@@ -1,8 +1,9 @@
 import { Corner } from "./corner.js";
+import { debugModeOn } from "./input.js";
 import { Wall, WallAnimation, wallState } from "./wall.js";
 const INWARDSSCALINGFACTOR = 0.5;
 const OUTWARDSSCALINGFACTOR = 0.3;
-const VELOCITY = 40;
+const VELOCITY = 0.4;
 const ACCELERATION = 0;
 export var CellAnimation;
 (function (CellAnimation) {
@@ -289,16 +290,16 @@ export class Cell {
         return false;
     }
     #checkifcellVectorIsPastOrigine(step) {
-        if (this.#cellVector.currentx + step >= this.#x)
+        if (Math.floor(this.#cellVector.currentx + step) >= this.#x)
             return true;
-        if (this.#cellVector.currenty + step >= this.#y)
+        if (Math.floor(this.#cellVector.currenty + step) >= this.#y)
             return true;
         return false;
     }
-    update(deltaTime) {
+    update() {
         if (this.#animation === CellAnimation.STOPPED)
             return;
-        let step = this.#velocity * deltaTime;
+        let step = this.#velocity;
         if (this.#animation === CellAnimation.INWARDS &&
             this.#checkifcellVectorIsPastStart(step)) {
             this.#setOutwardsAnimationRequirements();
@@ -359,10 +360,12 @@ export class Cell {
         for (let i = CornerDirections.NORTHWEST; i <= CornerDirections.SOUTHWEST; i++) {
             this.corners[i].draw(ctx);
         }
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillStyle = "black";
-        ctx.font = "15px Arial";
-        ctx.fillText(`${this.gridx},${this.gridy}`, this.#cellVector.currentx + (this.#cellVector.currentlength / 2), this.#cellVector.currenty + (this.#cellVector.currentlength / 2));
+        if (debugModeOn) {
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = "black";
+            ctx.font = "15px Arial";
+            ctx.fillText(`${this.gridx},${this.gridy}`, this.#cellVector.currentx + (this.#cellVector.currentlength / 2), this.#cellVector.currenty + (this.#cellVector.currentlength / 2));
+        }
     }
 }
