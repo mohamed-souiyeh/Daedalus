@@ -15,8 +15,8 @@ export class Grid {
   #offsetLeft: number;
   #offsetTop: number;
 
-  #mousex: number = 0;
-  #mousey: number = 0;
+  #mousexInGrid: number = 0;
+  #mouseyInGrid: number = 0;
   #mouseCellx: number = 0;
   #mouseCelly: number = 0;
 
@@ -160,13 +160,14 @@ export class Grid {
   public updateDebuger(ctx: CanvasRenderingContext2D) {
     if (!debugModeOn) return;
 
-    this.#mousex = mouse.x;
-    this.#mousey = mouse.y;
+    this.#mousexInGrid = mouse.x - this.#offsetLeft;
+    this.#mouseyInGrid = mouse.y - this.#offsetTop;
 
-    this.#mouseCellx = Math.floor(this.#mousex / CELLSIZE);
-    this.#mouseCelly = Math.floor(this.#mousey / CELLSIZE);
+    
+    this.#mouseCellx = Math.floor(this.#mousexInGrid / CELLSIZE);
+    this.#mouseCelly = Math.floor(this.#mouseyInGrid / CELLSIZE);
 
-    this.debuger.update(this.#mousex, this.#mousey);
+    this.debuger.update();
     
     this.drawDebuger(ctx);
   }
@@ -174,7 +175,7 @@ export class Grid {
   public drawDebuger(ctx: CanvasRenderingContext2D) {
     if (!debugModeOn) return;
     this.writeMousePosition(ctx);
-    this.debuger.draw(ctx);
+    this.debuger.draw(ctx, this.at(this.#mouseCellx, this.#mouseCelly));
   }
 
   //write the current mouss position on the arria at the top of the canvas between 0 ana #offsetTop

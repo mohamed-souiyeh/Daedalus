@@ -368,4 +368,18 @@ export class Cell {
             ctx.fillText(`${this.gridx},${this.gridy}`, this.#cellVector.currentx + (this.#cellVector.currentlength / 2), this.#cellVector.currenty + (this.#cellVector.currentlength / 2));
         }
     }
+    drawDebug(ctx, startx, starty, length, textHOffset, textVOffset) {
+        const cellAnimation = ["OUTWARDS", "INWARDS", "STOPPED", "TOORIGINE"];
+        const cellStates = ["visited", "unvisited"];
+        const directions = ["NORTH", "EAST", "SOUTH", "WEST"];
+        const cornerDirections = ["NORTHWEST", "NORTHEAST", "SOUTHEAST", "SOUTHWEST"];
+        const wallStates = ["ABSENT", "PRESENT"];
+        const wallAnimation = ["FADEIN", "FADEOUT", "STOPPED"];
+        let x = 0;
+        let y = 0;
+        ctx.fillText(`x: ${this.#x} y: ${this.#y}`, startx + x + textHOffset, starty + y + textVOffset);
+        y += 20;
+        ctx.fillText(`still needs work`, startx + x + textHOffset, starty + y + textVOffset);
+        y += 20;
+    }
 }

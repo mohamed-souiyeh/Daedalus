@@ -8,8 +8,8 @@ export var WallAnimation;
 })(WallAnimation || (WallAnimation = {}));
 export var wallState;
 (function (wallState) {
+    wallState[wallState["ABSENT"] = 0] = "ABSENT";
     wallState[wallState["PRESENT"] = 1] = "PRESENT";
-    wallState[wallState["ABSENT"] = -1] = "ABSENT";
 })(wallState || (wallState = {}));
 export const wallMoves = [
     {

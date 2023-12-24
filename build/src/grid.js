@@ -10,8 +10,8 @@ export class Grid {
     #width;
     #offsetLeft;
     #offsetTop;
-    #mousex = 0;
-    #mousey = 0;
+    #mousexInGrid = 0;
+    #mouseyInGrid = 0;
     #mouseCellx = 0;
     #mouseCelly = 0;
     #initialWallState = wallState.PRESENT;
@@ -125,17 +125,17 @@ export class Grid {
     updateDebuger(ctx) {
         if (!debugModeOn)
             return;
-        this.#mousex = mouse.x;
-        this.#mousey = mouse.y;
-        this.#mouseCellx = Math.floor(this.#mousex / CELLSIZE);
-        this.#mouseCelly = Math.floor(this.#mousey / CELLSIZE);
-        this.debuger.update(this.#mousex, this.#mousey);
+        this.#mousexInGrid = mouse.x - this.#offsetLeft;
+        this.#mouseyInGrid = mouse.y - this.#offsetTop;
+        this.#mouseCellx = Math.floor(this.#mousexInGrid / CELLSIZE);
+        this.#mouseCelly = Math.floor(this.#mouseyInGrid / CELLSIZE);
+        this.debuger.update();
         this.drawDebuger(ctx);
     }
     drawDebuger(ctx) {
         if (!debugModeOn)
             return;
         this.writeMousePosition(ctx);
-        this.debuger.draw(ctx);
+        this.debuger.draw(ctx, this.at(this.#mouseCellx, this.#mouseCelly));
     }
 }

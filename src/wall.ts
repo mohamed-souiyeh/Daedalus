@@ -7,8 +7,8 @@ export enum WallAnimation {
 }
 
 export enum wallState {
+  ABSENT = 0,
   PRESENT = 1,
-  ABSENT = -1,
 }
 
 export const wallMoves = [
