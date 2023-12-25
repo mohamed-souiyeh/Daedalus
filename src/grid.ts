@@ -1,6 +1,6 @@
 import { Cell, CellAnimation, Directions } from "./cell.js";
 import { Debuger } from "./debugger.js";
-import { debugModeOn, mouse, mouseCellPossIsLocked } from "./input.js";
+import { debugModeOn, mouse, mouseCellPosIsLocked } from "./input.js";
 import { wallState } from "./wall.js";
 
 
@@ -26,7 +26,7 @@ export class Grid {
 
   debuger: Debuger = new Debuger();
 
-//SECTION - initialization methods
+  //SECTION - initialization methods
   constructor(canvasLength: number, canvasWidth: number, initialWallState: wallState = wallState.PRESENT) {
     this.#length = Math.floor(canvasLength / CELLSIZE);
     this.#width = Math.floor(canvasWidth / CELLSIZE);
@@ -88,9 +88,9 @@ export class Grid {
       }
     }
   }
-//!SECTION
+  //!SECTION
 
-//SECTION - uncategorized methods
+  //SECTION - uncategorized methods
   public *eachCell() {
     for (let row of this.eachRow()) {
       for (let cell of row) {
@@ -132,7 +132,7 @@ export class Grid {
       cell.update();
     }
   }
-  
+
   public writeMousePosition(ctx: CanvasRenderingContext2D) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -154,7 +154,7 @@ export class Grid {
         cell.draw(ctx);
     }
   }
-  
+
 
 
   public updateDebuger(ctx: CanvasRenderingContext2D) {
@@ -163,15 +163,15 @@ export class Grid {
     this.#mousexInGrid = mouse.x - this.#offsetLeft;
     this.#mouseyInGrid = mouse.y - this.#offsetTop;
 
-    
+
     this.#mouseCellx = Math.floor(this.#mousexInGrid / CELLSIZE);
     this.#mouseCelly = Math.floor(this.#mouseyInGrid / CELLSIZE);
 
     this.debuger.update();
-    
+
     this.drawDebuger(ctx);
   }
-  
+
   public drawDebuger(ctx: CanvasRenderingContext2D) {
     if (!debugModeOn) return;
     this.writeMousePosition(ctx);

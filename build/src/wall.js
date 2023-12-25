@@ -1,4 +1,8 @@
-export const WALL_PERSENTAGE = 0.1;
+var wallDefaults;
+(function (wallDefaults) {
+    wallDefaults[wallDefaults["WALL_PERSENTAGE"] = 0.1] = "WALL_PERSENTAGE";
+})(wallDefaults || (wallDefaults = {}));
+export const WALL_PERSENTAGE = wallDefaults.WALL_PERSENTAGE;
 const WALL_TARGETEDALPHA = 1;
 export var WallAnimation;
 (function (WallAnimation) {

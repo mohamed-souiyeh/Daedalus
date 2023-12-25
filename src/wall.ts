@@ -1,4 +1,10 @@
-export const WALL_PERSENTAGE = 0.1;
+
+enum wallDefaults {
+  WALL_PERSENTAGE = 0.1,
+}
+
+
+export const WALL_PERSENTAGE = wallDefaults.WALL_PERSENTAGE;
 const WALL_TARGETEDALPHA = 1;
 export enum WallAnimation {
   FADEOUT,

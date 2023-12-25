@@ -1,4 +1,4 @@
-import { debugRect, mouse } from "./input.js";
+import { debugBookletIsOn, mouse } from "./input.js";
 export class Debuger {
     #x = 0;
     #y = 0;
@@ -22,7 +22,7 @@ export class Debuger {
         this.#y = mouse.y + (offset * verticalDirection);
     }
     draw(ctx, cell) {
-        if (!debugRect || cell === null)
+        if (!debugBookletIsOn || cell === null)
             return;
         ctx.fillStyle = "gray";
         ctx.fillRect(this.#x, this.#y, this.#length, this.#length);

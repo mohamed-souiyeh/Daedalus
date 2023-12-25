@@ -1,10 +1,17 @@
 import { Corner } from "./corner.js";
 import { debugModeOn } from "./input.js";
 import { Wall, WallAnimation, wallState } from "./wall.js";
-const INWARDSSCALINGFACTOR = 0.5;
-const OUTWARDSSCALINGFACTOR = 0.3;
-const VELOCITY = 0.4;
-const ACCELERATION = 0;
+var cellDefaults;
+(function (cellDefaults) {
+    cellDefaults[cellDefaults["INWARDSSCALINGFACTOR"] = 0.5] = "INWARDSSCALINGFACTOR";
+    cellDefaults[cellDefaults["OUTWARDSSCALINGFACTOR"] = 0.3] = "OUTWARDSSCALINGFACTOR";
+    cellDefaults[cellDefaults["VELOCITY"] = 0.4] = "VELOCITY";
+    cellDefaults[cellDefaults["ACCELERATION"] = 0] = "ACCELERATION";
+})(cellDefaults || (cellDefaults = {}));
+const INWARDSSCALINGFACTOR = cellDefaults.INWARDSSCALINGFACTOR;
+const OUTWARDSSCALINGFACTOR = cellDefaults.OUTWARDSSCALINGFACTOR;
+const VELOCITY = cellDefaults.VELOCITY;
+const ACCELERATION = cellDefaults.ACCELERATION;
 export var CellAnimation;
 (function (CellAnimation) {
     CellAnimation[CellAnimation["OUTWARDS"] = 0] = "OUTWARDS";

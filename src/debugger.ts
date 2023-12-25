@@ -1,5 +1,5 @@
 import { Cell } from "./cell.js";
-import { debugModeOn, debugRect, mouse } from "./input.js";
+import { debugModeOn, debugBookletIsOn, mouse } from "./input.js";
 
 
 export class Debuger {
@@ -37,7 +37,7 @@ export class Debuger {
   }
 
   public draw(ctx: CanvasRenderingContext2D, cell: Cell | null) {
-    if (!debugRect || cell === null) return;
+    if (!debugBookletIsOn || cell === null) return;
     ctx.fillStyle = "gray";
     ctx.fillRect(this.#x, this.#y, this.#length, this.#length);
 

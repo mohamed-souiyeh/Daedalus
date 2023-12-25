@@ -21,6 +21,8 @@ const grid = new Grid(canvas.width, canvas.height, wallState.PRESENT);
 
 let counter = 0;
 let deltaTime: DeltaTime = new DeltaTime();
+
+
 function animation(dt: number) {
   requestAnimationFrame(animation);
 
@@ -33,6 +35,7 @@ function animation(dt: number) {
 
   if (deltaTime.oneStepIsDone()) {
     grid.update(ctx);
+    
     if (counter === 0 && grid.at(0, 0)?.getAnimation() === CellAnimation.STOPPED) {
       let randomCell = grid.randomCell();
       // let randomCell = grid.at(10, 10);
@@ -56,16 +59,13 @@ function animation(dt: number) {
       // }
     }
   }
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   grid.draw(ctx);
 
   if (deltaTime.oneDebugStepIsDone()) {
     grid.updateDebuger(ctx);
   }
-
-
-
-
 }
 
 requestAnimationFrame(animation);

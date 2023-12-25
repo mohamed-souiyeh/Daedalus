@@ -2,11 +2,19 @@ import { Corner } from "./corner.js";
 import { debugModeOn } from "./input.js";
 import { Wall, WallAnimation, color, wallState } from "./wall.js";
 
-const INWARDSSCALINGFACTOR = 0.5;
-const OUTWARDSSCALINGFACTOR = 0.3;
 
-const VELOCITY = 0.4;
-const ACCELERATION = 0;
+enum cellDefaults {
+  INWARDSSCALINGFACTOR = 0.5,
+  OUTWARDSSCALINGFACTOR = 0.3,
+  VELOCITY = 0.4,
+  ACCELERATION = 0,
+}
+
+const INWARDSSCALINGFACTOR = cellDefaults.INWARDSSCALINGFACTOR;
+const OUTWARDSSCALINGFACTOR = cellDefaults.OUTWARDSSCALINGFACTOR;
+
+const VELOCITY = cellDefaults.VELOCITY;
+const ACCELERATION = cellDefaults.ACCELERATION;
 
 export enum CellAnimation {
   OUTWARDS,
