@@ -1,8 +1,12 @@
+import { Cell } from "./cell.js";
+import { Corner } from "./corner.js";
+import { Debuger } from "./debugger.js";
+import { Wall } from "./wall.js";
 export let mouse = {
     x: 0,
     y: 0
 };
-var inputDefaults;
+export var inputDefaults;
 (function (inputDefaults) {
     inputDefaults[inputDefaults["DELAY"] = 16] = "DELAY";
     inputDefaults[inputDefaults["MINDELAY"] = 16] = "MINDELAY";
@@ -11,15 +15,19 @@ var inputDefaults;
     inputDefaults[inputDefaults["DEBUGMODEON"] = 1] = "DEBUGMODEON";
     inputDefaults[inputDefaults["DEBUGBOOKLETISON"] = 0] = "DEBUGBOOKLETISON";
     inputDefaults[inputDefaults["MOUSECELLPOSISLOCKED"] = 0] = "MOUSECELLPOSISLOCKED";
-    inputDefaults[inputDefaults["CURRENTDEBUGPAGEINDEX"] = 0] = "CURRENTDEBUGPAGEINDEX";
+    inputDefaults[inputDefaults["DEFAULTDEBUGPAGEINDEX"] = 0] = "DEFAULTDEBUGPAGEINDEX";
+    inputDefaults[inputDefaults["CELLDEBUGPAGESIZE"] = 250] = "CELLDEBUGPAGESIZE";
+    inputDefaults[inputDefaults["CORNERDEBUGPAGESIZE"] = 250] = "CORNERDEBUGPAGESIZE";
+    inputDefaults[inputDefaults["WALLDEBUGPAGESIZE"] = 250] = "WALLDEBUGPAGESIZE";
+    inputDefaults[inputDefaults["SUMMARYDEBUGPAGESIZE"] = 250] = "SUMMARYDEBUGPAGESIZE";
 })(inputDefaults || (inputDefaults = {}));
 const DELAYSTEP = 10;
-export let delay; // delay in ms
-export let isPaused;
-export let debugModeOn;
-export let debugBookletIsOn;
-export let mouseCellPosIsLocked;
-export let currentdebugPageIndex;
+export let delay = inputDefaults.DELAY; // delay in ms
+export let isPaused = inputDefaults.ISPAUSED;
+export let debugModeOn = inputDefaults.DEBUGMODEON;
+export let debugBookletIsOn = inputDefaults.DEBUGBOOKLETISON;
+export let mouseCellPosIsLocked = inputDefaults.MOUSECELLPOSISLOCKED;
+export let currentdebugPageIndex = inputDefaults.DEFAULTDEBUGPAGEINDEX;
 //TODO - needs to be reworked
 {
     // let mazeAlgorithmSelect = document.getElementById("build") as HTMLSelectElement;
@@ -53,7 +61,11 @@ async function initDefaultStates() {
     debugModeOn = inputDefaults.DEBUGMODEON;
     debugBookletIsOn = inputDefaults.DEBUGBOOKLETISON;
     mouseCellPosIsLocked = inputDefaults.MOUSECELLPOSISLOCKED;
-    currentdebugPageIndex = inputDefaults.CURRENTDEBUGPAGEINDEX;
+    currentdebugPageIndex = inputDefaults.DEFAULTDEBUGPAGEINDEX;
+    Debuger.size = inputDefaults.SUMMARYDEBUGPAGESIZE;
+    Cell.debugPageSize = inputDefaults.CELLDEBUGPAGESIZE;
+    Corner.debugPageSize = inputDefaults.CORNERDEBUGPAGESIZE;
+    Wall.debugPageSize = inputDefaults.WALLDEBUGPAGESIZE;
 }
 async function addCanvasEventListeners() {
     //NOTE - to update mouse position if not locked
@@ -141,6 +153,18 @@ export var pageIndexs;
     pageIndexs[pageIndexs["eight"] = 8] = "eight";
     pageIndexs[pageIndexs["nine"] = 9] = "nine";
 })(pageIndexs || (pageIndexs = {}));
+export const debugPagesSize = [
+    inputDefaults.SUMMARYDEBUGPAGESIZE,
+    inputDefaults.CORNERDEBUGPAGESIZE,
+    inputDefaults.WALLDEBUGPAGESIZE,
+    inputDefaults.CORNERDEBUGPAGESIZE,
+    inputDefaults.WALLDEBUGPAGESIZE,
+    inputDefaults.CELLDEBUGPAGESIZE,
+    inputDefaults.WALLDEBUGPAGESIZE,
+    inputDefaults.CORNERDEBUGPAGESIZE,
+    inputDefaults.WALLDEBUGPAGESIZE,
+    inputDefaults.CORNERDEBUGPAGESIZE,
+];
 async function addKeyboardShortCutsEventListeners() {
     window.addEventListener('keydown', async (event) => {
         if (event.code === 'Space') {
@@ -154,6 +178,8 @@ async function addKeyboardShortCutsEventListeners() {
         }
         if (parseInt(event.key) >= pageIndexs.zero && parseInt(event.key) <= pageIndexs.nine) {
             currentdebugPageIndex = parseInt(event.key);
+            //NOTE - to set the debugger window size
+            Debuger.size = debugPagesSize[currentdebugPageIndex];
             console.log("currentdebugPageIndex => ", currentdebugPageIndex);
         }
     });

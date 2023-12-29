@@ -26,6 +26,35 @@ export class Grid {
 
   debuger: Debuger = new Debuger();
 
+  //SECTION - getters and setters
+
+  get startX() {
+    return this.#startX;
+  }
+
+  get startY() {
+    return this.#startY;
+  }
+
+  get length() {
+    return this.#length;
+  }
+
+  get width() {
+    return this.#width;
+  }
+
+  get offsetLeft() {
+    return this.#offsetLeft;
+  }
+
+  get offsetTop() {
+    return this.#offsetTop;
+  }
+  //!SECTION 
+
+
+
   //SECTION - initialization methods
   constructor(canvasLength: number, canvasWidth: number, initialWallState: wallState = wallState.PRESENT) {
     this.#length = Math.floor(canvasLength / CELLSIZE);
@@ -175,7 +204,7 @@ export class Grid {
   public drawDebuger(ctx: CanvasRenderingContext2D) {
     if (!debugModeOn) return;
     this.writeMousePosition(ctx);
-    this.debuger.draw(ctx, this.at(this.#mouseCellx, this.#mouseCelly));
+    this.debuger.draw(ctx, this.at(this.#mouseCellx, this.#mouseCelly), this);
   }
 
   //write the current mouss position on the arria at the top of the canvas between 0 ana #offsetTop

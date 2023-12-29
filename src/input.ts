@@ -1,3 +1,8 @@
+import { Cell } from "./cell.js";
+import { Corner } from "./corner.js";
+import { Debuger } from "./debugger.js";
+import { Wall } from "./wall.js";
+
 export type t_mouse = {
   x: number;
   y: number;
@@ -8,7 +13,7 @@ export let mouse: t_mouse = {
   y: 0
 };
 
-enum inputDefaults {
+export enum inputDefaults {
   DELAY = 16,
   MINDELAY = 16,
   MAXDELAY = 1000,
@@ -16,7 +21,11 @@ enum inputDefaults {
   DEBUGMODEON = 1,
   DEBUGBOOKLETISON = 0,
   MOUSECELLPOSISLOCKED = 0,
-  CURRENTDEBUGPAGEINDEX = 0,
+  DEFAULTDEBUGPAGEINDEX = 0,
+  CELLDEBUGPAGESIZE = 250,
+  CORNERDEBUGPAGESIZE = 250,
+  WALLDEBUGPAGESIZE = 250,
+  SUMMARYDEBUGPAGESIZE = 250,
 }
 
 const DELAYSTEP = 10;
@@ -32,7 +41,7 @@ export let debugBookletIsOn: boolean = inputDefaults.DEBUGBOOKLETISON as unknown
 
 export let mouseCellPosIsLocked: boolean = inputDefaults.MOUSECELLPOSISLOCKED as unknown as boolean;
 
-export let currentdebugPageIndex: number = inputDefaults.CURRENTDEBUGPAGEINDEX;
+export let currentdebugPageIndex: number = inputDefaults.DEFAULTDEBUGPAGEINDEX;
 
 
 
@@ -69,7 +78,7 @@ const debugButton = document.getElementById('debugButton') as HTMLButtonElement;
 
 async function initDefaultStates() {
   await updateDelay(inputDefaults.DELAY);
-  
+
   isPaused = inputDefaults.ISPAUSED as unknown as boolean;
 
   debugModeOn = inputDefaults.DEBUGMODEON as unknown as boolean;
@@ -78,10 +87,16 @@ async function initDefaultStates() {
 
   mouseCellPosIsLocked = inputDefaults.MOUSECELLPOSISLOCKED as unknown as boolean;
 
-  currentdebugPageIndex = inputDefaults.CURRENTDEBUGPAGEINDEX;
-}
+  currentdebugPageIndex = inputDefaults.DEFAULTDEBUGPAGEINDEX;
 
-//TODO - need to work on the index and size syncronization between the debugger and pages, every componement class will have a method to draw itself in the debugger page and that method expecte the window to be a certain size that size will be a static property of the debugger class and will be manipulated by the event listner that sets the the index of the debugger page, every class will have a static property that gonna be the size of it's respective page and it is gonna be used to set the size of the debugger window,  every componment class will be synced with it's respective debugging page index(it is for u to figire out later ;D), and i need a function that gonna be responsible of initializing all the static properties of the debugger class and all the static properties of the componement classes.
+  Debuger.size = inputDefaults.SUMMARYDEBUGPAGESIZE;
+
+  Cell.debugPageSize = inputDefaults.CELLDEBUGPAGESIZE;
+
+  Corner.debugPageSize = inputDefaults.CORNERDEBUGPAGESIZE;
+
+  Wall.debugPageSize = inputDefaults.WALLDEBUGPAGESIZE;
+}
 
 async function addCanvasEventListeners() {
   //NOTE - to update mouse position if not locked
@@ -172,18 +187,30 @@ async function addDebugButtonEventListeners() {
 }
 
 export enum pageIndexs {
-  zero,
-  one,
-  two,
-  three,
-  four,
-  five,
-  six,
-  seven,
-  eight,
-  nine,
+  zero, //NOTE - this is the index of the first page summary page
+  one, //NOTE - this is the index of the south west corner page
+  two, //NOTE - this is the index of the south wall page
+  three, //NOTE - this is the index of the south east corner page
+  four, //NOTE - this is the index of the west wall page
+  five, //NOTE - this is the index of the cell page
+  six, //NOTE - this is the index of the east wall page
+  seven, //NOTE - this is the index of the north west corner page
+  eight, //NOTE - this is the index of the north wall page
+  nine, //NOTE - this is the index of the north east corner page
 }
 
+export const debugPagesSize = [
+  inputDefaults.SUMMARYDEBUGPAGESIZE,
+  inputDefaults.CORNERDEBUGPAGESIZE,
+  inputDefaults.WALLDEBUGPAGESIZE,
+  inputDefaults.CORNERDEBUGPAGESIZE,
+  inputDefaults.WALLDEBUGPAGESIZE,
+  inputDefaults.CELLDEBUGPAGESIZE,
+  inputDefaults.WALLDEBUGPAGESIZE,
+  inputDefaults.CORNERDEBUGPAGESIZE,
+  inputDefaults.WALLDEBUGPAGESIZE,
+  inputDefaults.CORNERDEBUGPAGESIZE,
+];
 
 async function addKeyboardShortCutsEventListeners() {
   window.addEventListener('keydown', async (event) => {
@@ -198,6 +225,10 @@ async function addKeyboardShortCutsEventListeners() {
     }
     if (parseInt(event.key) >= pageIndexs.zero && parseInt(event.key) <= pageIndexs.nine) {
       currentdebugPageIndex = parseInt(event.key);
+
+      //NOTE - to set the debugger window size
+      Debuger.size = debugPagesSize[currentdebugPageIndex];
+
       console.log("currentdebugPageIndex => ", currentdebugPageIndex);
     }
   });

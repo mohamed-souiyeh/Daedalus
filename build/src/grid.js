@@ -17,6 +17,26 @@ export class Grid {
     #initialWallState = wallState.PRESENT;
     grid = [];
     debuger = new Debuger();
+    //SECTION - getters and setters
+    get startX() {
+        return this.#startX;
+    }
+    get startY() {
+        return this.#startY;
+    }
+    get length() {
+        return this.#length;
+    }
+    get width() {
+        return this.#width;
+    }
+    get offsetLeft() {
+        return this.#offsetLeft;
+    }
+    get offsetTop() {
+        return this.#offsetTop;
+    }
+    //!SECTION 
     //SECTION - initialization methods
     constructor(canvasLength, canvasWidth, initialWallState = wallState.PRESENT) {
         this.#length = Math.floor(canvasLength / CELLSIZE);
@@ -136,6 +156,6 @@ export class Grid {
         if (!debugModeOn)
             return;
         this.writeMousePosition(ctx);
-        this.debuger.draw(ctx, this.at(this.#mouseCellx, this.#mouseCelly));
+        this.debuger.draw(ctx, this.at(this.#mouseCellx, this.#mouseCelly), this);
     }
 }

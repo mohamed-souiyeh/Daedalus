@@ -65,7 +65,14 @@ export const wallMoves = [
         ycornerOffset: 1,
     },
 ];
+export const WALLCOLOR = {
+    r: 0,
+    g: 0,
+    b: 0,
+    a: 0,
+};
 export class Wall {
+    static debugPageSize;
     #posInCell;
     #x;
     #y;
@@ -74,12 +81,7 @@ export class Wall {
     #state = wallState.PRESENT;
     #animation = WallAnimation.FADEIN;
     #targetedAlpha = WALL_TARGETEDALPHA;
-    #color = {
-        r: 0,
-        g: 0,
-        b: 0,
-        a: 0,
-    };
+    #color = WALLCOLOR;
     #calculateLength;
     #calculateWidth;
     //SECTION - initialization methods

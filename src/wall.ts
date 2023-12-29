@@ -1,3 +1,4 @@
+import { inputDefaults } from "./input.js";
 
 enum wallDefaults {
   WALL_PERSENTAGE = 0.1,
@@ -75,7 +76,17 @@ export type color = {
   a: number;
 };
 
+export const WALLCOLOR = {
+  r: 0,
+  g: 0,
+  b: 0,
+  a: 0,
+};
+
 export class Wall {
+
+  static debugPageSize: number;
+
   #posInCell: number;
   #x: number;
   #y: number;
@@ -85,12 +96,7 @@ export class Wall {
   #state: wallState = wallState.PRESENT;
   #animation: WallAnimation = WallAnimation.FADEIN;
   #targetedAlpha: number = WALL_TARGETEDALPHA;
-  #color: color = {
-    r: 0,
-    g: 0,
-    b: 0,
-    a: 0,
-  };
+  #color: color = WALLCOLOR;
 
   #calculateLength: (currentlength: number) => number;
   #calculateWidth: (currentlength: number) => number;

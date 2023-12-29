@@ -1,3 +1,4 @@
+import { inputDefaults } from "./input.js";
 import { WALL_PERSENTAGE, WallAnimation, color, wallState } from "./wall.js";
 
 const CELLTARGETEDALPHA = 1;
@@ -33,7 +34,17 @@ const cornerMoves = [
   },
 ];
 
+export const CORNERCOLOR = {
+  r: 0,
+  g: 0,
+  b: 0,
+  a: 0,
+};
+
 export class Corner {
+
+  static debugPageSize: number;
+
   #x: number;
   #y: number;
   #posInCell: number;
@@ -44,12 +55,7 @@ export class Corner {
   #state: wallState = wallState.PRESENT;
   #animation: number = WallAnimation.FADEIN;
   #targetedAlpha: number = CELLTARGETEDALPHA;
-  #color: color = {
-    r: 0,
-    g: 0,
-    b: 0,
-    a: 0,
-  };
+  #color: color = CORNERCOLOR;
 
 
   //SECTION - initialization methods
@@ -143,6 +149,14 @@ export class Corner {
     ctx.fillStyle = `rgba(${this.#color.r},${this.#color.g},${this.#color.b},${this.#color.a
       })`;
     ctx.fillRect(this.#x, this.#y, this.#length, this.#width);
+  }
+
+  public drawDebug(ctx: CanvasRenderingContext2D, startx: number, starty: number, length: number, textHOffset: number, textVOffset: number) {
+    const title = `-- Corner Info --`;
+
+    const xoffset = length / 2 - ctx.measureText(title).width / 2;
+
+    ctx.fillText(title, startx + xoffset, starty + textVOffset);
   }
   //!SECTION
 }

@@ -1,6 +1,6 @@
-import { Corner } from "./corner.js";
-import { debugModeOn } from "./input.js";
-import { Wall, WallAnimation, wallState } from "./wall.js";
+import { CORNERCOLOR, Corner } from "./corner.js";
+import { currentdebugPageIndex, debugModeOn } from "./input.js";
+import { WALLCOLOR, Wall, WallAnimation, wallState } from "./wall.js";
 var cellDefaults;
 (function (cellDefaults) {
     cellDefaults[cellDefaults["INWARDSSCALINGFACTOR"] = 0.5] = "INWARDSSCALINGFACTOR";
@@ -74,7 +74,14 @@ const wallRelations = [
         second: CornerDirections.NORTHWEST,
     },
 ];
+export const CELLCOLOR = {
+    r: 175,
+    g: 216,
+    b: 248,
+    a: 1,
+};
 export class Cell {
+    static debugPageSize;
     //SECTION - algorithm properties
     gridx = -1;
     gridy = -1;
@@ -151,13 +158,14 @@ export class Cell {
     #velocity = VELOCITY;
     #acceleration = ACCELERATION;
     #animation = CellAnimation.STOPPED;
-    #color = {
-        r: 175, //175
-        g: 216, //216
-        b: 248, //248
-        //TODO - implement the interpolation from color to another based on cell state
-        a: 0.75,
-    };
+    #color = CELLCOLOR;
+    // {
+    //   r: 255, //175
+    //   g: 255, //216
+    //   b: 255, //248
+    //   //TODO - implement the interpolation from color to another based on cell state
+    //   a: 0,
+    // };
     #inwardScalingFactor = INWARDSSCALINGFACTOR;
     #outwardScalingFactor = OUTWARDSSCALINGFACTOR;
     #xOutwardWidth = 0;
@@ -193,21 +201,11 @@ export class Cell {
         this.#cellVector.currenty = this.#cellVector.starty;
         this.#cellVector.currentlength = this.#length - this.#length * this.#inwardScalingFactor;
         for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
-            let color = {
-                r: 12,
-                g: 53,
-                b: 71,
-                a: 0,
-            };
+            let color = Object.create(WALLCOLOR);
             this.walls[i].init(i, this.#x, this.#y, this.#cellVector.currentlength, color, wallState);
         }
         for (let i = CornerDirections.NORTHWEST; i <= CornerDirections.SOUTHWEST; i++) {
-            let color = {
-                r: 12,
-                g: 53,
-                b: 71,
-                a: 0,
-            };
+            let color = Object.create(CORNERCOLOR);
             this.corners[i].init(i, this.#x, this.#y, this.#cellVector.currentlength, color, wallState);
         }
     }
@@ -382,11 +380,20 @@ export class Cell {
         const cornerDirections = ["NORTHWEST", "NORTHEAST", "SOUTHEAST", "SOUTHWEST"];
         const wallStates = ["ABSENT", "PRESENT"];
         const wallAnimation = ["FADEIN", "FADEOUT", "STOPPED"];
-        let x = 0;
-        let y = 0;
-        ctx.fillText(`x: ${this.#x} y: ${this.#y}`, startx + x + textHOffset, starty + y + textVOffset);
-        y += 20;
-        ctx.fillText(`still needs work`, startx + x + textHOffset, starty + y + textVOffset);
-        y += 20;
+        if (currentdebugPageIndex === 5) {
+            const title = "-- Cell Info --";
+            const xoffset = length / 2 - ctx.measureText(title).width / 2;
+            ctx.fillText(title, startx + xoffset, starty + textVOffset);
+        }
+        else if (currentdebugPageIndex === 1 || currentdebugPageIndex === 3 || currentdebugPageIndex === 7 || currentdebugPageIndex === 9) {
+            const title = `-- Corner Info --`;
+            const xoffset = length / 2 - ctx.measureText(title).width / 2;
+            ctx.fillText(title, startx + xoffset, starty + textVOffset);
+        }
+        else if (currentdebugPageIndex === 2 || currentdebugPageIndex === 4 || currentdebugPageIndex === 6 || currentdebugPageIndex === 8) {
+            const title = `-- Wall Info --`;
+            const xoffset = length / 2 - ctx.measureText(title).width / 2;
+            ctx.fillText(title, startx + xoffset, starty + textVOffset);
+        }
     }
 }

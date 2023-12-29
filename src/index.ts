@@ -48,15 +48,15 @@ function animation(dt: number) {
         randomCell.link(cell);
       }
 
-      // randomCell = grid.randomCell();
+      randomCell = grid.randomCell();
 
-      // if (randomCell === null) return;
+      if (randomCell === null) return;
 
-      // cellneighbors = randomCell.neighbors();
+      cellneighbors = randomCell.neighbors();
 
-      // for (let cell of cellneighbors) {
-      //   randomCell.unlink(cell);
-      // }
+      for (let cell of cellneighbors) {
+        randomCell.unlink(cell);
+      }
     }
   }
 

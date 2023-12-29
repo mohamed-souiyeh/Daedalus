@@ -31,12 +31,13 @@ function animation(dt) {
             for (let cell of cellneighbors) {
                 randomCell.link(cell);
             }
-            // randomCell = grid.randomCell();
-            // if (randomCell === null) return;
-            // cellneighbors = randomCell.neighbors();
-            // for (let cell of cellneighbors) {
-            //   randomCell.unlink(cell);
-            // }
+            randomCell = grid.randomCell();
+            if (randomCell === null)
+                return;
+            cellneighbors = randomCell.neighbors();
+            for (let cell of cellneighbors) {
+                randomCell.unlink(cell);
+            }
         }
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
