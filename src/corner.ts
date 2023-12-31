@@ -1,7 +1,10 @@
-import { inputDefaults } from "./input.js";
-import { WALL_PERSENTAGE, WallAnimation, color, wallState } from "./wall.js";
+import { CORNERCOLOR } from "./configs/corner.config.js";
+import { WALL_PERSENTAGE, WallAnimation, wallState } from "./configs/wall.config.js";
+import { Debuger } from "./debugger.js";
+import { color } from "./types/color.type.js";
 
 const CELLTARGETEDALPHA = 1;
+let current_line = 1;
 
 const calculateWidth = (currentlength: number) => {
   return currentlength * WALL_PERSENTAGE;
@@ -34,16 +37,13 @@ const cornerMoves = [
   },
 ];
 
-export const CORNERCOLOR = {
-  r: 0,
-  g: 0,
-  b: 0,
-  a: 0,
-};
+
 
 export class Corner {
 
-  static debugPageSize: number;
+  static debugPageLength: number;
+  static debugPageWidth: number;
+
 
   #x: number;
   #y: number;
@@ -151,12 +151,71 @@ export class Corner {
     ctx.fillRect(this.#x, this.#y, this.#length, this.#width);
   }
 
-  public drawDebug(ctx: CanvasRenderingContext2D, startx: number, starty: number, length: number, textHOffset: number, textVOffset: number) {
+  private drawTitle(ctx: CanvasRenderingContext2D, startx: number, starty: number) {
     const title = `-- Corner Info --`;
+  
+    const xoffset = Debuger.length / 2 - ctx.measureText(title).width / 2;
+    const yoffset = Debuger.textVOffset;
+  
+    ctx.fillText(title, startx + xoffset, starty + yoffset);
+    current_line++;
+  }
 
-    const xoffset = length / 2 - ctx.measureText(title).width / 2;
+  public drawDebug(ctx: CanvasRenderingContext2D, startx: number, starty: number) {
+    const cornerDirections = ["NW", "NE", "SE", "SW"];
+    const wallStates = ["A", "P"];
+    const wallAnimation = ["FADEOUT", "FADEIN", "STOPPED"];
 
-    ctx.fillText(title, startx + xoffset, starty + textVOffset);
+
+    let yoffset = Debuger.textVOffset;
+    
+    this.drawTitle(ctx, startx, starty);
+
+    let cornerInfo = `x: ${this.#x.toFixed(3)}      |   y: ${this.#y.toFixed(3)}`
+
+    
+    let xoffset = Debuger.textHOffset;
+    yoffset += Debuger.textVOffset * (current_line) + Debuger.textSize * current_line;;
+    
+    ctx.fillText(cornerInfo, startx + xoffset, starty + yoffset);
+    current_line++;
+
+
+    cornerInfo = `Length: ${this.#length.toFixed(3)} |   Width: ${this.#width.toFixed(3)}`
+
+
+    xoffset = Debuger.textHOffset;
+    yoffset += Debuger.textVOffset + Debuger.textSize;
+
+    ctx.fillText(cornerInfo, startx + xoffset, starty + yoffset);
+    current_line++;
+
+    cornerInfo = `Pos: ${cornerDirections[this.#posInCell]}         |   State: ${wallStates[this.#state]}`
+
+    xoffset = Debuger.textHOffset;
+    yoffset += Debuger.textVOffset + Debuger.textSize;
+
+    ctx.fillText(cornerInfo, startx + xoffset, starty + yoffset);
+    current_line++;
+
+
+    cornerInfo = `Animation: ${wallAnimation[this.#animation]} | TAlpha: ${this.#targetedAlpha}`;
+
+    xoffset = Debuger.textHOffset;
+    yoffset += Debuger.textVOffset + Debuger.textSize;
+
+    ctx.fillText(cornerInfo, startx + xoffset, starty + yoffset);
+    current_line++;
+
+    cornerInfo = `color: rgba(${this.#color.r.toFixed(2)}, ${this.#color.g.toFixed(2)}, ${this.#color.b.toFixed(2)}, ${this.#color.a.toFixed(2)})`;
+
+    xoffset = Debuger.textHOffset;
+    yoffset += Debuger.textVOffset + Debuger.textSize;
+
+    ctx.fillText(cornerInfo, startx + xoffset, starty + yoffset);
+
+
+    current_line = 0;
   }
   //!SECTION
 }

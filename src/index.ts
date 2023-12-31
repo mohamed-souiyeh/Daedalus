@@ -1,8 +1,7 @@
 import { Grid } from "./grid.js";
-import { Cell, CellAnimation, Directions } from "./cell.js";
-import { wallState } from "./wall.js";
-import { mouse } from "./input.js";
 import { DeltaTime } from "./deltaTime.js";
+import { wallState } from "./configs/wall.config.js";
+import { CellAnimation, CellStates } from "./configs/cell.config.js";
 
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -24,48 +23,64 @@ let deltaTime: DeltaTime = new DeltaTime();
 
 
 function animation(dt: number) {
-  requestAnimationFrame(animation);
+  // requestAnimationFrame(animation);
 
 
-  if (deltaTime.lastTime === 0) {
-    deltaTime.lastTime = dt;
-  }
+  // if (deltaTime.lastTime === 0) {
+  //   deltaTime.lastTime = dt;
+  // }
 
-  deltaTime.update(dt);
+  // deltaTime.update(dt);
 
-  if (deltaTime.oneStepIsDone()) {
-    grid.update(ctx);
+  // if (deltaTime.oneStepIsDone()) {
+  //   grid.update(ctx);
     
-    if (counter === 0 && grid.at(0, 0)?.getAnimation() === CellAnimation.STOPPED) {
-      let randomCell = grid.randomCell();
-      // let randomCell = grid.at(10, 10);
+  //   if (counter === 0 && grid.at(0, 0)?.animation === CellAnimation.STOPPED) {
+  //     let randomCell = grid.randomCell();
+  //     // let randomCell = grid.at(10, 10);
 
-      if (randomCell === null) return;
+  //     if (randomCell === null) return;
 
-      let cellneighbors = randomCell.neighbors();
+  //     let cellneighbors = randomCell.neighbors();
 
-      for (let cell of cellneighbors) {
-        randomCell.link(cell);
-      }
+  //     for (let cell of cellneighbors) {
+  //       randomCell.link(cell);
+  //     }
 
-      randomCell = grid.randomCell();
+  //     randomCell.setState(CellStates.visited);
 
-      if (randomCell === null) return;
+  //     randomCell = grid.randomCell();
 
-      cellneighbors = randomCell.neighbors();
+  //     if (randomCell === null) return;
 
-      for (let cell of cellneighbors) {
-        randomCell.unlink(cell);
-      }
-    }
-  }
+  //     cellneighbors = randomCell.neighbors();
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  grid.draw(ctx);
+  //     for (let cell of cellneighbors) {
+  //       randomCell.unlink(cell);
+  //     }
 
-  if (deltaTime.oneDebugStepIsDone()) {
-    grid.updateDebuger(ctx);
-  }
+  //     randomCell.setState(CellStates.unvisited);
+
+  //   //   let cell = grid.at(0, 0);
+
+  //   //   if (cell === null) return;
+
+  //   //   cell.setOutwardAnimation();
+  //   //   cell.setState(cell.state === CellStates.visited? CellStates.unvisited : CellStates.visited);
+  //   //   counter++;
+  //   // }
+  //   // if (counter === 1 && grid.at(0, 0)?.animation === CellAnimation.STOPPED) 
+  //   // {
+  //   //   // counter = 0;
+  //   }
+  // }
+
+  // ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // grid.draw(ctx);
+
+  // if (deltaTime.oneDebugStepIsDone()) {
+  //   grid.updateDebuger(ctx);
+  // }
 }
 
 requestAnimationFrame(animation);

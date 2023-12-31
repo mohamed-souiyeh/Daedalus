@@ -1,24 +1,12 @@
-import { inputDefaults } from "./input.js";
-
-enum wallDefaults {
-  WALL_PERSENTAGE = 0.1,
-}
+import { WALLCOLOR, WALL_PERSENTAGE, WALL_TARGETEDALPHA, WallAnimation, wallState } from "./configs/wall.config.js";
+import { Debuger } from "./debugger.js";
+import { color } from "./types/color.type.js";
 
 
-export const WALL_PERSENTAGE = wallDefaults.WALL_PERSENTAGE;
-const WALL_TARGETEDALPHA = 1;
-export enum WallAnimation {
-  FADEOUT,
-  FADEIN,
-  STOPPED,
-}
 
-export enum wallState {
-  ABSENT = 0,
-  PRESENT = 1,
-}
+let current_line = 0;
 
-export const wallMoves = [
+const wallMoves = [
   {
     xd: 0,
     yd: 0,
@@ -69,40 +57,31 @@ export const wallMoves = [
   },
 ];
 
-export type color = {
-  r: number;
-  g: number;
-  b: number;
-  a: number;
-};
 
-export const WALLCOLOR = {
-  r: 0,
-  g: 0,
-  b: 0,
-  a: 0,
-};
 
 export class Wall {
 
-  static debugPageSize: number;
+  static debugPageLength: number;
+  static debugPageWidth: number;
 
-  #posInCell: number;
+
   #x: number;
   #y: number;
+  #posInCell: number;
+
   #length: number;
   #width: number;
 
   #state: wallState = wallState.PRESENT;
   #animation: WallAnimation = WallAnimation.FADEIN;
   #targetedAlpha: number = WALL_TARGETEDALPHA;
-  #color: color = WALLCOLOR;
+  #color: color = Object.create(WALLCOLOR);
 
   #calculateLength: (currentlength: number) => number;
   #calculateWidth: (currentlength: number) => number;
 
-//SECTION - initialization methods
-  constructor() {}
+  //SECTION - initialization methods
+  constructor() { }
 
   #initState = (state: wallState) => {
     this.#state = state;
@@ -141,9 +120,9 @@ export class Wall {
 
     this.#initState(state);
   }
-//!SECTION
+  //!SECTION
 
-//SECTION - getters and setters
+  //SECTION - getters and setters
   getState() {
     return this.#state;
   }
@@ -163,10 +142,10 @@ export class Wall {
         ? WallAnimation.FADEIN
         : WallAnimation.FADEOUT;
   };
-  
+
   public setWallState(state: wallState) {
     if (state === this.#state) return false;
-  
+
     this.#state = state;
     this.#setAnimationAndTAlpha(state);
     return true;
@@ -177,9 +156,9 @@ export class Wall {
     this.#color.a = this.#targetedAlpha;
   }
 
-//!SECTION
+  //!SECTION
 
-//SECTION - animation methods
+  //SECTION - animation methods
 
   public update(
     cellCurrentx: number,
@@ -207,20 +186,77 @@ export class Wall {
     ctx.fillStyle = `rgba(${this.#color.r},${this.#color.g},${this.#color.b},${this.#color.a})`;
     ctx.fillRect(this.#x, this.#y, this.#length, this.#width);
   }
-//!SECTION
+  //!SECTION
 
-//SECTION - debug methods
-// write a debug function that will print all the wall information
-// to the console line by line in an organized manner
-  public debug() {
-    console.log(`pos: ${this.#posInCell}`);
-    console.log(`x: ${this.#x}`);
-    console.log(`y: ${this.#y}`);
-    console.log(`length: ${this.#length}`);
-    console.log(`width: ${this.#width}`);
-    console.log(`state: ${this.#state}`);
-    console.log(`animation: ${this.#animation}`);
-    console.log(`targetedAlpha: ${this.#targetedAlpha}`);
-    console.log(`color: `, this.#color);
+  //SECTION - debug methods
+
+  drawTitle(ctx: CanvasRenderingContext2D, startx: number, starty: number) {
+    const title = `-- Wall Info --`;
+
+    const xoffset = Debuger.length / 2 - ctx.measureText(title).width / 2;
+    const yoffset = Debuger.textVOffset;
+
+    ctx.fillText(title, startx + xoffset, starty + yoffset);
+    current_line++;
   }
+
+  public drawDebug(ctx: CanvasRenderingContext2D, startx: number, starty: number) {
+    const directions = ["N", "E", "S", "W"];
+    const wallStates = ["A", "P"];
+    const wallAnimation = ["FADEOUT", "FADEIN", "STOPPED"];
+
+    let yoffset = Debuger.textVOffset;
+
+    this.drawTitle(ctx, startx, starty);
+
+    let wallInfo = `x: ${this.#x.toFixed(3)}      |   y: ${this.#y.toFixed(3)}`
+
+
+    let xoffset = Debuger.textHOffset;
+    yoffset += Debuger.textVOffset * (current_line) + Debuger.textSize * current_line;;
+
+    ctx.fillText(wallInfo, startx + xoffset, starty + yoffset);
+    current_line++;
+
+
+    wallInfo = `Length: ${this.#length.toFixed(3)} |   Width: ${this.#width.toFixed(3)}`
+
+
+    xoffset = Debuger.textHOffset;
+    yoffset += Debuger.textVOffset + Debuger.textSize;
+
+    ctx.fillText(wallInfo, startx + xoffset, starty + yoffset);
+    current_line++;
+
+    wallInfo = `Pos: ${directions[this.#posInCell]}           |   State: ${wallStates[this.#state]}`
+
+    xoffset = Debuger.textHOffset;
+    yoffset += Debuger.textVOffset + Debuger.textSize;
+
+    ctx.fillText(wallInfo, startx + xoffset, starty + yoffset);
+    current_line++;
+
+
+    wallInfo = `Animation: ${wallAnimation[this.#animation]} | TAlpha: ${this.#targetedAlpha}`;
+
+    xoffset = Debuger.textHOffset;
+    yoffset += Debuger.textVOffset + Debuger.textSize;
+
+    ctx.fillText(wallInfo, startx + xoffset, starty + yoffset);
+    current_line++;
+
+    wallInfo = `color: rgba(${this.#color.r.toFixed(2)}, ${this.#color.g.toFixed(2)}, ${this.#color.b.toFixed(2)}, ${this.#color.a.toFixed(2)})`;
+
+    xoffset = Debuger.textHOffset;
+    yoffset += Debuger.textVOffset + Debuger.textSize;
+
+    ctx.fillText(wallInfo, startx + xoffset, starty + yoffset);
+
+
+    current_line = 0;
+
+  }
+
+  //!SECTION - debug methods
+
 }

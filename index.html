@@ -91,7 +91,7 @@
       <div>
         <h6 id="delayInput" placeholder="delay in ms">delay in ms</h6>
         <button id="decrement">-</button>
-        <input type="text" id="number" size="1" placeholder="ms" value="16" />
+        <input type="text" id="number" size="1" placeholder="ms" />
         <button id="increment">+</button>
       </div>
       <select id="build">
@@ -99,12 +99,6 @@
         <option value="dfs">Depth First Search</option>
         <option value="bfs">Breadth First Search</option>
       </select>
-
-      <!-- <select id="solve" disabled>
-		<option value="" disabled selected>Select Solve Algorithm</option>
-		<option value="dijkstra">Dijkstra's Algorithm</option>
-		<option value="aStar">A* Algorithm</option>
-	</select> -->
 
       <select id="solve" disabled>
         <option value="" disabled selected>Select Solve Algorithm</option>
@@ -114,7 +108,6 @@
       <button id="launch" disabled>Launch</button>
     </nav>
     <div id="maze">
-      <!-- Add your canvas and other content here -->
       <canvas id="canvas"></canvas>
     </div>
     <script type="module" src="./build/src/index.js"></script>

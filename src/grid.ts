@@ -1,10 +1,11 @@
-import { Cell, CellAnimation, Directions } from "./cell.js";
+import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.js";
+import { Cell } from "./cell.js";
+import { CELLSIZE, CellAnimation, Directions } from "./configs/cell.config.js";
+import { mouse } from "./configs/input.config.js";
+import { wallState } from "./configs/wall.config.js";
 import { Debuger } from "./debugger.js";
-import { debugModeOn, mouse, mouseCellPosIsLocked } from "./input.js";
-import { wallState } from "./wall.js";
+import { debugModeOn } from "./input.js";
 
-
-export const CELLSIZE = 50;
 
 
 export class Grid {
@@ -57,8 +58,11 @@ export class Grid {
 
   //SECTION - initialization methods
   constructor(canvasLength: number, canvasWidth: number, initialWallState: wallState = wallState.PRESENT) {
+    //FIXME - this is just for testing
     this.#length = Math.floor(canvasLength / CELLSIZE);
     this.#width = Math.floor(canvasWidth / CELLSIZE);
+    // this.#length = 1;
+    // this.#width = 1;
     this.#initialWallState = initialWallState;
 
     this.#prepareGrid();
@@ -77,7 +81,7 @@ export class Grid {
   #initialize(canvasLength: number, canvasWidth: number, wallState: wallState) {
 
     this.#startX = Math.floor((canvasLength - (this.#length * CELLSIZE)) / 2);
-    this.#startY = Math.floor((canvasWidth - (this.#width * CELLSIZE)) * 0.9);
+    this.#startY = Math.floor((canvasWidth - (this.#width * CELLSIZE)) * 0.5);
 
     this.#offsetLeft = this.#startX;
     this.#offsetTop = this.#startY;
@@ -173,14 +177,29 @@ export class Grid {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    for (let cell of this.eachCell()) {
-      if (cell.getAnimation() === CellAnimation.STOPPED)
-        cell.draw(ctx);
-    }
+
 
     for (let cell of this.eachCell()) {
-      if (cell.getAnimation() !== CellAnimation.STOPPED)
+      if (cell.animation === CellAnimation.STOPPED) {
+        if (cell.gridx !== this.#mouseCellx || cell.gridy !== this.#mouseCelly || !debugModeOn)
+          cell.draw(ctx);
+      }
+    }
+
+
+    setShadowStyle(ctx, { blur: 10, color: "green" })
+    for (let cell of this.eachCell()) {
+      if (cell.animation !== CellAnimation.STOPPED) {
+        (cell.gridx !== this.#mouseCellx || cell.gridy !== this.#mouseCelly)
         cell.draw(ctx);
+      }
+    }
+    resetShadowStyle(ctx);
+
+    if (debugModeOn) {
+      setShadowStyle(ctx, { blur: 10, color: "red" })
+      this.at(this.#mouseCellx, this.#mouseCelly)?.draw(ctx);
+      resetShadowStyle(ctx);
     }
   }
 
@@ -202,6 +221,7 @@ export class Grid {
   }
 
   public drawDebuger(ctx: CanvasRenderingContext2D) {
+
     if (!debugModeOn) return;
     this.writeMousePosition(ctx);
     this.debuger.draw(ctx, this.at(this.#mouseCellx, this.#mouseCelly), this);

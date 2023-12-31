@@ -1,60 +1,23 @@
-import { CORNERCOLOR, Corner } from "./corner.js";
-import { currentdebugPageIndex, debugModeOn, inputDefaults } from "./input.js";
-import { WALLCOLOR, Wall, WallAnimation, color, wallState } from "./wall.js";
+import { cellDefaults, stateColors } from "./configs/cell.config.js";
+import { CORNERCOLOR } from "./configs/corner.config.js";
+import { WALLCOLOR, WallAnimation, wallState } from "./configs/wall.config.js";
+import { Corner } from "./corner.js";
+import { Debuger } from "./debugger.js";
+import { CellAnimation, CellStates, CornerDirections, Directions } from "./configs/cell.config.js";
+import { currentdebugPageIndex, debugModeOn } from "./input.js";
+import { cellVector } from "./types/cell/cellVector.type.js";
+import { link } from "./types/cell/link.type.js";
+import { color } from "./types/color.type.js";
+import { Wall} from "./wall.js";
 
 
-enum cellDefaults {
-  INWARDSSCALINGFACTOR = 0.5,
-  OUTWARDSSCALINGFACTOR = 0.3,
-  VELOCITY = 0.4,
-  ACCELERATION = 0,
-}
+let current_line = 0;
 
 const INWARDSSCALINGFACTOR = cellDefaults.INWARDSSCALINGFACTOR;
 const OUTWARDSSCALINGFACTOR = cellDefaults.OUTWARDSSCALINGFACTOR;
 
 const VELOCITY = cellDefaults.VELOCITY;
 const ACCELERATION = cellDefaults.ACCELERATION;
-
-export enum CellAnimation {
-  OUTWARDS,
-  INWARDS,
-  STOPPED,
-  TOORIGINE,
-}
-
-export enum Directions {
-  NORTH,
-  EAST,
-  SOUTH,
-  WEST,
-}
-
-export enum CornerDirections {
-  NORTHWEST,
-  NORTHEAST,
-  SOUTHEAST,
-  SOUTHWEST,
-}
-
-export enum CellStates {
-  visited,
-  unvisited,
-}
-
-type cellVector = {
-  startx: number;
-  starty: number;
-  endx: number;
-  endy: number;
-  currentx: number;
-  currenty: number;
-  currentlength: number;
-};
-
-type link = {
-  state: boolean;
-};
 
 const cornerRelations = [
   {
@@ -94,7 +57,7 @@ const wallRelations = [
   },
 ];
 
-export const CELLCOLOR = {
+const CELLCOLOR = {
   r: 175,
   g: 216,
   b: 248,
@@ -103,7 +66,11 @@ export const CELLCOLOR = {
 
 export class Cell {
 
-  static debugPageSize: number;
+  static debugPageLength: number;
+  static debugPageWidth: number;
+
+  static debugPage: number;
+
 
   //SECTION - algorithm properties
   gridx: number = -1;
@@ -200,7 +167,14 @@ export class Cell {
   #velocity: number = VELOCITY;
   #acceleration: number = ACCELERATION;
   #animation: CellAnimation = CellAnimation.STOPPED;
-  #color: color = CELLCOLOR;
+  #color: color = Object.create(CELLCOLOR);
+  #nextColor: color = Object.create(CELLCOLOR);
+  #colorDists: color = {
+    r: 0,
+    g: 0,
+    b: 0,
+    a: 0,
+  };
 
   // {
   //   r: 255, //175
@@ -286,8 +260,24 @@ export class Cell {
 
   //SECTION - setters and getters
 
-  public getAnimation() {
+  setState(state: CellStates) {
+    this.#state = state;
+    this.#nextColor = Object.create(stateColors.get(state) as color);
+    this.#colorDists = {
+      r: this.#nextColor.r - this.#color.r,
+      g: this.#nextColor.g - this.#color.g,
+      b: this.#nextColor.b - this.#color.b,
+      a: this.#nextColor.a - this.#color.a,
+    };
+  }
+
+
+  get animation() {
     return this.#animation;
+  }
+
+  get state() {
+    return this.#state;
   }
 
   setOutwardAnimation() {
@@ -319,6 +309,13 @@ export class Cell {
     if (this.#animation === CellAnimation.STOPPED) return;
 
     this.#animation = CellAnimation.STOPPED;
+
+    this.#colorDists = {
+      r: 0,
+      g: 0,
+      b: 0,
+      a: 0,
+    };
 
     this.#cellVector.currentlength = this.#length;
 
@@ -429,6 +426,12 @@ export class Cell {
       this.#xOutwardSteps += step < 0 ? -step : step;
     }
 
+    //NOTE - update the color
+    this.#color.r = Math.abs(this.#nextColor.r - (this.#colorDists.r * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
+    this.#color.g = Math.abs(this.#nextColor.g - (this.#colorDists.g * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
+    this.#color.b = Math.abs(this.#nextColor.b - (this.#colorDists.b * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
+    this.#color.a = Math.abs(this.#nextColor.a - (this.#colorDists.a * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
+
     //NOTE - update the walls and corners
     for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
       let currentAlpha: number = 0;
@@ -489,37 +492,203 @@ export class Cell {
     }
   }
 
-  public drawDebug(ctx: CanvasRenderingContext2D, startx: number, starty: number, length: number, textHOffset: number, textVOffset: number) {
+  drawTitle(ctx: CanvasRenderingContext2D, startx: number, starty: number) {
+    const title = "-- Cell Info --";
+
+    let xoffset = Debuger.length / 2 - ctx.measureText(title).width / 2;
+    let yoffset = Debuger.textVOffset;
+
+    ctx.fillText(title, startx + xoffset, starty + yoffset);
+    current_line++;
+  }
+
+
+  drawInfo(ctx: CanvasRenderingContext2D, startx: number, starty: number) {
     const cellAnimation = ["OUTWARDS", "INWARDS", "STOPPED", "TOORIGINE"];
     const cellStates = ["visited", "unvisited"];
-    const directions = ["NORTH", "EAST", "SOUTH", "WEST"];
-    const cornerDirections = ["NORTHWEST", "NORTHEAST", "SOUTHEAST", "SOUTHWEST"];
-    const wallStates = ["ABSENT", "PRESENT"];
-    const wallAnimation = ["FADEIN", "FADEOUT", "STOPPED"];
+
+    let yoffset = Debuger.textVOffset;
+    let xoffset;
+
+    let cellInfo = `-- Animation properties --`;
+    {
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+      cellInfo = `x: ${this.#x.toFixed(3)} | y: ${this.#y.toFixed(3)} | Length: ${this.#length.toFixed(3)}`;
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+      cellInfo = `Velocity: ${this.#velocity.toFixed(3)}   |   Acceleration: ${this.#acceleration.toFixed(3)}`;
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+      cellInfo = `Animation: ${cellAnimation[this.#animation]}`
+      //` | color: rgba(${this.#color.r}, ${this.#color.g}, ${this.#color.b}, ${this.#color.a.toFixed(3)})`;
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+      cellInfo = `Color: rgba(${this.#color.r}, ${this.#color.g}, ${this.#color.b}, ${this.#color.a.toFixed(3)})`;
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+      cellInfo = `nextColor: rgba(${this.#nextColor.r}, ${this.#nextColor.g}, ${this.#nextColor.b}, ${this.#nextColor.a.toFixed(3)})`;
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+      cellInfo = `colorDists: rgba(${this.#colorDists.r}, ${this.#colorDists.g}, ${this.#colorDists.b}, ${this.#colorDists.a.toFixed(3)})`;
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+      cellInfo = `xOSteps: ${this.#xOutwardSteps.toFixed(3)} | xOWidth: ${this.#xOutwardWidth.toFixed(3)}`;
+      
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+      
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+      
+      cellInfo = `animation percentage: ${((this.#xOutwardSteps / this.#xOutwardWidth) * 100).toFixed(3)}%`;
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo,startx + xoffset, starty + yoffset);
+      current_line++;
+
+      cellInfo = `ISFactor: ${this.#inwardScalingFactor.toFixed(3)} | OSFactor: ${this.#outwardScalingFactor.toFixed(3)}`;
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+    }
+
+    cellInfo = `-- Cell Vector properties --`;
+    {
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+      cellInfo = `sx: ${this.#cellVector.startx.toFixed(3)} | sy: ${this.#cellVector.starty.toFixed(3)}`
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+
+      cellInfo = `ex: ${this.#cellVector.endx.toFixed(3)} | ey: ${this.#cellVector.endy.toFixed(3)}`
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+
+      cellInfo = `cx: ${this.#cellVector.currentx.toFixed(3)} | cy: ${this.#cellVector.currenty.toFixed(3)}`
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+      cellInfo = `clength: ${this.#cellVector.currentlength.toFixed(3)}`;
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+    }
+
+    // setTextStyle(ctx, { textAlign: Debuger.textalign, textBaseline: Debuger.textBaseline, font: Debuger.textSize + "px " + Debuger.textFont, fillStyle: "red" })
+    cellInfo = '-- Algorithm properties --';
+    {
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+      // setTextStyle(ctx, { textAlign: Debuger.textalign, textBaseline: Debuger.textBaseline, font: Debuger.textSize + "px " + Debuger.textFont, fillStyle: Debuger.textColor })
+
+      cellInfo = `Gridx: ${this.gridx} | Gridy: ${this.gridy} | State: ${cellStates[this.#state]}`;
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+      cellInfo = `Links: ${this.#links.size}`;
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+
+      cellInfo = `No: ${this.north === null ? "null" : this.north.gridx + "," + this.north.gridy} | E: ${this.east === null ? "null" : this.east.gridx + "," + this.east.gridy} | S: ${this.south === null ? "null" : this.south.gridx + "," + this.south.gridy} | W: ${this.west === null ? "null" : this.west.gridx + "," + this.west.gridy}`
+
+      xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
+      yoffset += Debuger.textVOffset + Debuger.textSize;
+
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
+      current_line++;
+    }
+
+  }
+
+  public drawDebug(ctx: CanvasRenderingContext2D, startx: number, starty: number, index: number) {
 
     if (currentdebugPageIndex === 5) {
-      const title = "-- Cell Info --";
+      this.drawTitle(ctx, startx, starty);
 
-      const xoffset = length / 2 - ctx.measureText(title).width / 2;
+      this.drawInfo(ctx, startx, starty);
 
-      ctx.fillText(title, startx + xoffset, starty + textVOffset);
+      current_line = 0;
     }
     else if (currentdebugPageIndex === 1 || currentdebugPageIndex === 3 || currentdebugPageIndex === 7 || currentdebugPageIndex === 9) {
-      const title = `-- Corner Info --`;
-
-      const xoffset = length / 2 - ctx.measureText(title).width / 2;
-
-      ctx.fillText(title, startx + xoffset, starty + textVOffset);
+      this.corners[index].drawDebug(ctx, startx, starty);
     }
     else if (currentdebugPageIndex === 2 || currentdebugPageIndex === 4 || currentdebugPageIndex === 6 || currentdebugPageIndex === 8) {
-      const title = `-- Wall Info --`;
-
-      const xoffset = length / 2 - ctx.measureText(title).width / 2;
-
-      ctx.fillText(title, startx + xoffset, starty + textVOffset);
+      this.walls[index].drawDebug(ctx, startx, starty);
     }
-
-
   }
 
   //!SECTION
