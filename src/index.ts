@@ -23,64 +23,64 @@ let deltaTime: DeltaTime = new DeltaTime();
 
 
 function animation(dt: number) {
-  // requestAnimationFrame(animation);
+  requestAnimationFrame(animation);
 
 
-  // if (deltaTime.lastTime === 0) {
-  //   deltaTime.lastTime = dt;
-  // }
+  if (deltaTime.lastTime === 0) {
+    deltaTime.lastTime = dt;
+  }
 
-  // deltaTime.update(dt);
+  deltaTime.update(dt);
 
-  // if (deltaTime.oneStepIsDone()) {
-  //   grid.update(ctx);
+  if (deltaTime.oneStepIsDone()) {
+    grid.update(ctx);
     
-  //   if (counter === 0 && grid.at(0, 0)?.animation === CellAnimation.STOPPED) {
-  //     let randomCell = grid.randomCell();
-  //     // let randomCell = grid.at(10, 10);
+    if (counter === 0 && grid.at(0, 0)?.animation === CellAnimation.STOPPED) {
+      let randomCell = grid.randomCell();
+      // let randomCell = grid.at(10, 10);
 
-  //     if (randomCell === null) return;
+      if (randomCell === null) return;
 
-  //     let cellneighbors = randomCell.neighbors();
+      let cellneighbors = randomCell.neighbors();
 
-  //     for (let cell of cellneighbors) {
-  //       randomCell.link(cell);
-  //     }
+      for (let cell of cellneighbors) {
+        randomCell.link(cell);
+      }
 
-  //     randomCell.setState(CellStates.visited);
+      randomCell.setState(CellStates.visited);
 
-  //     randomCell = grid.randomCell();
+      randomCell = grid.randomCell();
 
-  //     if (randomCell === null) return;
+      if (randomCell === null) return;
 
-  //     cellneighbors = randomCell.neighbors();
+      cellneighbors = randomCell.neighbors();
 
-  //     for (let cell of cellneighbors) {
-  //       randomCell.unlink(cell);
-  //     }
+      for (let cell of cellneighbors) {
+        randomCell.unlink(cell);
+      }
 
-  //     randomCell.setState(CellStates.unvisited);
+      randomCell.setState(CellStates.unvisited);
 
-  //   //   let cell = grid.at(0, 0);
+    //   let cell = grid.at(0, 0);
 
-  //   //   if (cell === null) return;
+    //   if (cell === null) return;
 
-  //   //   cell.setOutwardAnimation();
-  //   //   cell.setState(cell.state === CellStates.visited? CellStates.unvisited : CellStates.visited);
-  //   //   counter++;
-  //   // }
-  //   // if (counter === 1 && grid.at(0, 0)?.animation === CellAnimation.STOPPED) 
-  //   // {
-  //   //   // counter = 0;
-  //   }
-  // }
+    //   cell.setOutwardAnimation();
+    //   cell.setState(cell.state === CellStates.visited? CellStates.unvisited : CellStates.visited);
+    //   counter++;
+    // }
+    // if (counter === 1 && grid.at(0, 0)?.animation === CellAnimation.STOPPED) 
+    // {
+    //   // counter = 0;
+    }
+  }
 
-  // ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // grid.draw(ctx);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  grid.draw(ctx);
 
-  // if (deltaTime.oneDebugStepIsDone()) {
-  //   grid.updateDebuger(ctx);
-  // }
+  if (deltaTime.oneDebugStepIsDone()) {
+    grid.updateDebuger(ctx);
+  }
 }
 
 requestAnimationFrame(animation);

@@ -12,6 +12,6 @@
     "noEmitOnError": true,
     "strictNullChecks": true,
   },
-  "include": ["./src/**/*", "depricated_code/utils.js", "depricated_code/input.js"]
+  "include": ["./src/**/*"]
 }
 
