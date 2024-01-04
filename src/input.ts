@@ -106,9 +106,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function initDefaultStates() {
     await updateDelay(inputDefaults.DELAY);
 
-    isPaused = inputDefaults.ISPAUSED as unknown as boolean;
+    await setPauseButtonState(inputDefaults.ISPAUSED as unknown as boolean);
 
-    debugModeOn = inputDefaults.DEBUGMODEON as unknown as boolean;
+    await setDebugMode(inputDefaults.DEBUGMODEON as unknown as boolean);
 
     debugBookletIsOn = inputDefaults.DEBUGBOOKLETISON as unknown as boolean;
 
@@ -204,10 +204,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  async function setPauseButtonState(state: boolean) {
+    isPaused = state;
+    
+    isPaused ? pauseButton.setAttribute('class', 'btn btn-primary') : pauseButton.setAttribute('class', 'btn btn-success');
+    
+    isPaused ? pauseButton.querySelector("i")?.setAttribute('class', "fa fa-pause") : pauseButton.querySelector("i")?.setAttribute('class', "fa fa-play");
+        
+    // pauseButton.querySelector("span")!.textContent = isPaused ? 'Play' : 'Pause';
+  }
 
   async function togglePause(pauseButton: HTMLButtonElement) {
     isPaused = !isPaused;
-    pauseButton.textContent = isPaused ? 'Resume' : 'Pause';
+
+    isPaused ? pauseButton.setAttribute('class', 'btn btn-primary'): pauseButton.setAttribute('class', 'btn btn-success');
+
+    isPaused ? pauseButton.querySelector("i")?.setAttribute('class', "fa fa-pause") : pauseButton.querySelector("i")?.setAttribute('class', "fa fa-play");
+    
+    // pauseButton.querySelector("span")!.textContent = isPaused ? 'Play' : 'Pause';
   }
 
   async function addPauseButtonEventListeners() {
@@ -218,10 +232,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 
+  async function setDebugMode(state: boolean) {
+    debugModeOn = state;
+    debugModeOn ? debugButton.querySelector("i")!.setAttribute('class', "fa-solid fa-bug") : debugButton.querySelector("i")!.setAttribute('class', "fa-solid fa-bug-slash");
+    //<i class="fa-solid fa-bug-slash"></i>
+    debugModeOn ? debugButton.setAttribute('class', "btn btn-primary") : debugButton.setAttribute('class', "btn btn-secondary");
+  }
+
   async function toggleDebugMode() {
     debugModeOn = !debugModeOn;
-    debugButton.textContent = debugModeOn ? 'Debug On' : 'Debug Off';
-    debugButton.style.backgroundColor = debugModeOn ? 'green' : 'red';
+    debugModeOn ? debugButton.querySelector("i")!.setAttribute('class', "fa-solid fa-bug") : debugButton.querySelector("i")!.setAttribute('class', "fa-solid fa-bug-slash");
+    debugModeOn ? debugButton.setAttribute('class', "btn btn-primary") : debugButton.setAttribute('class', "btn btn-secondary");
   }
 
   async function addDebugButtonEventListeners() {

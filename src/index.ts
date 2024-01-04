@@ -83,4 +83,4 @@ function animation(dt: number) {
   }
 }
 
-requestAnimationFrame(animation);
+// requestAnimationFrame(animation);

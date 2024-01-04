@@ -16,7 +16,7 @@ export var inputDefaults;
     inputDefaults[inputDefaults["DELAY"] = 20] = "DELAY";
     inputDefaults[inputDefaults["MINDELAY"] = 16] = "MINDELAY";
     inputDefaults[inputDefaults["MAXDELAY"] = 10000] = "MAXDELAY";
-    inputDefaults[inputDefaults["ISPAUSED"] = false] = "ISPAUSED";
+    inputDefaults[inputDefaults["ISPAUSED"] = true] = "ISPAUSED";
     inputDefaults[inputDefaults["DEBUGMODEON"] = true] = "DEBUGMODEON";
     inputDefaults[inputDefaults["DEBUGBOOKLETISON"] = true] = "DEBUGBOOKLETISON";
     inputDefaults[inputDefaults["MOUSECELLPOSISLOCKED"] = false] = "MOUSECELLPOSISLOCKED";

@@ -57,4 +57,4 @@ function animation(dt) {
         grid.updateDebuger(ctx);
     }
 }
-requestAnimationFrame(animation);
+// requestAnimationFrame(animation);

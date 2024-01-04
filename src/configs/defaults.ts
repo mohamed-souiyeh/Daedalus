@@ -16,7 +16,7 @@ export enum inputDefaults {
   DELAY = 20,
   MINDELAY = 16,
   MAXDELAY = 10000,
-  ISPAUSED = false as unknown as number,
+  ISPAUSED = true as unknown as number,
   DEBUGMODEON = true as unknown as number,
   DEBUGBOOKLETISON = true as unknown as number,
   MOUSECELLPOSISLOCKED = false as unknown as number,
