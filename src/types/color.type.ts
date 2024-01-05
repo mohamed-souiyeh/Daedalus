@@ -1,4 +1,4 @@
-export type color = {
+export interface color {
   r: number;
   g: number;
   b: number;

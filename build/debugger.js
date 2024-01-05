@@ -1,9 +1,9 @@
+import { globals } from "./Events/input.js";
 import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.js";
 import { setTextStyle } from "./canvas_ctx_style_manipulation/text.js";
 import { CornerDirections, Directions } from "./configs/cell.config.js";
 import { pageIndexs } from "./configs/defaults.js";
 import { mouse } from "./configs/input.config.js";
-import { debugBookletIsOn, currentdebugPageIndex } from "./input.js";
 const DEBUGGERCOLOR = "gray";
 const SHADOWCOLOR = "gold";
 let current_line = 0;
@@ -117,7 +117,7 @@ export class Debuger {
         this.drawline(ctx, x, y, x + cellSize, y);
     }
     draw(ctx, cell, grid) {
-        if (!debugBookletIsOn || cell === null)
+        if (!globals.debugBookletIsOn || cell === null)
             return;
         ctx.fillStyle = DEBUGGERCOLOR;
         setShadowStyle(ctx, { blur: 10, color: SHADOWCOLOR });
@@ -127,14 +127,14 @@ export class Debuger {
         // NOTE - writing the page index on debugger page
         const xoffset = Debuger.length / 2 - ctx.measureText(`-- x --`).width / 2;
         const yoffset = Debuger.width - Debuger.textSize - Debuger.textVOffset;
-        ctx.fillText(`-- ${currentdebugPageIndex} --`, this.#x + xoffset, this.#y + yoffset);
-        if (currentdebugPageIndex === pageIndexs.summary) {
+        ctx.fillText(`-- ${globals.currentdebugPageIndex} --`, this.#x + xoffset, this.#y + yoffset);
+        if (globals.currentdebugPageIndex === pageIndexs.summary) {
             this.gridInfo(ctx, grid);
             this.drawCellDiagram(ctx);
             current_line = 0;
         }
         else {
-            cell.drawDebug(ctx, this.#x, this.#y, CordAndPags.get(currentdebugPageIndex));
+            cell.drawDebug(ctx, this.#x, this.#y, CordAndPags.get(globals.currentdebugPageIndex));
         }
     }
 }

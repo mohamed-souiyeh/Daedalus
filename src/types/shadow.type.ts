@@ -1,7 +1,7 @@
 
-export type shadow = {
-  blur?: number;
-  color?: string;
-  offsetX?: number;
-  offsetY?: number;
+export interface shadow {
+  blur ?: number;
+  color ?: string;
+  offsetX ?: number;
+  offsetY ?: number;
 };

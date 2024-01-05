@@ -4,9 +4,11 @@
     "deploy": "gh-pages -d build"
   },
   "dependencies": {
+    "bootstrap": "^5.3.2",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
+    "@types/bootstrap": "^5.2.10",
     "gh-pages": "^6.1.0"
   },
   "homepage": "http://mohamed-souiyeh.github.io/Daedalus_JS"

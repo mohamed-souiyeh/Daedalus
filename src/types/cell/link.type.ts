@@ -1,3 +1,3 @@
-export type link = {
+export interface link {
   state: boolean;
 };

@@ -1,4 +1,4 @@
-import { delay, isPaused } from "./input.js";
+import { globals } from "./Events/input.js";
 
 
 
@@ -39,7 +39,7 @@ export class DeltaTime {
   }
 
   public oneStepIsDone() {
-    if (this.#timeStep >= delay && !isPaused) {
+    if (this.#timeStep >= globals.delay && !globals.isPaused) {
       this.#timeStep = 0;
       return true;
     }
@@ -59,7 +59,7 @@ export class DeltaTime {
     this.#debugTimeStep += dt - this.#lastTime;
     this.#lastTime = dt;
   }
-  
+
 }
 
 

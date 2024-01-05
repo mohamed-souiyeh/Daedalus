@@ -10,11 +10,6 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-      crossorigin="anonymous"
-    ></script>
     <link rel="stylesheet" type="text/css" href="./styles.css" />
     <link
       rel="stylesheet"
@@ -22,18 +17,30 @@
     />
   </head>
   <body>
-    <nav>
+    <nav data-bs-theme="dark">
       <div class="container-fluid g-0">
-        <div class="row row-col-3 align-items-center g-0">
-          <div class="col-5 g-0" id="first-section"></div>
-          <div class="col-2 g-0" id="logo">
-              <h1 style="text-align: center; margin: 0;">Daedalus</h1>
+        <div class="row row-col-2 align-items-center g-0">
+          <!-- <div class="col-1 g-0" id="first-section"></div> -->
+
+          <!-- logo -->
+          <div
+            class="col-1 g-0"
+            id="logo"
+            data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            data-bs-title="Start Tutorial"
+          >
+            <button type="button" class="btn btn-dark">
+              <h1 style="text-align: center; margin: 0; color: aliceblue">
+                Daedalus
+              </h1>
+            </button>
           </div>
 
-          <!-- control panel -->
-          <div class="col-5 g-0" id="third-section">
+          <!-- control-center -->
+          <div class="col g-0" id="third-section">
             <div
-              id="controle-section"
+              id="controle-section-div"
               style="
                 display: flex;
                 flex-flow: row-reverse nowrap;
@@ -54,87 +61,181 @@
                 Launch
               </button> -->
 
-              <div style="padding-left: 5px; padding-right: 5px">
-                <button
-                  id="pauseButton"
-                  type="button"
-                  class="btn btn-success"
+              <!-- offCanvas control-center -->
+              <div
+                id="control-center"
+                data-bs-theme="dark"
+                class="offcanvas offcanvas-end"
+                tabindex="-1"
+                aria-labelledby="control-centerLabel"
+              >
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title" id="control-centerLabel">
+                    Control Center
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"
+                  ></button>
+                </div>
+
+                <div
+                  class="offcanvas-body"
                   style="
-                    height: 2em;
-                    width: 2em;
-                    padding: 0;
-                    text-align: center;
+                    display: flex;
+                    flex-direction: column;
+                    flex-wrap: nowrap;
+                    gap: 0.75em;
                   "
                 >
-                  <i class="fa fa-pause"></i>
-                  <!-- <span id="text">Pause</span> -->
+                  <div id="control-center-description">
+                    here u can chose the algorithm u want to use to build the
+                    maze/mazes (if u choose to apply areas) and the
+                    algorithm/algorithms (if u choose to apply areas) u want to
+                    use to solve the maze,
+                  </div>
+                  <select
+                    id="maze-generation-algorithm"
+                    class="form-select g-0"
+                    style="margin: 0"
+                    aria-label="Default select"
+                  >
+                    <option selected>Random maze generation algorithm</option>
+                    <option value="1">Random Walk DFS</option>
+                    <option value="2">recursive devider (wall adder)</option>
+                  </select>
+                  <select
+                    id="maze-solving-algorithm"
+                    class="form-select g-0"
+                    style="margin: 0"
+                    aria-label="Default select"
+                  >
+                    <option selected>Random maze solving algorithm</option>
+                    <option value="1">Breadth first search (BFS)</option>
+                    <option value="2">Dijkstra's Algorithm</option>
+                    <option value="3">A* Algorithm</option>
+                  </select>
+                  <button type="button" class="btn btn-primary">Launch</button>
+                </div>
+              </div>
+
+              <!-- control-center-button -->
+              <div
+                id="controle-center-button-div"
+                style="padding-left: 5px; padding-right: 5px"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                data-bs-title="control center"
+              >
+                <button
+                  id="controleCenterButton"
+                  type="button"
+                  class="btn btn-primary btn-custom"
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#control-center"
+                  aria-controls="offcanvasExample"
+                >
+                  <i class="fa-solid fa-gear"></i>
                 </button>
               </div>
 
-              <div style="padding-left: 5px; padding-right: 5px">
+              <!-- resetButton -->
+              <div
+                id="resetButton-div"
+                style="padding-left: 5px; padding-right: 5px"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                data-bs-title="reset"
+              >
+                <button
+                  id="resetButton"
+                  type="button"
+                  class="btn btn-primary btn-custom"
+                >
+                  <i class="fa fa-rotate"></i>
+                </button>
+              </div>
+
+              <!-- pauseButton -->
+              <div
+                id="pauseButton-div"
+                style="padding-left: 5px; padding-right: 5px"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                data-bs-title="pause"
+              >
+                <button
+                  id="pauseButton"
+                  type="button"
+                  class="btn btn-primary btn-custom"
+                >
+                  <i class="fa fa-pause"></i>
+                </button>
+              </div>
+
+              <!-- debugButton -->
+              <div
+                id="debugButton-div"
+                style="padding-left: 5px; padding-right: 5px"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                data-bs-title="debuger"
+              >
                 <button
                   id="debugButton"
                   type="button"
-                  class="btn btn-primary"
-                  style="
-                    height: 2em;
-                    width: 2em;
-                    padding: 0;
-                    text-align: center;
-                  "
+                  class="btn btn-primary btn-custom"
                 >
                   <i class="fa-solid fa-bug"></i>
                 </button>
               </div>
 
-              <div
-                id="inputDelay"
-                style="padding-left: 5px; padding-right: 5px"
-              >
-                <!-- <div
-                  class="form-text"
-                  id="delay header"
-                  placeholder="delay in ms"
-                  style="color: azure; text-align: center; margin: 0"
-                >
-                  delay in ms
-                </div> -->
+              <!-- input delay -->
+              <div id="inputDelay-wrapper">
                 <div
-                  class="input-group"
-                  style="display: flex; align-items: center"
+                  id="input-group-div"
+                  class="input-group input-group-sm"
+                  style="
+                    height: 2em;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                    display: flex;
+                    align-items: center;
+                  "
                 >
+                  <!-- decrement button -->
                   <button
                     id="decrement"
                     type="button"
-                    class="btn btn-primary"
-                    style="
-                      height: 2em;
-                      width: 2em;
-                      padding: 0;
-                      text-align: center;
-                    "
+                    class="btn btn-primary btn-custom"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-title="decrement delay"
                   >
                     -
                   </button>
+
                   <input
                     type="text"
-                    id="number"
+                    id="number-input"
                     class="form-control"
-                    style="text-align: center; height: 2em"
+                    style="text-align: center; height: 2em; width: fit-content"
                     size="1"
                     placeholder="ms"
                     value="16"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-title="delay in ms"
                   />
                   <button
                     id="increment"
                     type="button"
-                    class="btn btn-primary"
-                    style="
-                      height: 2em;
-                      width: 2em;
-                      padding: 0;
-                      text-align: center;
-                    "
+                    class="btn btn-primary btn-custom"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-title="increment delay"
                   >
                     +
                   </button>
@@ -149,6 +250,14 @@
       <!-- Add your canvas and other content here -->
       <canvas id="canvas"></canvas>
     </div>
+    <script type="importmap">
+      {
+        "imports": {
+          "@popperjs/core": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/esm/popper.min.js",
+          "bootstrap": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.esm.min.js"
+        }
+      }
+    </script>
     <script type="module" src="./build/index.js"></script>
   </body>
 </html>

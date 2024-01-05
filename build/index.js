@@ -2,18 +2,24 @@ import { Grid } from "./grid.js";
 import { DeltaTime } from "./deltaTime.js";
 import { wallState } from "./configs/wall.config.js";
 import { CellAnimation, CellStates } from "./configs/cell.config.js";
+let deltaTime;
+let grid;
+let counter;
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-console.log("canvas => ", canvas);
-console.log("canvas offset width => ", canvas.offsetWidth);
-console.log("canvas offset height => ", canvas.offsetHeight);
-console.log("canvas width => ", canvas.width);
-console.log("canvas height => ", canvas.height);
-canvas.width = canvas.offsetWidth;
-canvas.height = canvas.offsetHeight;
-const grid = new Grid(canvas.width, canvas.height, wallState.PRESENT);
-let counter = 0;
-let deltaTime = new DeltaTime();
+function setup() {
+    console.log("canvas => ", canvas);
+    console.log("canvas offset width => ", canvas.offsetWidth);
+    console.log("canvas offset height => ", canvas.offsetHeight);
+    console.log("canvas width => ", canvas.width);
+    console.log("canvas height => ", canvas.height);
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    grid = new Grid(canvas.width, canvas.height, wallState.PRESENT);
+    counter = 0;
+    deltaTime = new DeltaTime();
+    requestAnimationFrame(animation);
+}
 function animation(dt) {
     requestAnimationFrame(animation);
     if (deltaTime.lastTime === 0) {
@@ -52,9 +58,11 @@ function animation(dt) {
         }
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgb(33, 40, 49)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     grid.draw(ctx);
     if (deltaTime.oneDebugStepIsDone()) {
         grid.updateDebuger(ctx);
     }
 }
-// requestAnimationFrame(animation);
+setup();

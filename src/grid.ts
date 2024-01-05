@@ -1,10 +1,10 @@
+import { globals } from "./Events/input.js";
 import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.js";
 import { Cell } from "./cell.js";
 import { CELLSIZE, CellAnimation, Directions } from "./configs/cell.config.js";
 import { mouse } from "./configs/input.config.js";
 import { wallState } from "./configs/wall.config.js";
 import { Debuger } from "./debugger.js";
-import { debugModeOn } from "./input.js";
 
 
 
@@ -66,7 +66,7 @@ export class Grid {
     this.#initialWallState = initialWallState;
 
     this.#prepareGrid();
-    this.#initialize(canvasLength, canvasWidth, initialWallState);
+    this.initialize(canvasLength, canvasWidth, initialWallState);
   }
 
   #prepareGrid() {
@@ -78,7 +78,7 @@ export class Grid {
     }
   }
 
-  #initialize(canvasLength: number, canvasWidth: number, wallState: wallState) {
+  public initialize(canvasLength: number, canvasWidth: number, wallState: wallState) {
 
     this.#startX = Math.floor((canvasLength - (this.#length * CELLSIZE)) / 2);
     this.#startY = Math.floor((canvasWidth - (this.#width * CELLSIZE)) * 0.5);
@@ -160,7 +160,6 @@ export class Grid {
   //SECTION - animation methods
 
   public update(ctx: CanvasRenderingContext2D) {
-
     for (let cell of this.eachCell()) {
       cell.update();
     }
@@ -178,10 +177,11 @@ export class Grid {
 
   public draw(ctx: CanvasRenderingContext2D) {
 
+    ctx.clearRect(this.startX, this.startY, this.#length * CELLSIZE, this.#width * CELLSIZE);
 
     for (let cell of this.eachCell()) {
       if (cell.animation === CellAnimation.STOPPED) {
-        if (cell.gridx !== this.#mouseCellx || cell.gridy !== this.#mouseCelly || !debugModeOn)
+        if (cell.gridx !== this.#mouseCellx || cell.gridy !== this.#mouseCelly || !globals.debugModeOn)
           cell.draw(ctx);
       }
     }
@@ -196,7 +196,7 @@ export class Grid {
     }
     resetShadowStyle(ctx);
 
-    if (debugModeOn) {
+    if (globals.debugModeOn) {
       setShadowStyle(ctx, { blur: 10, color: "red" })
       this.at(this.#mouseCellx, this.#mouseCelly)?.draw(ctx);
       resetShadowStyle(ctx);
@@ -206,7 +206,7 @@ export class Grid {
 
 
   public updateDebuger(ctx: CanvasRenderingContext2D) {
-    if (!debugModeOn) return;
+    if (!globals.debugModeOn) return;
 
     this.#mousexInGrid = mouse.x - this.#offsetLeft;
     this.#mouseyInGrid = mouse.y - this.#offsetTop;
@@ -222,7 +222,7 @@ export class Grid {
 
   public drawDebuger(ctx: CanvasRenderingContext2D) {
 
-    if (!debugModeOn) return;
+    if (!globals.debugModeOn) return;
     this.writeMousePosition(ctx);
     this.debuger.draw(ctx, this.at(this.#mouseCellx, this.#mouseCelly), this);
   }

@@ -1,4 +1,4 @@
-export type cellVector = {
+export interface cellVector {
   startx: number;
   starty: number;
   endx: number;

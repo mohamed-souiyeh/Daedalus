@@ -1,4 +1,22 @@
 export const CELLSIZE = 40;
+export const UNVISITED_CELLCOLOR = {
+    r: 175,
+    g: 216,
+    b: 248,
+    a: 1,
+};
+export const VISITED_CELLCOLOR = {
+    r: 175,
+    g: 216,
+    b: 248,
+    a: 1,
+};
+// {
+//   r: 0,
+//   g: 255,
+//   b: 0,
+//   a: 1,
+// };
 export var cellDefaults;
 (function (cellDefaults) {
     cellDefaults[cellDefaults["INWARDSSCALINGFACTOR"] = 0.5] = "INWARDSSCALINGFACTOR";
@@ -12,18 +30,8 @@ export var CellStates;
     CellStates[CellStates["unvisited"] = 1] = "unvisited";
 })(CellStates || (CellStates = {}));
 export const stateColors = new Map([
-    [CellStates.visited, {
-            r: 0,
-            g: 255,
-            b: 0,
-            a: 1
-        }],
-    [CellStates.unvisited, {
-            r: 175,
-            g: 216,
-            b: 248,
-            a: 1,
-        }],
+    [CellStates.visited, Object.create(VISITED_CELLCOLOR)],
+    [CellStates.unvisited, Object.create(UNVISITED_CELLCOLOR)],
 ]);
 export var CellAnimation;
 (function (CellAnimation) {

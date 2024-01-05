@@ -1,4 +1,4 @@
-export type t_mouse = {
+export interface t_mouse {
   x: number;
   y: number;
 };

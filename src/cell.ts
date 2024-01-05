@@ -1,14 +1,14 @@
-import { cellDefaults, stateColors } from "./configs/cell.config.js";
+import { UNVISITED_CELLCOLOR, cellDefaults, stateColors } from "./configs/cell.config.js";
 import { CORNERCOLOR } from "./configs/corner.config.js";
 import { WALLCOLOR, WallAnimation, wallState } from "./configs/wall.config.js";
 import { Corner } from "./corner.js";
 import { Debuger } from "./debugger.js";
 import { CellAnimation, CellStates, CornerDirections, Directions } from "./configs/cell.config.js";
-import { currentdebugPageIndex, debugModeOn } from "./input.js";
 import { cellVector } from "./types/cell/cellVector.type.js";
 import { link } from "./types/cell/link.type.js";
 import { color } from "./types/color.type.js";
-import { Wall} from "./wall.js";
+import { Wall } from "./wall.js";
+import { globals } from "./Events/input.js";
 
 
 let current_line = 0;
@@ -56,13 +56,6 @@ const wallRelations = [
     second: CornerDirections.NORTHWEST,
   },
 ];
-
-const CELLCOLOR = {
-  r: 175,
-  g: 216,
-  b: 248,
-  a: 1,
-};
 
 export class Cell {
 
@@ -167,8 +160,8 @@ export class Cell {
   #velocity: number = VELOCITY;
   #acceleration: number = ACCELERATION;
   #animation: CellAnimation = CellAnimation.STOPPED;
-  #color: color = Object.create(CELLCOLOR);
-  #nextColor: color = Object.create(CELLCOLOR);
+  #color: color = Object.create(UNVISITED_CELLCOLOR);
+  #nextColor: color = Object.create(UNVISITED_CELLCOLOR);
   #colorDists: color = {
     r: 0,
     g: 0,
@@ -176,13 +169,6 @@ export class Cell {
     a: 0,
   };
 
-  // {
-  //   r: 255, //175
-  //   g: 255, //216
-  //   b: 255, //248
-  //   //TODO - implement the interpolation from color to another based on cell state
-  //   a: 0,
-  // };
 
   #inwardScalingFactor: number = INWARDSSCALINGFACTOR;
   #outwardScalingFactor: number = OUTWARDSSCALINGFACTOR;
@@ -479,7 +465,7 @@ export class Cell {
       this.corners[i].draw(ctx);
     }
 
-    if (debugModeOn) {
+    if (globals.debugModeOn) {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "black";
@@ -568,19 +554,19 @@ export class Cell {
       current_line++;
 
       cellInfo = `xOSteps: ${this.#xOutwardSteps.toFixed(3)} | xOWidth: ${this.#xOutwardWidth.toFixed(3)}`;
-      
+
       xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
-      
+
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
       current_line++;
-      
+
       cellInfo = `animation percentage: ${((this.#xOutwardSteps / this.#xOutwardWidth) * 100).toFixed(3)}%`;
 
       xoffset = Debuger.length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
-      ctx.fillText(cellInfo,startx + xoffset, starty + yoffset);
+      ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
       current_line++;
 
       cellInfo = `ISFactor: ${this.#inwardScalingFactor.toFixed(3)} | OSFactor: ${this.#outwardScalingFactor.toFixed(3)}`;
@@ -676,17 +662,17 @@ export class Cell {
 
   public drawDebug(ctx: CanvasRenderingContext2D, startx: number, starty: number, index: number) {
 
-    if (currentdebugPageIndex === 5) {
+    if (globals.currentdebugPageIndex === 5) {
       this.drawTitle(ctx, startx, starty);
 
       this.drawInfo(ctx, startx, starty);
 
       current_line = 0;
     }
-    else if (currentdebugPageIndex === 1 || currentdebugPageIndex === 3 || currentdebugPageIndex === 7 || currentdebugPageIndex === 9) {
+    else if (globals.currentdebugPageIndex === 1 || globals.currentdebugPageIndex === 3 || globals.currentdebugPageIndex === 7 || globals.currentdebugPageIndex === 9) {
       this.corners[index].drawDebug(ctx, startx, starty);
     }
-    else if (currentdebugPageIndex === 2 || currentdebugPageIndex === 4 || currentdebugPageIndex === 6 || currentdebugPageIndex === 8) {
+    else if (globals.currentdebugPageIndex === 2 || globals.currentdebugPageIndex === 4 || globals.currentdebugPageIndex === 6 || globals.currentdebugPageIndex === 8) {
       this.walls[index].drawDebug(ctx, startx, starty);
     }
   }

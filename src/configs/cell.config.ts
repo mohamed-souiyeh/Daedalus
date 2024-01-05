@@ -2,6 +2,29 @@ import { color } from "../types/color.type.js";
 
 export const CELLSIZE = 40;
 
+export const UNVISITED_CELLCOLOR = {
+  r: 175,
+  g: 216,
+  b: 248,
+  a: 1,
+};
+
+
+export const VISITED_CELLCOLOR = {
+  r: 175,
+  g: 216,
+  b: 248,
+  a: 1,
+};
+
+
+// {
+//   r: 0,
+//   g: 255,
+//   b: 0,
+//   a: 1,
+// };
+
 export enum cellDefaults {
   INWARDSSCALINGFACTOR = 0.5,
   OUTWARDSSCALINGFACTOR = 0.3,
@@ -15,18 +38,8 @@ export enum CellStates {
 }
 
 export const stateColors: Map<CellStates, color> = new Map([
-  [CellStates.visited, {
-    r: 0,
-    g: 255,
-    b: 0,
-    a: 1
-  }],
-  [CellStates.unvisited, {
-    r: 175,
-    g: 216,
-    b: 248,
-    a: 1,
-  }],
+  [CellStates.visited, Object.create(VISITED_CELLCOLOR)],
+  [CellStates.unvisited, Object.create(UNVISITED_CELLCOLOR)],
 ])
 
 export enum CellAnimation {

@@ -1,11 +1,11 @@
-import { cellDefaults, stateColors } from "./configs/cell.config.js";
+import { UNVISITED_CELLCOLOR, cellDefaults, stateColors } from "./configs/cell.config.js";
 import { CORNERCOLOR } from "./configs/corner.config.js";
 import { WALLCOLOR, WallAnimation, wallState } from "./configs/wall.config.js";
 import { Corner } from "./corner.js";
 import { Debuger } from "./debugger.js";
 import { CellAnimation, CellStates, CornerDirections, Directions } from "./configs/cell.config.js";
-import { currentdebugPageIndex, debugModeOn } from "./input.js";
 import { Wall } from "./wall.js";
+import { globals } from "./Events/input.js";
 let current_line = 0;
 const INWARDSSCALINGFACTOR = cellDefaults.INWARDSSCALINGFACTOR;
 const OUTWARDSSCALINGFACTOR = cellDefaults.OUTWARDSSCALINGFACTOR;
@@ -47,12 +47,6 @@ const wallRelations = [
         second: CornerDirections.NORTHWEST,
     },
 ];
-const CELLCOLOR = {
-    r: 175,
-    g: 216,
-    b: 248,
-    a: 1,
-};
 export class Cell {
     static debugPageLength;
     static debugPageWidth;
@@ -133,21 +127,14 @@ export class Cell {
     #velocity = VELOCITY;
     #acceleration = ACCELERATION;
     #animation = CellAnimation.STOPPED;
-    #color = Object.create(CELLCOLOR);
-    #nextColor = Object.create(CELLCOLOR);
+    #color = Object.create(UNVISITED_CELLCOLOR);
+    #nextColor = Object.create(UNVISITED_CELLCOLOR);
     #colorDists = {
         r: 0,
         g: 0,
         b: 0,
         a: 0,
     };
-    // {
-    //   r: 255, //175
-    //   g: 255, //216
-    //   b: 255, //248
-    //   //TODO - implement the interpolation from color to another based on cell state
-    //   a: 0,
-    // };
     #inwardScalingFactor = INWARDSSCALINGFACTOR;
     #outwardScalingFactor = OUTWARDSSCALINGFACTOR;
     #xOutwardWidth = 0;
@@ -371,7 +358,7 @@ export class Cell {
         for (let i = CornerDirections.NORTHWEST; i <= CornerDirections.SOUTHWEST; i++) {
             this.corners[i].draw(ctx);
         }
-        if (debugModeOn) {
+        if (globals.debugModeOn) {
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillStyle = "black";
@@ -497,15 +484,15 @@ export class Cell {
         }
     }
     drawDebug(ctx, startx, starty, index) {
-        if (currentdebugPageIndex === 5) {
+        if (globals.currentdebugPageIndex === 5) {
             this.drawTitle(ctx, startx, starty);
             this.drawInfo(ctx, startx, starty);
             current_line = 0;
         }
-        else if (currentdebugPageIndex === 1 || currentdebugPageIndex === 3 || currentdebugPageIndex === 7 || currentdebugPageIndex === 9) {
+        else if (globals.currentdebugPageIndex === 1 || globals.currentdebugPageIndex === 3 || globals.currentdebugPageIndex === 7 || globals.currentdebugPageIndex === 9) {
             this.corners[index].drawDebug(ctx, startx, starty);
         }
-        else if (currentdebugPageIndex === 2 || currentdebugPageIndex === 4 || currentdebugPageIndex === 6 || currentdebugPageIndex === 8) {
+        else if (globals.currentdebugPageIndex === 2 || globals.currentdebugPageIndex === 4 || globals.currentdebugPageIndex === 6 || globals.currentdebugPageIndex === 8) {
             this.walls[index].drawDebug(ctx, startx, starty);
         }
     }
