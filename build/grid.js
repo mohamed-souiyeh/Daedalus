@@ -48,7 +48,7 @@ export class Grid {
         // this.#width = 1;
         this.#initialWallState = initialWallState;
         this.#prepareGrid();
-        this.#initialize(canvasLength, canvasWidth, initialWallState);
+        this.initialize(canvasLength, canvasWidth, initialWallState);
     }
     #prepareGrid() {
         for (let y = 0; y < this.#width; y++) {
@@ -58,7 +58,7 @@ export class Grid {
             }
         }
     }
-    #initialize(canvasLength, canvasWidth, wallState) {
+    initialize(canvasLength, canvasWidth, wallState) {
         this.#startX = Math.floor((canvasLength - (this.#length * CELLSIZE)) / 2);
         this.#startY = Math.floor((canvasWidth - (this.#width * CELLSIZE)) * 0.5);
         this.#offsetLeft = this.#startX;

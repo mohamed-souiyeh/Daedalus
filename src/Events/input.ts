@@ -6,11 +6,11 @@ import { Debuger } from "../debugger.js";
 import { Wall } from "../wall.js";
 import { addCanvasEventListeners } from "./Canvas.EventListeners.js";
 import { LENGTH, WIDTH, addCanvasShortCutsEventListeners } from "./Canvas.ShortCuts.EventListeners.js";
-import { addControlCenterEventListeners } from "./ControlCenter.EventListeners.js";
 import { addDebugButtonEventListeners, setDebugMode } from "./DebugButton.EventListeners.js";
 import { addDelayInputEventListeners, updateDelay } from "./Delay.EventListeners.js";
 import { addKeyboardEventListners } from "./Keyboard.EventListeners.js";
 import { addPauseButtonEventListeners, setPauseButtonState } from "./PauseButton.EventListeners.js";
+import { setupControlCenterEvents } from "./control center Events/controlCenter.setup.js";
 import { initToolTips } from "./toolTips.js";
 
 export const globals = {
@@ -25,6 +25,8 @@ export const globals = {
   mouseCellPosIsLocked: inputDefaults.MOUSECELLPOSISLOCKED as unknown as boolean,
   
   currentdebugPageIndex: inputDefaults.DEFAULTDEBUGPAGEINDEX as unknown as number,
+
+  // mazeGenerationAlgorithm: 
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -39,6 +41,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const debugButton = document.getElementById('debugButton') as HTMLButtonElement;
   const resetButton = document.getElementById('resetButton') as HTMLButtonElement;
   const controlCenterButton = document.getElementById('controleCenterButton') as HTMLButtonElement;
+
+  const controlCenter = document.getElementById('control-center') as HTMLDivElement;
 
   async function initDefaultStates() {
     await updateDelay(inputDefaults.DELAY, numberInput);
@@ -83,9 +87,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   await addPauseButtonEventListeners(pauseButton);
 
-  await addControlCenterEventListeners(controlCenterButton);
-
   await addCanvasShortCutsEventListeners(canvas);
 
   await addKeyboardEventListners(controlCenterButton ,pauseButton, debugButton, numberInput);
+
+  await setupControlCenterEvents(controlCenter);
+  
 });
