@@ -5,6 +5,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.2",
+    "npx": "^10.2.2",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
