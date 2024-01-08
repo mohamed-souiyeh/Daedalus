@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "./public/src",
+    "allowJs": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "alwaysStrict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmitOnError": true,
+    "strictNullChecks": true,
+  },
+  "include": ["./src/**/*"]
+}
+

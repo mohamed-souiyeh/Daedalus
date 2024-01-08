@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#nav {
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+#body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+}
+
+
+#maze {
+  flex-grow: 1;
+  /* This makes the maze take up all remaining space */
+  overflow: hidden;
+  /* This makes the div unscrollable */
+  max-height: 100vh;
+  /* This prevents the div from growing larger than the viewport */
+}
+
+#canvas {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}

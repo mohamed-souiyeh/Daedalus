@@ -84,8 +84,8 @@ function animation(dt: number) {
   }
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "rgb(33, 40, 49)"
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // ctx.fillStyle = "rgb(33, 40, 49)"
+  // ctx.fillRect(0, 0, canvas.width, canvas.height);
   grid.draw(ctx);
 
   if (deltaTime.oneDebugStepIsDone()) {
