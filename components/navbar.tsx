@@ -9,16 +9,40 @@ import {
 } from "@nextui-org/navbar";
 import { MyAvatar } from "./avatar";
 import { title } from "./primitives";
+import { Button, ButtonGroup } from "@nextui-org/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookBookmark, faBug, faGear, faPause, faRepeat } from "@fortawesome/free-solid-svg-icons";
 
 export const Navbar = () => {
 
   return (
-    <NextUINavbar maxWidth="full" position="sticky" isBordered className="m-0 p-0">
-      <NavbarContent as="div" justify="start">
+    <NextUINavbar maxWidth="full" position="sticky" isBordered id="nav">
+      <NavbarContent id="firstSection" as="div" justify="start">
         <MyAvatar />
-        <h1 className={title({ color: "cyan"})}>
+      </NavbarContent>
+      <NavbarContent id="secondSection" as="div" justify="center">
+        <h1 className={title({ color: "cyan" })}>
           Daedalus
         </h1>
+      </NavbarContent>
+      <NavbarContent id="thirdSection" as="div" justify="end">
+        <Button id="controleCenterButton" color="primary" isIconOnly size="sm">
+          <FontAwesomeIcon icon={faGear} rotation={90} size="lg" />
+        </Button>
+        <Button id="resetButton" color="primary" isIconOnly size="sm">
+          <FontAwesomeIcon icon={faRepeat} size="lg" />
+        </Button>
+        <Button id="pauseButton" color="primary" isIconOnly size="sm">
+          <FontAwesomeIcon icon={faPause} size="lg" />
+        </Button>
+        <ButtonGroup>
+          <Button id="debugBooklet" color="primary" isIconOnly size="sm">
+            <FontAwesomeIcon icon={faBookBookmark} size="lg" />
+          </Button>
+          <Button id="debugButton" color="primary" isIconOnly size="sm">
+            <FontAwesomeIcon icon={faBug} size="lg" />
+          </Button>
+        </ButtonGroup>
       </NavbarContent>
     </NextUINavbar>
   );

@@ -1,4 +1,6 @@
 import "@/styles/globals.css";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
@@ -6,6 +8,7 @@ import { Providers } from "./providers";
 import { Navbar } from "@/components/navbar";
 import { Link } from "@nextui-org/link";
 import Script from "next/script";
+
 
 export const metadata: Metadata = {
   title: {

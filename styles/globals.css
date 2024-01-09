@@ -2,17 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+
+html {
+  display: flex;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+  width: 100%;
+}
+
+div {
+  display: flex;
+}
+
+
+
 #nav {
-  padding: 12px;
   display: flex;
   flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+  width: 100vw;
+}
+
+#firstSection {
+  display: flex;
+  flex-direction: row;
+  /* flex-grow: 1; */
   gap: 10px;
 }
+
+#secondSection {
+  display: contents;
+
+  /* flex-direction: row; */
+
+  /* gap: 10px; */
+}
+
+#thirdSection {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  /* flex-grow: 1; */
+  gap: 10px;
+}
+
 
 #body {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  /* This makes the div unscrollable */
+  height: 100%;
+  width: 100%;
   margin: 0;
 }
 
@@ -20,8 +68,7 @@
 #maze {
   flex-grow: 1;
   /* This makes the maze take up all remaining space */
-  overflow: hidden;
-  /* This makes the div unscrollable */
+
   max-height: 100vh;
   /* This prevents the div from growing larger than the viewport */
 }
