@@ -7,13 +7,39 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@nextui-org/navbar";
+import React, { CSSProperties, useState } from "react";
 import { MyAvatar } from "./avatar";
 import { title } from "./primitives";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookBookmark, faBug, faGear, faPause, faRepeat } from "@fortawesome/free-solid-svg-icons";
+import { faBookBookmark, faBug, faBugSlash, faGear, faMinus, faPause, faPlay, faPlus, faRepeat } from "@fortawesome/free-solid-svg-icons";
+import { inputDefaults } from "@/src/configs/defaults";
+import { Switch } from "@nextui-org/switch";
+import { fab } from "@fortawesome/free-brands-svg-icons";
+import { Input } from "@nextui-org/input";
+
+
 
 export const Navbar = () => {
+  const [pauseButtonIcon, setPauseButtonIcon] = useState(inputDefaults.ISPAUSED ? faPlay : faPause);
+  const handlePauseButton = () => {
+    setPauseButtonIcon(pauseButtonIcon === faPlay ? faPause : faPlay);
+  };
+
+  const [debugButtonIcon, setDebugButtonIcon] = useState(inputDefaults.DEBUGMODEON ? faBug : faBugSlash);
+  const [debugButtonColor, setDebugButtonColor] = useState((inputDefaults.DEBUGMODEON ? "primary" : "default") as "primary" | "default" | "secondary" | "success" | "warning" | "danger" | undefined);
+
+  const handleDebugButton = () => {
+    setDebugButtonIcon(debugButtonIcon === faBug ? faBugSlash : faBug);
+    setDebugButtonColor(debugButtonColor === "primary" ? "default" : "primary");
+    // color = debugButtonIcon === faBug ? "primary" : "default";
+  };
+
+  const [debugBookletColor, setDebugBookletColor] = useState("default" as "primary" | "default" | "secondary" | "success" | "warning" | "danger" | undefined);
+
+  const handleDebugBooklet = () => {
+    setDebugBookletColor(debugBookletColor === "primary" ? "default" : "primary");
+  };
 
   return (
     <NextUINavbar maxWidth="full" position="sticky" isBordered id="nav">
@@ -21,7 +47,7 @@ export const Navbar = () => {
         <MyAvatar />
       </NavbarContent>
       <NavbarContent id="secondSection" as="div" justify="center">
-        <h1 className={title({ color: "cyan" })}>
+        <h1 className={title({ color: "blue" })}>
           Daedalus
         </h1>
       </NavbarContent>
@@ -32,15 +58,33 @@ export const Navbar = () => {
         <Button id="resetButton" color="primary" isIconOnly size="sm">
           <FontAwesomeIcon icon={faRepeat} size="lg" />
         </Button>
-        <Button id="pauseButton" color="primary" isIconOnly size="sm">
-          <FontAwesomeIcon icon={faPause} size="lg" />
+        <Button id="pauseButton" color="primary" isIconOnly size="sm" onClick={handlePauseButton}>
+          <FontAwesomeIcon icon={pauseButtonIcon} size="lg" />
         </Button>
-        <ButtonGroup>
-          <Button id="debugBooklet" color="primary" isIconOnly size="sm">
+        <ButtonGroup >
+
+          <Button id="debugBooklet" color={debugBookletColor} isIconOnly size="sm" onClick={handleDebugBooklet}>
             <FontAwesomeIcon icon={faBookBookmark} size="lg" />
           </Button>
-          <Button id="debugButton" color="primary" isIconOnly size="sm">
-            <FontAwesomeIcon icon={faBug} size="lg" />
+          
+          <Button id="debugButton" color={debugButtonColor} isIconOnly size="sm" onClick={handleDebugButton}>
+            <FontAwesomeIcon icon={debugButtonIcon} size="lg" />
+          </Button>
+        </ButtonGroup>
+
+        <ButtonGroup>
+          <Button id="decrement" color="primary" isIconOnly size="sm">
+            <FontAwesomeIcon icon={faPlus} size="lg" />
+          </Button>
+          <input
+            type="text"
+            id="number-input"
+            className=" h-8 text-center"
+            size={1}
+            defaultValue="16" 
+            />
+          <Button id="increment" color="primary" isIconOnly size="sm">
+            <FontAwesomeIcon icon={faMinus} size="lg" />
           </Button>
         </ButtonGroup>
       </NavbarContent>

@@ -7,7 +7,7 @@ export async function addCanvasEventListeners(canvas) {
             return;
         mouse.x = event.x - canvas.offsetLeft;
         mouse.y = event.y - canvas.offsetTop;
-        // console.log("mouse moved", mouse);
+        console.log("mouse moved", mouse);
     });
     //NOTE - to lock mouse position
     canvas.addEventListener('mousedown', async function (event) {

@@ -3,16 +3,15 @@ import { DeltaTime } from "./deltaTime.js";
 import { wallState } from "./configs/wall.config.js";
 import { CellAnimation, CellStates } from "./configs/cell.config.js";
 
-
 let deltaTime: DeltaTime;
 let grid: Grid;
 let counter: number;
-const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+// const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+// const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-function setup()
+export function setup(canvas: HTMLCanvasElement)
 {
-
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   console.log("canvas => ", canvas);
   console.log("canvas offset width => ", canvas.offsetWidth);
   console.log("canvas offset height => ", canvas.offsetHeight);
@@ -27,11 +26,10 @@ function setup()
   counter = 0;
   deltaTime = new DeltaTime();
 
-  requestAnimationFrame(animation);
 }
 
-function animation(dt: number) {
-  requestAnimationFrame(animation);
+export function animation(dt: number, ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement | ) {
+  requestAnimationFrame((dt) => animation(dt, ctx, canvas));
 
 
   if (deltaTime.lastTime === 0) {
@@ -92,5 +90,3 @@ function animation(dt: number) {
     grid.updateDebuger(ctx);
   }
 }
-
-setup();

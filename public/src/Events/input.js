@@ -21,6 +21,7 @@ export const globals = {
 };
 document.addEventListener("DOMContentLoaded", async () => {
     const canvas = document.getElementById("canvas");
+    console.log("canvas => ", canvas);
     canvas.setAttribute('tabindex', '0'); // make the canvas focusable
     const numberInput = document.getElementById('number-input');
     const incrementButton = document.getElementById('increment');
@@ -47,7 +48,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         Wall.debugPageLength = inputDefaults.WALLDEBUGPAGELENGTH;
         Wall.debugPageWidth = inputDefaults.WALLDEBUGPAGEWIDTH;
     }
-    // await initToolTips();
     await initDefaultStates();
     await addCanvasEventListeners(canvas);
     await addDelayInputEventListeners(numberInput, incrementButton, decrementButton);

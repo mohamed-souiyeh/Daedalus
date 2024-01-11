@@ -28,9 +28,10 @@ export const globals = {
   // mazeGenerationAlgorithm: 
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+export const setupEventListners = async () => {
 
   const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+  console.log("canvas => ", canvas);
   canvas.setAttribute('tabindex', '0'); // make the canvas focusable
 
   const numberInput = document.getElementById('number-input') as HTMLInputElement;
@@ -74,7 +75,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 
-  // await initToolTips();
 
   await initDefaultStates();
 
