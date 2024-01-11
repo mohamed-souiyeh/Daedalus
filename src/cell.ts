@@ -1,14 +1,14 @@
-import { UNVISITED_CELLCOLOR, cellDefaults, stateColors } from "./configs/cell.config.js";
-import { CORNERCOLOR } from "./configs/corner.config.js";
-import { WALLCOLOR, WallAnimation, wallState } from "./configs/wall.config.js";
-import { Corner } from "./corner.js";
-import { Debuger } from "./debugger.js";
-import { CellAnimation, CellStates, CornerDirections, Directions } from "./configs/cell.config.js";
-import { cellVector } from "./types/cell/cellVector.type.js";
-import { link } from "./types/cell/link.type.js";
-import { color } from "./types/color.type.js";
-import { Wall } from "./wall.js";
-import { globals } from "./Events/input.js";
+import { UNVISITED_CELLCOLOR, cellDefaults, stateColors } from "./configs/cell.config.ts";
+import { CORNERCOLOR } from "./configs/corner.config.ts";
+import { WALLCOLOR, WallAnimation, wallState } from "./configs/wall.config.ts";
+import { Corner } from "./corner.ts";
+import { Debuger } from "./debugger.ts";
+import { CellAnimation, CellStates, CornerDirections, Directions } from "./configs/cell.config.ts";
+import { cellVector } from "./types/cell/cellVector.type.ts";
+import { link } from "./types/cell/link.type.ts";
+import { color } from "./types/color.type.ts";
+import { Wall } from "./wall.ts";
+import { globals } from "./Events/input.ts";
 
 
 let current_line = 0;

@@ -7,39 +7,137 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@nextui-org/navbar";
-import React, { CSSProperties, useState } from "react";
+import { createRef, useEffect, useRef, useState } from "react";
 import { MyAvatar } from "./avatar";
 import { title } from "./primitives";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookBookmark, faBug, faBugSlash, faGear, faMinus, faPause, faPlay, faPlus, faRepeat } from "@fortawesome/free-solid-svg-icons";
+import { faBookBookmark, faBookOpen, faBug, faBugSlash, faGear, faMinus, faPause, faPlay, faPlus, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { inputDefaults } from "@/src/configs/defaults";
-import { Switch } from "@nextui-org/switch";
-import { fab } from "@fortawesome/free-brands-svg-icons";
-import { Input } from "@nextui-org/input";
+import { DELAYSTEP, updateDelay } from "@/src/Events/Delay.EventListeners";
+import { globals } from "@/src/Events/input";
 
-
+const color = undefined as "primary" | "default" | "secondary" | "success" | "warning" | "danger" | undefined;
 
 export const Navbar = () => {
+
+  const controleCenterButton = createRef<HTMLButtonElement>();
+  const resetButton = createRef<HTMLButtonElement>();
+  const pauseButton = createRef<HTMLButtonElement>();
+  const debugButton = createRef<HTMLButtonElement>();
+  const debugBooklet = createRef<HTMLButtonElement>();
+  const increment = createRef<HTMLButtonElement>();
+  const decrement = createRef<HTMLButtonElement>();
+  const numberInput = createRef<HTMLInputElement>();
+
+
+  const [inputValue, setInputValue] = useState(inputDefaults.DELAY as unknown as string);
+  const inputValueRef = useRef(inputValue);
+
+  useEffect(() => {
+    inputValueRef.current = inputValue;
+  }, [inputValue]);
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!/^\d*$/.test(inputValueRef.current)) {
+      updateDelay(inputDefaults.DELAY, setInputValue);
+    } else {
+      updateDelay(parseInt(inputValueRef.current), setInputValue);
+    }
+  }
+
+  const incrementDelay = () => {
+    const value: number = parseInt(inputValueRef.current) + DELAYSTEP > inputDefaults.MAXDELAY ? inputDefaults.MAXDELAY : parseInt(inputValueRef.current) + DELAYSTEP;
+
+    updateDelay(value, setInputValue);
+  }
+
+  const decrementDelay = () => {
+    const value: number = parseInt(inputValueRef.current) - DELAYSTEP < inputDefaults.MINDELAY ? inputDefaults.MINDELAY : parseInt(inputValueRef.current) - DELAYSTEP;
+
+    updateDelay(value, setInputValue);
+  }
+
+
   const [pauseButtonIcon, setPauseButtonIcon] = useState(inputDefaults.ISPAUSED ? faPlay : faPause);
+  const pauseButtonIconRef = useRef(pauseButtonIcon);
+
+  useEffect(() => {
+    pauseButtonIconRef.current = pauseButtonIcon;
+  }, [pauseButtonIcon]);
+
   const handlePauseButton = () => {
-    setPauseButtonIcon(pauseButtonIcon === faPlay ? faPause : faPlay);
+    globals.isPaused = !globals.isPaused;
+    setPauseButtonIcon(pauseButtonIconRef.current === faPlay ? faPause : faPlay);
   };
 
   const [debugButtonIcon, setDebugButtonIcon] = useState(inputDefaults.DEBUGMODEON ? faBug : faBugSlash);
+  const debugButtonIconRef = useRef(debugButtonIcon);
   const [debugButtonColor, setDebugButtonColor] = useState((inputDefaults.DEBUGMODEON ? "primary" : "default") as "primary" | "default" | "secondary" | "success" | "warning" | "danger" | undefined);
+  const debugButtonColorRef = useRef(debugButtonColor);
+
+  useEffect(() => {
+    debugButtonIconRef.current = debugButtonIcon;
+    debugButtonColorRef.current = debugButtonColor;
+  }, [debugButtonIcon, debugButtonColor]);
 
   const handleDebugButton = () => {
-    setDebugButtonIcon(debugButtonIcon === faBug ? faBugSlash : faBug);
-    setDebugButtonColor(debugButtonColor === "primary" ? "default" : "primary");
-    // color = debugButtonIcon === faBug ? "primary" : "default";
+    globals.debugModeOn = !globals.debugModeOn;
+    setDebugButtonIcon(debugButtonIconRef.current === faBug ? faBugSlash : faBug);
+    setDebugButtonColor(debugButtonColorRef.current === "primary" ? "default" : "primary");
+    handleDebugBooklet();
   };
 
-  const [debugBookletColor, setDebugBookletColor] = useState("default" as "primary" | "default" | "secondary" | "success" | "warning" | "danger" | undefined);
+  const [debugBookletColor, setDebugBookletColor] = useState(inputDefaults.DEBUGBOOKLETISON ? "primary" as typeof color: "default" as typeof color);
+  const debugBookletColorRef = useRef(debugBookletColor);
+
+  useEffect(() => {
+    debugBookletColorRef.current = debugBookletColor;
+  }, [debugBookletColor]);
 
   const handleDebugBooklet = () => {
-    setDebugBookletColor(debugBookletColor === "primary" ? "default" : "primary");
+    globals.debugBookletIsOn = !globals.debugBookletIsOn;
+    setDebugBookletColor(debugBookletColorRef.current === "primary" ? "default" : "primary");
   };
+
+  useEffect(() => {
+
+    const windowShortcutes = (event: any) => {
+      
+      // console.log("event => ", event);
+      if (event.code === 'KeyC') {
+        // controleCenterButton.current?.click();
+      }
+      if (event.code === 'KeyP') {
+        console.log("pauseButton.current => ");
+        handlePauseButton();
+      }
+      if (event.code === 'KeyD') {
+        handleDebugButton();
+        handleDebugBooklet();
+      }
+      if (event.code === 'KeyB') {
+        handleDebugBooklet();
+      }
+      if (event.code === 'NumpadSubtract') {
+        decrementDelay();
+      }
+      if (event.code === 'NumpadAdd') {
+        incrementDelay();
+      }
+    }
+  
+    window.addEventListener('keydown', windowShortcutes);
+
+    return () => {
+      window.removeEventListener('keydown', windowShortcutes);
+    }
+
+  }, []);
+
+
+
+
 
   return (
     <NextUINavbar maxWidth="full" position="sticky" isBordered id="nav">
@@ -52,39 +150,40 @@ export const Navbar = () => {
         </h1>
       </NavbarContent>
       <NavbarContent id="thirdSection" as="div" justify="end">
-        <Button id="controleCenterButton" color="primary" isIconOnly size="sm">
+        <Button ref={controleCenterButton} color="primary" isIconOnly size="sm">
           <FontAwesomeIcon icon={faGear} rotation={90} size="lg" />
         </Button>
-        <Button id="resetButton" color="primary" isIconOnly size="sm">
+        <Button ref={resetButton} color="primary" isIconOnly size="sm">
           <FontAwesomeIcon icon={faRepeat} size="lg" />
         </Button>
-        <Button id="pauseButton" color="primary" isIconOnly size="sm" onClick={handlePauseButton}>
+        <Button ref={pauseButton} color="primary" isIconOnly size="sm" onClick={handlePauseButton}>
           <FontAwesomeIcon icon={pauseButtonIcon} size="lg" />
         </Button>
         <ButtonGroup >
 
-          <Button id="debugBooklet" color={debugBookletColor} isIconOnly size="sm" onClick={handleDebugBooklet}>
-            <FontAwesomeIcon icon={faBookBookmark} size="lg" />
+          <Button ref={debugBooklet} color={debugBookletColor} isIconOnly size="sm" onClick={handleDebugBooklet}>
+            <FontAwesomeIcon icon={faBookOpen} size="lg" />
           </Button>
-          
-          <Button id="debugButton" color={debugButtonColor} isIconOnly size="sm" onClick={handleDebugButton}>
+
+          <Button ref={debugButton} color={debugButtonColor} isIconOnly size="sm" onClick={handleDebugButton}>
             <FontAwesomeIcon icon={debugButtonIcon} size="lg" />
           </Button>
         </ButtonGroup>
 
         <ButtonGroup>
-          <Button id="decrement" color="primary" isIconOnly size="sm">
-            <FontAwesomeIcon icon={faPlus} size="lg" />
+          <Button ref={decrement} color="primary" isIconOnly size="sm" onClick={decrementDelay}>
+          <FontAwesomeIcon icon={faMinus} size="lg" />
           </Button>
           <input
             type="text"
-            id="number-input"
+            ref={numberInput}
             className=" h-8 text-center"
             size={1}
-            defaultValue="16" 
-            />
-          <Button id="increment" color="primary" isIconOnly size="sm">
-            <FontAwesomeIcon icon={faMinus} size="lg" />
+            value={inputValue}
+            onChange={onInputChange}
+          />
+          <Button ref={increment} color="primary" isIconOnly size="sm" onClick={incrementDelay}>
+            <FontAwesomeIcon icon={faPlus} size="lg" />
           </Button>
         </ButtonGroup>
       </NavbarContent>

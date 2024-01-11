@@ -1,7 +1,7 @@
-import { CORNERCOLOR } from "./configs/corner.config.js";
-import { WALL_PERSENTAGE, WallAnimation, wallState } from "./configs/wall.config.js";
-import { Debuger } from "./debugger.js";
-import { color } from "./types/color.type.js";
+import { CORNERCOLOR } from "./configs/corner.config.ts";
+import { WALL_PERSENTAGE, WallAnimation, wallState } from "./configs/wall.config.ts";
+import { Debuger } from "./debugger.ts";
+import { color } from "./types/color.type.ts";
 
 const CELLTARGETEDALPHA = 1;
 let current_line = 1;

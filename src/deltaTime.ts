@@ -1,4 +1,4 @@
-import { globals } from "./Events/input.js";
+import { globals } from "./Events/input.ts";
 
 
 

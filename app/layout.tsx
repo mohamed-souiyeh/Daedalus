@@ -7,7 +7,6 @@ import { fontSans } from "@/config/fonts";
 import { Providers } from "./providers";
 import { Navbar } from "@/components/navbar";
 import { Link } from "@nextui-org/link";
-import Script from "next/script";
 
 
 export const metadata: Metadata = {
@@ -38,7 +37,6 @@ export default function RootLayout({
         <Providers>
           <div id="body">
             {children}
-            <Script type="module" src="/src/index.js" strategy="afterInteractive" />
           </div>
         </Providers>
       </body>

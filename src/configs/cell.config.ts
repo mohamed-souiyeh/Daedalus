@@ -1,4 +1,4 @@
-import { color } from "../types/color.type.js";
+import { color } from "../types/color.type.ts";
 
 export const CELLSIZE = 40;
 

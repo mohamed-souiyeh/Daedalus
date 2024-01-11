@@ -1,5 +1,5 @@
 
-import { shadow } from '../types/shadow.type.js';
+import { shadow } from '../types/shadow.type.ts';
 
 export function setShadowStyle(ctx: CanvasRenderingContext2D, shadow: shadow) {
   ctx.shadowBlur = shadow?.blur ?? 0;

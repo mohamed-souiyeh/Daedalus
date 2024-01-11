@@ -1,17 +1,23 @@
-import { Grid } from "./grid.js";
-import { DeltaTime } from "./deltaTime.js";
-import { wallState } from "./configs/wall.config.js";
-import { CellAnimation, CellStates } from "./configs/cell.config.js";
+import { Grid } from "./grid.ts";
+import { DeltaTime } from "./deltaTime.ts";
+import { wallState } from "./configs/wall.config.ts";
+import { CellAnimation, CellStates } from "./configs/cell.config.ts";
+import { globals } from "./Events/input.ts";
 
 let deltaTime: DeltaTime;
 let grid: Grid;
 let counter: number;
-// const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-// const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-export function setup(canvas: HTMLCanvasElement)
-{
-  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+export function setup() {
+
+  const canvas = globals.canvas;
+  const ctx = globals.ctx;
+
+  if (canvas === null || ctx === null) {
+    console.log("canvas or ctx is null");
+    return;
+  }
+
   console.log("canvas => ", canvas);
   console.log("canvas offset width => ", canvas.offsetWidth);
   console.log("canvas offset height => ", canvas.offsetHeight);
@@ -25,12 +31,18 @@ export function setup(canvas: HTMLCanvasElement)
 
   counter = 0;
   deltaTime = new DeltaTime();
-
 }
 
-export function animation(dt: number, ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement | ) {
-  requestAnimationFrame((dt) => animation(dt, ctx, canvas));
+export function animation(dt: number) {
+  requestAnimationFrame(animation);
 
+  const canvas = globals.canvas;
+  const ctx = globals.ctx;
+
+  if (canvas === null || ctx === null) {
+    console.log("canvas or ctx is null");
+    return;
+  }
 
   if (deltaTime.lastTime === 0) {
     deltaTime.lastTime = dt;
@@ -40,7 +52,7 @@ export function animation(dt: number, ctx: CanvasRenderingContext2D, canvas: HTM
 
   if (deltaTime.oneStepIsDone()) {
     grid.update(ctx);
-    
+
     if (counter === 0 && grid.at(0, 0)?.animation === CellAnimation.STOPPED) {
       let randomCell = grid.randomCell();
       // let randomCell = grid.at(10, 10);
@@ -67,17 +79,17 @@ export function animation(dt: number, ctx: CanvasRenderingContext2D, canvas: HTM
 
       randomCell.setState(CellStates.unvisited);
 
-    //   let cell = grid.at(0, 0);
+      //   let cell = grid.at(0, 0);
 
-    //   if (cell === null) return;
+      //   if (cell === null) return;
 
-    //   cell.setOutwardAnimation();
-    //   cell.setState(cell.state === CellStates.visited? CellStates.unvisited : CellStates.visited);
-    //   counter++;
-    // }
-    // if (counter === 1 && grid.at(0, 0)?.animation === CellAnimation.STOPPED) 
-    // {
-    //   // counter = 0;
+      //   cell.setOutwardAnimation();
+      //   cell.setState(cell.state === CellStates.visited? CellStates.unvisited : CellStates.visited);
+      //   counter++;
+      // }
+      // if (counter === 1 && grid.at(0, 0)?.animation === CellAnimation.STOPPED) 
+      // {
+      //   // counter = 0;
     }
   }
 
@@ -88,5 +100,6 @@ export function animation(dt: number, ctx: CanvasRenderingContext2D, canvas: HTM
 
   if (deltaTime.oneDebugStepIsDone()) {
     grid.updateDebuger(ctx);
+    grid.drawDebuger(ctx);
   }
 }

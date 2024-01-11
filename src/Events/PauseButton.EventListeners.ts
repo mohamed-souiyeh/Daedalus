@@ -1,4 +1,4 @@
-import { globals } from "./input.js";
+import { globals } from "./input.ts";
 
 
 

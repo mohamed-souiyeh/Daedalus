@@ -9,7 +9,7 @@ import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
 import { Navbar } from "@/components/navbar";
 import { useEffect, useRef } from "react";
-import { setupEventListners } from "@/src/Events/input";
+import { globals, setupEventListners } from "@/src/Events/input";
 import { animation, setup } from "@/src";
 
 
@@ -18,15 +18,15 @@ export default function Home() {
   useEffect(() => {
     if (!canvaRef.current)
       return;
-    const ctx = canvaRef.current.getContext("2d");
-    if (!ctx)
+    globals.canvas = canvaRef.current;
+    globals.ctx = canvaRef.current.getContext("2d");
+    if (!globals.ctx)
       return;
     setupEventListners();
 
-    setup(canvaRef.current);
+    setup();
 
-    requestAnimationFrame((dt) => animation(dt, ctx, canvaRef.current));
-
+    requestAnimationFrame(animation);
   }, []);
 
 

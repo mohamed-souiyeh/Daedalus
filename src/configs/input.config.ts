@@ -1,5 +1,5 @@
-import { t_mouse } from "../types/mouse.type.js";
-import { inputDefaults } from "./defaults.js";
+import { t_mouse } from "../types/mouse.type.ts";
+import { inputDefaults } from "./defaults.ts";
 
 export let mouse: t_mouse = {
   x: 0,

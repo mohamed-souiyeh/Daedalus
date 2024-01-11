@@ -15,10 +15,10 @@ export enum pageIndexs {
 export enum inputDefaults {
   DELAY = 20,
   MINDELAY = 16,
-  MAXDELAY = 10000,
-  ISPAUSED = true as unknown as number,
-  DEBUGMODEON = false as unknown as number,
-  DEBUGBOOKLETISON = false as unknown as number,
+  MAXDELAY = 1000,
+  ISPAUSED = false as unknown as number,
+  DEBUGMODEON = true as unknown as number,
+  DEBUGBOOKLETISON = true as unknown as number,
   MOUSECELLPOSISLOCKED = false as unknown as number,
 
   DEFAULTDEBUGPAGEINDEX = pageIndexs.cell,

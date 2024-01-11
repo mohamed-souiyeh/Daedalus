@@ -1,5 +1,5 @@
-import { mouse } from "../configs/input.config.js";
-import { globals } from "./input.js";
+import { mouse } from "../configs/input.config.ts";
+import { globals } from "./input.ts";
 
 
 export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
@@ -8,7 +8,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
     if (globals.mouseCellPosIsLocked || !globals.debugModeOn) return;
     mouse.x = event.x - canvas.offsetLeft;
     mouse.y = event.y - canvas.offsetTop;
-    console.log("mouse moved", mouse);
+    // console.log("mouse moved", mouse);
   });
 
   //NOTE - to lock mouse position
