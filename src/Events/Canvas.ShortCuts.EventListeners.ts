@@ -12,8 +12,8 @@ export async function addCanvasShortCutsEventListeners(canvas: HTMLCanvasElement
       globals.currentdebugPageIndex = parseInt(event.key);
 
       //NOTE - to set the debugger window size
-      Debuger.length = debugPagesSize[globals.currentdebugPageIndex][LENGTH];
-      Debuger.width = debugPagesSize[globals.currentdebugPageIndex][WIDTH];
+      Debuger.d_length = debugPagesSize[globals.currentdebugPageIndex][LENGTH];
+      Debuger.d_width = debugPagesSize[globals.currentdebugPageIndex][WIDTH];
     }
   });
 }

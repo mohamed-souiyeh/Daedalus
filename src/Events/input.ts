@@ -15,15 +15,15 @@ import { initToolTips } from "./toolTips.js";
 
 export const globals = {
   delay: inputDefaults.DELAY as unknown as number,  // globals.delay in ms
-  
+
   isPaused: inputDefaults.ISPAUSED as unknown as boolean,
-  
+
   debugModeOn: inputDefaults.DEBUGMODEON as unknown as boolean,
-  
+
   debugBookletIsOn: inputDefaults.DEBUGBOOKLETISON as unknown as boolean,
-  
+
   mouseCellPosIsLocked: inputDefaults.MOUSECELLPOSISLOCKED as unknown as boolean,
-  
+
   currentdebugPageIndex: inputDefaults.DEFAULTDEBUGPAGEINDEX as unknown as number,
 
   // mazeGenerationAlgorithm: 
@@ -59,8 +59,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 
-    Debuger.length = debugPagesSize[globals.currentdebugPageIndex][LENGTH];
-    Debuger.width = debugPagesSize[globals.currentdebugPageIndex][WIDTH];
+    Debuger.d_length = debugPagesSize[globals.currentdebugPageIndex][LENGTH];
+    Debuger.d_width = debugPagesSize[globals.currentdebugPageIndex][WIDTH];
 
 
     Cell.debugPage = pageIndexs.cell;
@@ -84,13 +84,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   await addDelayInputEventListeners(numberInput, incrementButton, decrementButton);
 
   await addDebugButtonEventListeners(debugButton);
-  
+
   await addPauseButtonEventListeners(pauseButton);
 
   await addCanvasShortCutsEventListeners(canvas);
 
-  await addKeyboardEventListners(controlCenterButton ,pauseButton, debugButton, numberInput);
+  await addKeyboardEventListners(controlCenterButton, pauseButton, debugButton, numberInput);
 
   await setupControlCenterEvents(controlCenter);
-  
+
 });

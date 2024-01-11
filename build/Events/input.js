@@ -13,7 +13,7 @@ import { addPauseButtonEventListeners, setPauseButtonState } from "./PauseButton
 import { setupControlCenterEvents } from "./control center Events/controlCenter.setup.js";
 import { initToolTips } from "./toolTips.js";
 export const globals = {
-    delay: inputDefaults.DELAY, // globals.delay in ms
+    delay: inputDefaults.DELAY,
     isPaused: inputDefaults.ISPAUSED,
     debugModeOn: inputDefaults.DEBUGMODEON,
     debugBookletIsOn: inputDefaults.DEBUGBOOKLETISON,
@@ -39,8 +39,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         globals.debugBookletIsOn = inputDefaults.DEBUGBOOKLETISON;
         globals.mouseCellPosIsLocked = inputDefaults.MOUSECELLPOSISLOCKED;
         globals.currentdebugPageIndex = inputDefaults.DEFAULTDEBUGPAGEINDEX;
-        Debuger.length = debugPagesSize[globals.currentdebugPageIndex][LENGTH];
-        Debuger.width = debugPagesSize[globals.currentdebugPageIndex][WIDTH];
+        Debuger.d_length = debugPagesSize[globals.currentdebugPageIndex][LENGTH];
+        Debuger.d_width = debugPagesSize[globals.currentdebugPageIndex][WIDTH];
         Cell.debugPage = pageIndexs.cell;
         Cell.debugPageLength = inputDefaults.CELLDEBUGPAGELENGTH;
         Cell.debugPageWidth = inputDefaults.CELLDEBUGPAGEWIDTH;

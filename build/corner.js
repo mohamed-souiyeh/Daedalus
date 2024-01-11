@@ -111,7 +111,7 @@ export class Corner {
     }
     drawTitle(ctx, startx, starty) {
         const title = `-- Corner Info --`;
-        const xoffset = Debuger.length / 2 - ctx.measureText(title).width / 2;
+        const xoffset = Debuger.d_length / 2 - ctx.measureText(title).width / 2;
         const yoffset = Debuger.textVOffset;
         ctx.fillText(title, startx + xoffset, starty + yoffset);
         current_line++;

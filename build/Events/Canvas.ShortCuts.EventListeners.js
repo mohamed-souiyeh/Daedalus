@@ -9,8 +9,8 @@ export async function addCanvasShortCutsEventListeners(canvas) {
         if (parseInt(event.key) >= pageIndexs.summary && parseInt(event.key) <= pageIndexs.NE_corner) {
             globals.currentdebugPageIndex = parseInt(event.key);
             //NOTE - to set the debugger window size
-            Debuger.length = debugPagesSize[globals.currentdebugPageIndex][LENGTH];
-            Debuger.width = debugPagesSize[globals.currentdebugPageIndex][WIDTH];
+            Debuger.d_length = debugPagesSize[globals.currentdebugPageIndex][LENGTH];
+            Debuger.d_width = debugPagesSize[globals.currentdebugPageIndex][WIDTH];
         }
     });
 }

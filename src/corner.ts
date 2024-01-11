@@ -153,10 +153,10 @@ export class Corner {
 
   private drawTitle(ctx: CanvasRenderingContext2D, startx: number, starty: number) {
     const title = `-- Corner Info --`;
-  
-    const xoffset = Debuger.length / 2 - ctx.measureText(title).width / 2;
+
+    const xoffset = Debuger.d_length / 2 - ctx.measureText(title).width / 2;
     const yoffset = Debuger.textVOffset;
-  
+
     ctx.fillText(title, startx + xoffset, starty + yoffset);
     current_line++;
   }
@@ -168,15 +168,15 @@ export class Corner {
 
 
     let yoffset = Debuger.textVOffset;
-    
+
     this.drawTitle(ctx, startx, starty);
 
     let cornerInfo = `x: ${this.#x.toFixed(3)}      |   y: ${this.#y.toFixed(3)}`
 
-    
+
     let xoffset = Debuger.textHOffset;
     yoffset += Debuger.textVOffset * (current_line) + Debuger.textSize * current_line;;
-    
+
     ctx.fillText(cornerInfo, startx + xoffset, starty + yoffset);
     current_line++;
 
