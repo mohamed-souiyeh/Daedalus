@@ -1,3 +1,4 @@
+import { wallState } from "./wall.config";
 
 export enum pageIndexs {
   summary, //NOTE - this is the index of the first page summary page
@@ -13,12 +14,12 @@ export enum pageIndexs {
 }
 
 export enum inputDefaults {
-  DELAY = 20,
-  MINDELAY = 16,
-  MAXDELAY = 10000,
+  DELAY = 8,
+  MINDELAY = 8,
+  MAXDELAY = 1000,
   ISPAUSED = false as unknown as number,
   DEBUGMODEON = false as unknown as number,
-  DEBUGBOOKLETISON = false as unknown as number,
+  DEBUGBOOKLETISON = inputDefaults.DEBUGMODEON as unknown as number,
   MOUSECELLPOSISLOCKED = false as unknown as number,
 
   DEFAULTDEBUGPAGEINDEX = pageIndexs.cell,
@@ -36,4 +37,5 @@ export enum inputDefaults {
   SUMMARYDEBUGPAGELENGTH = 250,
   SUMMARYDEBUGPAGEWIDTH = 250,
 
+  DEFAULTWALLSTATE = wallState.PRESENT,
 }

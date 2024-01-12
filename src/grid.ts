@@ -1,10 +1,10 @@
-import { globals } from "./Events/input.js";
-import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.js";
-import { Cell } from "./cell.js";
-import { CELLSIZE, CellAnimation, Directions } from "./configs/cell.config.js";
-import { mouse } from "./configs/input.config.js";
-import { wallState } from "./configs/wall.config.js";
-import { Debuger } from "./debugger.js";
+import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.ts";
+import { Cell } from "./cell.ts";
+import { CELLSIZE, CellAnimation, Directions } from "./configs/cell.config.ts";
+import { globals } from "./configs/globals.ts";
+import { mouse } from "./configs/input.config.ts";
+import { wallState } from "./configs/wall.config.ts";
+import { Debuger } from "./debugger.ts";
 
 
 
@@ -217,13 +217,12 @@ export class Grid {
 
     this.debuger.update();
 
-    this.drawDebuger(ctx);
   }
 
   public drawDebuger(ctx: CanvasRenderingContext2D) {
 
     if (!globals.debugModeOn) return;
-    this.writeMousePosition(ctx);
+    // this.writeMousePosition(ctx);
     this.debuger.draw(ctx, this.at(this.#mouseCellx, this.#mouseCelly), this);
   }
 

@@ -1,11 +1,11 @@
-import { globals } from "./Events/input.js";
-import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.js";
-import { setTextStyle } from "./canvas_ctx_style_manipulation/text.js";
-import { Cell } from "./cell.js";
-import { CornerDirections, Directions } from "./configs/cell.config.js";
-import { pageIndexs } from "./configs/defaults.js";
-import { mouse } from "./configs/input.config.js";
-import { Grid } from "./grid.js";
+import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.ts";
+import { setTextStyle } from "./canvas_ctx_style_manipulation/text.ts";
+import { Cell } from "./cell.ts";
+import { CornerDirections, Directions } from "./configs/cell.config.ts";
+import { pageIndexs } from "./configs/defaults.ts";
+import { globals } from "./configs/globals.ts";
+import { mouse } from "./configs/input.config.ts";
+import { Grid } from "./grid.ts";
 
 
 
@@ -186,8 +186,11 @@ export class Debuger {
 
   public draw(ctx: CanvasRenderingContext2D, cell: Cell | null, grid: Grid) {
     if (!globals.debugBookletIsOn || cell === null) return;
-    ctx.fillStyle = DEBUGGERCOLOR;
 
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(this.#x, this.#y, 100, 100);
+
+    ctx.fillStyle = DEBUGGERCOLOR;
     setShadowStyle(ctx, { blur: 10, color: SHADOWCOLOR })
 
     ctx.fillRect(this.#x, this.#y, Debuger.d_length, Debuger.d_width);

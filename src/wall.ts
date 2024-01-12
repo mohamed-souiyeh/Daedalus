@@ -1,6 +1,6 @@
-import { WALLCOLOR, WALL_PERSENTAGE, WALL_TARGETEDALPHA, WallAnimation, wallState } from "./configs/wall.config.js";
-import { Debuger } from "./debugger.js";
-import { color } from "./types/color.type.js";
+import { WALLCOLOR, WALL_PERSENTAGE, WALL_TARGETEDALPHA, WallAnimation, wallState } from "./configs/wall.config.ts";
+import { Debuger } from "./debugger.ts";
+import { color } from "./types/color.type.ts";
 
 
 

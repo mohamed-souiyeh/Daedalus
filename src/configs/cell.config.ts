@@ -1,4 +1,4 @@
-import { color } from "../types/color.type.js";
+import { color } from "../types/color.type.ts";
 
 export const CELLSIZE = 40;
 
@@ -26,7 +26,7 @@ export const VISITED_CELLCOLOR = {
 // };
 
 export enum cellDefaults {
-  INWARDSSCALINGFACTOR = 0.5,
+  INWARDSSCALINGFACTOR = 0.3,
   OUTWARDSSCALINGFACTOR = 0.3,
   VELOCITY = 0.5,
   ACCELERATION = 0,

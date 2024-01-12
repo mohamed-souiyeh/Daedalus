@@ -1,15 +1,54 @@
 {
+  "name": "next-app-template",
+  "version": "0.0.1",
+  "private": true,
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "dev": "next dev",
+    "watch": "tsc --watch -p tsconfig.src.json",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "bootstrap": "^5.3.2"
-  },
-  "devDependencies": {
-    "@types/bootstrap": "^5.2.10",
-    "gh-pages": "^6.1.0",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-brands-svg-icons": "^6.5.1",
+    "@fortawesome/free-regular-svg-icons": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@nextui-org/avatar": "^2.0.24",
+    "@nextui-org/button": "2.0.26",
+    "@nextui-org/code": "2.0.24",
+    "@nextui-org/dropdown": "^2.1.16",
+    "@nextui-org/input": "^2.1.16",
+    "@nextui-org/kbd": "2.0.25",
+    "@nextui-org/link": "2.0.26",
+    "@nextui-org/modal": "^2.0.28",
+    "@nextui-org/navbar": "2.0.27",
+    "@nextui-org/react": "^2.2.9",
+    "@nextui-org/snippet": "2.0.30",
+    "@nextui-org/switch": "^2.0.25",
+    "@nextui-org/system": "2.0.15",
+    "@nextui-org/theme": "2.1.17",
+    "@nextui-org/tooltip": "^2.0.29",
+    "@react-aria/ssr": "^3.8.0",
+    "@react-aria/visually-hidden": "^3.8.6",
+    "@types/node": "20.5.7",
+    "@types/react": "18.2.21",
+    "@types/react-dom": "18.2.7",
+    "autoprefixer": "10.4.16",
+    "clsx": "^2.0.0",
+    "eslint": "8.48.0",
+    "eslint-config-next": "14.0.2",
+    "framer-motion": "^10.16.4",
+    "intl-messageformat": "^10.5.0",
+    "next": "14.0.2",
+    "next-themes": "^0.2.1",
+    "postcss": "8.4.31",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-responsive": "^9.0.2",
+    "tailwind-variants": "^0.1.18",
+    "tailwindcss": "3.3.5",
     "typescript": "5.0.4"
-  },
-  "homepage": "http://mohamed-souiyeh.github.io/Daedalus_JS"
+  }
 }

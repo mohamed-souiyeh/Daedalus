@@ -1,14 +1,15 @@
-import { UNVISITED_CELLCOLOR, cellDefaults, stateColors } from "./configs/cell.config.js";
-import { CORNERCOLOR } from "./configs/corner.config.js";
-import { WALLCOLOR, WallAnimation, wallState } from "./configs/wall.config.js";
-import { Corner } from "./corner.js";
-import { Debuger } from "./debugger.js";
-import { CellAnimation, CellStates, CornerDirections, Directions } from "./configs/cell.config.js";
-import { cellVector } from "./types/cell/cellVector.type.js";
-import { link } from "./types/cell/link.type.js";
-import { color } from "./types/color.type.js";
-import { Wall } from "./wall.js";
-import { globals } from "./Events/input.js";
+import { UNVISITED_CELLCOLOR, cellDefaults, stateColors } from "./configs/cell.config.ts";
+import { CORNERCOLOR } from "./configs/corner.config.ts";
+import { WALLCOLOR, WallAnimation, wallState } from "./configs/wall.config.ts";
+import { Corner } from "./corner.ts";
+import { Debuger } from "./debugger.ts";
+import { CellAnimation, CellStates, CornerDirections, Directions } from "./configs/cell.config.ts";
+import { cellVector } from "./types/cell/cellVector.type.ts";
+import { link } from "./types/cell/link.type.ts";
+import { color } from "./types/color.type.ts";
+import { Wall } from "./wall.ts";
+import { globals } from "./configs/globals.ts";
+
 
 
 let current_line = 0;
@@ -481,7 +482,7 @@ export class Cell {
   drawTitle(ctx: CanvasRenderingContext2D, startx: number, starty: number) {
     const title = "-- Cell Info --";
 
-    let xoffset = Debuger.d_length / 2 - ctx.measureText(title).width / 2;
+    let xoffset = Debuger._length / 2 - ctx.measureText(title).width / 2;
     let yoffset = Debuger.textVOffset;
 
     ctx.fillText(title, startx + xoffset, starty + yoffset);
@@ -539,6 +540,7 @@ export class Cell {
 
       cellInfo = `nextColor: rgba(${this.#nextColor.r}, ${this.#nextColor.g}, ${this.#nextColor.b}, ${this.#nextColor.a.toFixed(3)})`;
 
+      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
       xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 

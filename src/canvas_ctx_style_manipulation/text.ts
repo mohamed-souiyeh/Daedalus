@@ -1,4 +1,4 @@
-import { text } from "../types/text.type.js";
+import { text } from "../types/text.type.ts";
 
 export function setTextStyle(ctx: CanvasRenderingContext2D, textStyle: text) {
   ctx.font = textStyle?.font ?? "10px sans-serif";

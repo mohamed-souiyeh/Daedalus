@@ -1,4 +1,4 @@
-import { mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "../../configs/controlCenter.config.js";
+import { mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "../../configs/controlCenter.config.ts";
 
 
 

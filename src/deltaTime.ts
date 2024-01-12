@@ -1,4 +1,4 @@
-import { globals } from "./Events/input.js";
+import { globals } from "./configs/globals";
 
 
 
@@ -36,6 +36,12 @@ export class DeltaTime {
 
   set debugTimeStep(value: number) {
     this.#debugTimeStep = value;
+  }
+
+  public reset() {
+    this.#lastTime = 0;
+    this.#timeStep = 0;
+    this.#debugTimeStep = 0;
   }
 
   public oneStepIsDone() {
