@@ -1,4 +1,4 @@
-import { globals } from "./input.ts";
+import { globals } from "../configs/globals";
 
 
 

@@ -1,6 +1,5 @@
 import { mouse } from "../configs/input.config.ts";
-import { globals } from "./input.ts";
-
+import { globals } from "../configs/globals.ts";
 
 export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
   //NOTE - to update mouse position if not locked

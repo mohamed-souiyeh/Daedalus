@@ -1,7 +1,7 @@
-import { globals } from "./Events/input.ts";
 import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.ts";
 import { Cell } from "./cell.ts";
 import { CELLSIZE, CellAnimation, Directions } from "./configs/cell.config.ts";
+import { globals } from "./configs/globals.ts";
 import { mouse } from "./configs/input.config.ts";
 import { wallState } from "./configs/wall.config.ts";
 import { Debuger } from "./debugger.ts";

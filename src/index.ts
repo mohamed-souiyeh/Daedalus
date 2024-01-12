@@ -2,14 +2,15 @@ import { Grid } from "./grid.ts";
 import { DeltaTime } from "./deltaTime.ts";
 import { wallState } from "./configs/wall.config.ts";
 import { CellAnimation, CellStates } from "./configs/cell.config.ts";
-import { globals } from "./Events/input.ts";
+import { inputDefaults } from "./configs/defaults.ts";
+import { globals } from "./configs/globals.ts";
 
 let deltaTime: DeltaTime;
 let grid: Grid;
 let counter: number;
 
-export function setup() {
 
+export function reset() {
   const canvas = globals.canvas;
   const ctx = globals.ctx;
 
@@ -18,11 +19,31 @@ export function setup() {
     return;
   }
 
-  console.log("canvas => ", canvas);
-  console.log("canvas offset width => ", canvas.offsetWidth);
-  console.log("canvas offset height => ", canvas.offsetHeight);
-  console.log("canvas width => ", canvas.width);
-  console.log("canvas height => ", canvas.height);
+  cancelAnimationFrame(globals.currentAnimation);
+  globals.currentAnimation = 0;
+
+  grid.initialize(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
+  
+  deltaTime.reset();
+  counter = 0;
+
+  globals.currentAnimation = requestAnimationFrame(animation);
+}
+
+export function setup() {
+  const canvas = globals.canvas;
+  const ctx = globals.ctx;
+
+  if (canvas === null || ctx === null) {
+    console.log("canvas or ctx is null");
+    return;
+  }
+
+  // console.log("canvas => ", canvas);
+  // console.log("canvas offset width => ", canvas.offsetWidth);
+  // console.log("canvas offset height => ", canvas.offsetHeight);
+  // console.log("canvas width => ", canvas.width);
+  // console.log("canvas height => ", canvas.height);
 
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
@@ -31,10 +52,13 @@ export function setup() {
 
   counter = 0;
   deltaTime = new DeltaTime();
+
+  globals.setup = true;
+  globals.currentAnimation = requestAnimationFrame(animation);
 }
 
 export function animation(dt: number) {
-  requestAnimationFrame(animation);
+  globals.currentAnimation = requestAnimationFrame(animation);
 
   const canvas = globals.canvas;
   const ctx = globals.ctx;
@@ -94,12 +118,12 @@ export function animation(dt: number) {
   }
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // ctx.fillStyle = "rgb(33, 40, 49)"
+  // ctx.fillStyle = "rgb(255, 255, 255)"
   // ctx.fillRect(0, 0, canvas.width, canvas.height);
   grid.draw(ctx);
 
   if (deltaTime.oneDebugStepIsDone()) {
-    grid.updateDebuger(ctx);
-    grid.drawDebuger(ctx);
+    grid.updateDebuger(globals.ctx as CanvasRenderingContext2D);
+    grid.drawDebuger(globals.ctx as CanvasRenderingContext2D);
   }
 }

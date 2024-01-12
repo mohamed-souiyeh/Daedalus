@@ -1,9 +1,9 @@
-import { globals } from "./Events/input.ts";
 import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.ts";
 import { setTextStyle } from "./canvas_ctx_style_manipulation/text.ts";
 import { Cell } from "./cell.ts";
 import { CornerDirections, Directions } from "./configs/cell.config.ts";
 import { pageIndexs } from "./configs/defaults.ts";
+import { globals } from "./configs/globals.ts";
 import { mouse } from "./configs/input.config.ts";
 import { Grid } from "./grid.ts";
 
@@ -186,10 +186,11 @@ export class Debuger {
 
   public draw(ctx: CanvasRenderingContext2D, cell: Cell | null, grid: Grid) {
     if (!globals.debugBookletIsOn || cell === null) return;
+
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(this.#x, this.#y, 100, 100);
+
     ctx.fillStyle = DEBUGGERCOLOR;
-    
-    console.log("this.x", this.#x, "this.y", this.#y);
-    console.log("debuger length", Debuger._length, "debuger width", Debuger._width);
     setShadowStyle(ctx, { blur: 10, color: SHADOWCOLOR })
 
     ctx.fillRect(this.#x, this.#y, Debuger._length, Debuger._width);

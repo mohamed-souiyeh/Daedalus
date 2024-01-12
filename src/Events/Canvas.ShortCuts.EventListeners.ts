@@ -1,7 +1,7 @@
 import { pageIndexs } from "../configs/defaults.ts";
 import { debugPagesSize } from "../configs/input.config.ts";
 import { Debuger } from "../debugger.ts";
-import { globals } from "./input.ts";
+import { globals } from "../configs/globals.ts";
 
 export const LENGTH = 0;
 export const WIDTH = 1;

@@ -8,7 +8,8 @@ import { cellVector } from "./types/cell/cellVector.type.ts";
 import { link } from "./types/cell/link.type.ts";
 import { color } from "./types/color.type.ts";
 import { Wall } from "./wall.ts";
-import { globals } from "./Events/input.ts";
+import { globals } from "./configs/globals.ts";
+
 
 
 let current_line = 0;
