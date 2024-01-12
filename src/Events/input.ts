@@ -17,8 +17,8 @@ export const setupEventListners = async () => {
 
   async function initDefaultStates() {
 
-    Debuger._length = debugPagesSize[globals.currentdebugPageIndex][LENGTH];
-    Debuger._width = debugPagesSize[globals.currentdebugPageIndex][WIDTH];
+    Debuger.d_length = debugPagesSize[globals.currentdebugPageIndex][LENGTH];
+    Debuger.d_width = debugPagesSize[globals.currentdebugPageIndex][WIDTH];
 
 
     Cell.debugPage = pageIndexs.cell;

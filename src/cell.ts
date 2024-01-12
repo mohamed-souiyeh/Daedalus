@@ -499,7 +499,7 @@ export class Cell {
 
     let cellInfo = `-- Animation properties --`;
     {
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -507,7 +507,7 @@ export class Cell {
 
       cellInfo = `x: ${this.#x.toFixed(3)} | y: ${this.#y.toFixed(3)} | Length: ${this.#length.toFixed(3)}`;
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -515,7 +515,7 @@ export class Cell {
 
       cellInfo = `Velocity: ${this.#velocity.toFixed(3)}   |   Acceleration: ${this.#acceleration.toFixed(3)}`;
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -524,7 +524,7 @@ export class Cell {
       cellInfo = `Animation: ${cellAnimation[this.#animation]}`
       //` | color: rgba(${this.#color.r}, ${this.#color.g}, ${this.#color.b}, ${this.#color.a.toFixed(3)})`;
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -532,7 +532,7 @@ export class Cell {
 
       cellInfo = `Color: rgba(${this.#color.r}, ${this.#color.g}, ${this.#color.b}, ${this.#color.a.toFixed(3)})`;
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -541,6 +541,7 @@ export class Cell {
       cellInfo = `nextColor: rgba(${this.#nextColor.r}, ${this.#nextColor.g}, ${this.#nextColor.b}, ${this.#nextColor.a.toFixed(3)})`;
 
       xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -548,7 +549,7 @@ export class Cell {
 
       cellInfo = `colorDists: rgba(${this.#colorDists.r}, ${this.#colorDists.g}, ${this.#colorDists.b}, ${this.#colorDists.a.toFixed(3)})`;
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -556,7 +557,7 @@ export class Cell {
 
       cellInfo = `xOSteps: ${this.#xOutwardSteps.toFixed(3)} | xOWidth: ${this.#xOutwardWidth.toFixed(3)}`;
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -564,7 +565,7 @@ export class Cell {
 
       cellInfo = `animation percentage: ${((this.#xOutwardSteps / this.#xOutwardWidth) * 100).toFixed(3)}%`;
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -572,7 +573,7 @@ export class Cell {
 
       cellInfo = `ISFactor: ${this.#inwardScalingFactor.toFixed(3)} | OSFactor: ${this.#outwardScalingFactor.toFixed(3)}`;
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -582,7 +583,7 @@ export class Cell {
     cellInfo = `-- Cell Vector properties --`;
     {
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -590,7 +591,7 @@ export class Cell {
 
       cellInfo = `sx: ${this.#cellVector.startx.toFixed(3)} | sy: ${this.#cellVector.starty.toFixed(3)}`
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -599,7 +600,7 @@ export class Cell {
 
       cellInfo = `ex: ${this.#cellVector.endx.toFixed(3)} | ey: ${this.#cellVector.endy.toFixed(3)}`
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -608,7 +609,7 @@ export class Cell {
 
       cellInfo = `cx: ${this.#cellVector.currentx.toFixed(3)} | cy: ${this.#cellVector.currenty.toFixed(3)}`
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -616,7 +617,7 @@ export class Cell {
 
       cellInfo = `clength: ${this.#cellVector.currentlength.toFixed(3)}`;
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -626,7 +627,7 @@ export class Cell {
     // setTextStyle(ctx, { textAlign: Debuger.textalign, textBaseline: Debuger.textBaseline, font: Debuger.textSize + "px " + Debuger.textFont, fillStyle: "red" })
     cellInfo = '-- Algorithm properties --';
     {
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -636,7 +637,7 @@ export class Cell {
 
       cellInfo = `Gridx: ${this.gridx} | Gridy: ${this.gridy} | State: ${cellStates[this.#state]}`;
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -644,7 +645,7 @@ export class Cell {
 
       cellInfo = `Links: ${this.#links.size}`;
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
@@ -652,7 +653,7 @@ export class Cell {
 
       cellInfo = `No: ${this.north === null ? "null" : this.north.gridx + "," + this.north.gridy} | E: ${this.east === null ? "null" : this.east.gridx + "," + this.east.gridy} | S: ${this.south === null ? "null" : this.south.gridx + "," + this.south.gridy} | W: ${this.west === null ? "null" : this.west.gridx + "," + this.west.gridy}`
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);

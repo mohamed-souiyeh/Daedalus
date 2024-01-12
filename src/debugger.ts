@@ -36,8 +36,8 @@ export class Debuger {
   #x: number = 0;
   #y: number = 0;
 
-  static _length: number = 0;
-  static _width: number = 0;
+  static d_length: number = 0;
+  static d_width: number = 0;
 
   static textHOffset: number = 5;
   static textVOffset: number = 5;
@@ -56,14 +56,14 @@ export class Debuger {
   constructor() { }
 
   public update() {
-    const horizontalDirection = mouse.x >= this.#offsetLeftFromMouse * 2 + Debuger._length ? directions.LEFT : directions.RIGHT;
-    const verticalDirection = mouse.y >= this.#offsetTopFromMouse * 2 + Debuger._width ? directions.UP : directions.DOWN;
+    const horizontalDirection = mouse.x >= this.#offsetLeftFromMouse * 2 + Debuger.d_length ? directions.LEFT : directions.RIGHT;
+    const verticalDirection = mouse.y >= this.#offsetTopFromMouse * 2 + Debuger.d_width ? directions.UP : directions.DOWN;
 
-    let offset = horizontalDirection === directions.LEFT ? this.#offsetLeftFromMouse + Debuger._length : this.#offsetLeftFromMouse;
+    let offset = horizontalDirection === directions.LEFT ? this.#offsetLeftFromMouse + Debuger.d_length : this.#offsetLeftFromMouse;
 
     this.#x = mouse.x + (offset * horizontalDirection);
 
-    offset = verticalDirection === directions.UP ? this.#offsetTopFromMouse + Debuger._width : this.#offsetTopFromMouse;
+    offset = verticalDirection === directions.UP ? this.#offsetTopFromMouse + Debuger.d_width : this.#offsetTopFromMouse;
 
     this.#y = mouse.y + (offset * verticalDirection);
   }
@@ -80,21 +80,21 @@ export class Debuger {
 
   gridInfo(ctx: CanvasRenderingContext2D, grid: Grid) {
     const title = "-- Grid Info --";
-    let xoffset = Debuger._length / 2 - ctx.measureText(title).width / 2;
+    let xoffset = Debuger.d_length / 2 - ctx.measureText(title).width / 2;
     let yoffset = Debuger.textVOffset;
 
     ctx.fillText(title, this.#x + xoffset, this.#y + yoffset);
     current_line++;
 
     let gridInfo = `Length: ${grid.length} | Width: ${grid.width} | Size: ${grid.size()}`;
-    xoffset = (Debuger._length - ctx.measureText(gridInfo).width) / 2;
+    xoffset = (Debuger.d_length - ctx.measureText(gridInfo).width) / 2;
     yoffset += Debuger.textVOffset + Debuger.textSize;
 
     ctx.fillText(gridInfo, this.#x + xoffset, this.#y + yoffset);
     current_line++;
 
     gridInfo = `Start: x ${grid.startX}, y ${grid.startY} | Offsets: h ${grid.offsetLeft}, v ${grid.offsetTop}`;
-    xoffset = (Debuger._length - ctx.measureText(gridInfo).width) / 2;
+    xoffset = (Debuger.d_length - ctx.measureText(gridInfo).width) / 2;
     yoffset += Debuger.textVOffset + Debuger.textSize;
 
     ctx.fillText(gridInfo, this.#x + xoffset, this.#y + yoffset);
@@ -112,7 +112,7 @@ export class Debuger {
 
     const title = "-- Cell Diagram --";
 
-    let xoffset = Debuger._length / 2 - ctx.measureText(title).width / 2;
+    let xoffset = Debuger.d_length / 2 - ctx.measureText(title).width / 2;
     let yoffset = Debuger.textVOffset;
 
 
@@ -124,12 +124,12 @@ export class Debuger {
 
 
 
-    const size = Debuger._width;
+    const size = Debuger.d_width;
 
     const cellSize = (size - ((yoffset + Debuger.textSize + Debuger.textVOffset) + (Debuger.textSize + Debuger.textVOffset * 2))) - 10;// - 10 is for the padding
 
 
-    xoffset = (Debuger._length - cellSize) / 2;
+    xoffset = (Debuger.d_length - cellSize) / 2;
 
     const cellx = this.#x + xoffset;
     const celly = (this.#y + (yoffset + Debuger.textSize + Debuger.textVOffset)) + 5;
@@ -193,15 +193,15 @@ export class Debuger {
     ctx.fillStyle = DEBUGGERCOLOR;
     setShadowStyle(ctx, { blur: 10, color: SHADOWCOLOR })
 
-    ctx.fillRect(this.#x, this.#y, Debuger._length, Debuger._width);
+    ctx.fillRect(this.#x, this.#y, Debuger.d_length, Debuger.d_width);
 
     resetShadowStyle(ctx);
 
     setTextStyle(ctx, { textAlign: Debuger.textalign, textBaseline: Debuger.textBaseline, font: Debuger.textSize + "px " + Debuger.textFont, fillStyle: Debuger.textColor })
 
     // NOTE - writing the page index on debugger page
-    const xoffset = Debuger._length / 2 - ctx.measureText(`-- x --`).width / 2;
-    const yoffset = Debuger._width - Debuger.textSize - Debuger.textVOffset;
+    const xoffset = Debuger.d_length / 2 - ctx.measureText(`-- x --`).width / 2;
+    const yoffset = Debuger.d_width - Debuger.textSize - Debuger.textVOffset;
 
     ctx.fillText(`-- ${globals.currentdebugPageIndex} --`, this.#x + xoffset, this.#y + yoffset);
 
