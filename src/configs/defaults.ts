@@ -14,6 +14,9 @@ export enum pageIndexs {
 }
 
 export enum inputDefaults {
+  TOOLTIPDELAY = 300,
+  DISABLETOOLTIP = 1000 * 60 * 60,
+  DEFAULTTOOLTIPSTATE = DISABLETOOLTIP,
   DELAY = 8,
   MINDELAY = 8,
   MAXDELAY = 1000,

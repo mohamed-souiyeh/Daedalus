@@ -7,17 +7,19 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@nextui-org/navbar";
-import { Key, createRef, useEffect, useRef, useState } from "react";
+import { Key, createRef, use, useEffect, useRef, useState } from "react";
 import { MyAvatar } from "./avatar";
 import { title } from "./primitives";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookBookmark, faBookOpen, faBug, faBugSlash, faCircleQuestion, faGear, faLink, faMagnifyingGlassLocation, faMinus, faPause, faPlay, faPlus, faRepeat, faTextSlash, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
+import { faBookBookmark, faBookOpen, faBug, faBugSlash, faCircleInfo, faCircleQuestion, faGear, faGraduationCap, faLink, faMagnifyingGlassLocation, faMinus, faPause, faPlay, faPlus, faRepeat, faRoute, faStreetView, faTextSlash, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
 import { inputDefaults } from "@/src/configs/defaults";
 import { DELAYSTEP, updateDelay } from "@/src/Events/Delay.EventListeners";
 import { reset } from "@/src";
 import { globals } from "@/src/configs/globals";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Select, SelectItem, Selection, Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
+import { mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "@/src/configs/controlCenter.config";
+import { AlgorithmDescription } from "./algorithmDescription";
 
 const color = undefined as "primary" | "default" | "secondary" | "success" | "warning" | "danger" | undefined;
 
@@ -33,6 +35,7 @@ export const Navbar = () => {
   const numberInput = createRef<HTMLInputElement>();
   const mazeBuildingInspector = createRef<HTMLButtonElement>();
   const mazeSolvingInspector = createRef<HTMLButtonElement>();
+  const depthFilterButton = createRef<HTMLButtonElement>();
 
 
   const [inputValue, setInputValue] = useState(inputDefaults.DELAY as unknown as string);
@@ -95,14 +98,28 @@ export const Navbar = () => {
     reset();
   };
 
+  const addDepthFilter = () => {
+    console.log("addDepthFilter");
+  };
+
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const isControlCenterOpen = useRef(isOpen);
   useEffect(() => {
     isControlCenterOpen.current = isOpen;
   }, [isOpen]);
 
+  const [mazeSolvingAlgorithmValue, setmazeSolvingAlgorithmValue] = useState<Selection>(new Set([]));
+  const [mazeBuildingAlgorithmValue, setmazeBuildingAlgorithmValue] = useState<Selection>(new Set([]));
+
+  // useEffect(() => {
+  //   console.log("mazeBuildingAlgorithmValue => ", Array.from(mazeBuildingAlgorithmValue)[0]);
+  //   console.log("mazeSolvingAlgorithmValue => ", Array.from(mazeSolvingAlgorithmValue)[0]);
+  // }, [mazeSolvingAlgorithmValue, mazeBuildingAlgorithmValue]);
+
 
   const handleLaunchButton = () => {
+    globals.mazeBuildingAlgorithm = Array.from(mazeBuildingAlgorithmValue)[0] as string;
+    globals.mazeSolvingAlgorithm = Array.from(mazeSolvingAlgorithmValue)[0] as string;
     onClose();
   };
 
@@ -148,7 +165,7 @@ export const Navbar = () => {
 
 
 
-  const [tooltipDelay, setTooltipDelay] = useState(300);
+  const [tooltipDelay, setTooltipDelay] = useState(inputDefaults.DEFAULTTOOLTIPSTATE);
   const tooltipDelayRef = useRef(tooltipDelay);
 
   useEffect(() => {
@@ -164,7 +181,7 @@ export const Navbar = () => {
       console.log("copy");
     }
     if (e === "Tooltips") {
-      setTooltipDelay(tooltipDelayRef.current === 300 ? 1000 * 120 : 300);
+      setTooltipDelay(tooltipDelayRef.current === inputDefaults.TOOLTIPDELAY ? inputDefaults.DISABLETOOLTIP : inputDefaults.TOOLTIPDELAY);
     }
   };
 
@@ -177,15 +194,40 @@ export const Navbar = () => {
         <div className=" flex flex-row items-center flex-grow justify-between">
           <MyAvatar />
           <div className=" flex flex-row gap-2">
-            <Tooltip content="Maze Solving Algorithm" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
-              <Button ref={mazeSolvingInspector} color={mazeSolvingInspectorColor} isIconOnly size="sm" isDisabled={false}>
-                <FontAwesomeIcon icon={faMagnifyingGlassLocation} size="lg" />
-              </Button>
-            </Tooltip>
             <Tooltip content="Maze Building Algorithm" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
-              <Button ref={mazeBuildingInspector} color={mazeBuildingInspectorColor} isIconOnly size="sm" isDisabled={false}>
-                <FontAwesomeIcon icon={faTrowelBricks} size="lg" />
-              </Button>
+              <div>
+                <Popover placement="bottom" showArrow={true} color="default" backdrop="opaque">
+                  <PopoverTrigger>
+                    <Button ref={mazeBuildingInspector} color={mazeBuildingInspectorColor} isIconOnly size="sm" isDisabled={false}>
+                      <FontAwesomeIcon icon={faTrowelBricks} size="lg" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    {
+                      //TODO - use algorithm description from config file in algorithm description component
+                    }
+                    <AlgorithmDescription />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </Tooltip>
+            <Tooltip content="Maze Solving Algorithm" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+              <div>
+                <Popover placement="bottom" showArrow={true} color="default" backdrop="opaque">
+
+                  <PopoverTrigger>
+                    <Button ref={mazeSolvingInspector} color={mazeSolvingInspectorColor} isIconOnly size="sm" isDisabled={false}>
+                      <FontAwesomeIcon icon={faRoute} size="lg" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    {
+                      //TODO - use algorithm description from config file in algorithm description component
+                    }
+                    <AlgorithmDescription />
+                  </PopoverContent>
+                </Popover>
+              </div>
             </Tooltip>
           </div>
         </div>
@@ -212,7 +254,7 @@ export const Navbar = () => {
                 <DropdownItem
                   key="Tuto"
                   description="Take a Tour"
-                  endContent={<FontAwesomeIcon icon={faCircleQuestion} size="lg" />}
+                  endContent={<FontAwesomeIcon icon={faGraduationCap} size="lg" />}
                 >
                   Tutorial</DropdownItem>
                 <DropdownItem
@@ -241,24 +283,70 @@ export const Navbar = () => {
           </Button>
         </Tooltip>
 
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="items-center" size="lg">
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="items-center" size="xl" backdrop="blur">
           <ModalContent>
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1">Control Center</ModalHeader>
-                <ModalBody>
+                <ModalBody className="flex flex-grow w-full">
                   <p>
                     here u can chose the algorithm u want to use to build the
                     maze/mazes (if u choose to apply areas) and the
                     algorithm/algorithms (if u choose to apply areas) u want to
                     use to solve the maze.
                   </p>
+                  <div id="algorithm selection" className="flex flex-row gap-3 w-full">
+                    {//TODO - add sections for maze building and maze solving algorithms for each behavior group 
+                    }
+                    <Select
+                      label="Maze Building Algorithm"
+                      size="md"
+                      radius="sm"
+                      placeholder="Select an Algorithm"
+                      // startContent={<FontAwesomeIcon icon={faTrowelBricks} size="sm" />}
+                      selectorIcon={<FontAwesomeIcon icon={faTrowelBricks} size="sm" />}
+                      disableSelectorIconRotation
+                      // defaultSelectedKeys={["Random"]}
+                      description="The algorithm used to build the maze"
+                      selectedKeys={mazeBuildingAlgorithmValue}
+                      onSelectionChange={setmazeBuildingAlgorithmValue}
+                    >
+                      {mazeGenerationAlgorithms.map((algo) => (
+                        <SelectItem key={algo.key} value={algo.name} >
+                          {algo.name}
+                        </SelectItem>
+                      ))}
+                    </Select>
+                    <Select
+                      label="Maze solving Algorithm"
+                      size="md"
+                      radius="sm"
+                      placeholder="Select an Algorithm"
+                      // startContent={<FontAwesomeIcon icon={faMagnifyingGlassLocation} size="sm" />}
+                      selectorIcon={<FontAwesomeIcon icon={faRoute} size="sm" />}
+                      disableSelectorIconRotation
+                      // defaultSelectedKeys={["Random"]}
+                      description="The algorithm used to solve the maze"
+                      selectedKeys={mazeSolvingAlgorithmValue}
+                      onSelectionChange={setmazeSolvingAlgorithmValue}
+                    >
+                      {mazeSolvingAlgorithms.map((algo) => (
+                        <SelectItem key={algo.key} value={algo.name}>
+                          {algo.name}
+                        </SelectItem>
+                      ))}
+                    </Select>
+                  </div>
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>
                     Close
                   </Button>
-                  <Button color="primary" onPress={handleLaunchButton}>
+                  <Button
+                    isDisabled={!Array.from(mazeBuildingAlgorithmValue)[0] || !Array.from(mazeSolvingAlgorithmValue)[0]}
+                    color="primary"
+                    onPress={handleLaunchButton}
+                  >
                     Launch
                   </Button>
                 </ModalFooter>
@@ -288,7 +376,17 @@ export const Navbar = () => {
               <FontAwesomeIcon icon={debugButtonIcon} size="lg" />
             </Button>
           </Tooltip>
+          
         </ButtonGroup>
+
+        <Tooltip content="Depth Filter" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+          <Button ref={depthFilterButton} color="primary" isIconOnly size="sm" onClick={addDepthFilter}>
+            {
+              //TODO - handle the depth filter stuff
+            }
+            <FontAwesomeIcon icon={faStreetView} size="lg" />
+          </Button>
+        </Tooltip>
 
         <ButtonGroup>
           <Tooltip content="Decrement Delay" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
@@ -320,6 +418,7 @@ export const Navbar = () => {
             </Button>
           </Tooltip>
         </ButtonGroup>
+
       </NavbarContent>
     </NextUINavbar >
   );

@@ -21,5 +21,6 @@ export const globals = {
 
   currentdebugPageIndex: inputDefaults.DEFAULTDEBUGPAGEINDEX as unknown as number,
 
-  // mazeGenerationAlgorithm: 
+  mazeBuildingAlgorithm: null as string | null,
+  mazeSolvingAlgorithm: null as string | null,
 }

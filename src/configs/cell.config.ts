@@ -2,18 +2,20 @@ import { color } from "../types/color.type.ts";
 
 export const CELLSIZE = 40;
 
+const colore = "rgba(006FEE)"
+
 export const UNVISITED_CELLCOLOR = {
-  r: 175,
-  g: 216,
-  b: 248,
+  r: 153,
+  g: 199,
+  b: 251,
   a: 1,
 };
 
 
 export const VISITED_CELLCOLOR = {
-  r: 175,
-  g: 216,
-  b: 248,
+  r: 153,
+  g: 199,
+  b: 251,
   a: 1,
 };
 

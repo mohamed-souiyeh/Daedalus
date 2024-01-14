@@ -467,6 +467,7 @@ export class Cell {
     }
 
     if (globals.debugModeOn) {
+      //FIXME - replace this with the set style method
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "black";
@@ -482,7 +483,7 @@ export class Cell {
   drawTitle(ctx: CanvasRenderingContext2D, startx: number, starty: number) {
     const title = "-- Cell Info --";
 
-    let xoffset = Debuger._length / 2 - ctx.measureText(title).width / 2;
+    let xoffset = Debuger.d_length / 2 - ctx.measureText(title).width / 2;
     let yoffset = Debuger.textVOffset;
 
     ctx.fillText(title, startx + xoffset, starty + yoffset);
@@ -540,7 +541,7 @@ export class Cell {
 
       cellInfo = `nextColor: rgba(${this.#nextColor.r}, ${this.#nextColor.g}, ${this.#nextColor.b}, ${this.#nextColor.a.toFixed(3)})`;
 
-      xoffset = Debuger._length / 2 - ctx.measureText(cellInfo).width / 2;
+      xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
 

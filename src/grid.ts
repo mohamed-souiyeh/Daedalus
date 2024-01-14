@@ -187,7 +187,7 @@ export class Grid {
     }
 
 
-    setShadowStyle(ctx, { blur: 10, color: "green" })
+    setShadowStyle(ctx, { blur: 10, color: "#338EF7" })
     for (let cell of this.eachCell()) {
       if (cell.animation !== CellAnimation.STOPPED) {
         (cell.gridx !== this.#mouseCellx || cell.gridy !== this.#mouseCelly)
@@ -197,7 +197,7 @@ export class Grid {
     resetShadowStyle(ctx);
 
     if (globals.debugModeOn) {
-      setShadowStyle(ctx, { blur: 10, color: "red" })
+      setShadowStyle(ctx, { blur: 10, color: "gold" })
       this.at(this.#mouseCellx, this.#mouseCelly)?.draw(ctx);
       resetShadowStyle(ctx);
     }
