@@ -22,7 +22,6 @@ import { mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "@/src/configs/c
 import { AlgorithmDescription } from "./algorithmDescription";
 import { FirstSection } from "./firstSection";
 import { color } from "@/types";
-import { SecondSection } from "./secondSection";
 
 
 export const Navbar = () => {
