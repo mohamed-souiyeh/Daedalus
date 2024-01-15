@@ -9,7 +9,7 @@ import { Grid } from "./grid.ts";
 
 
 
-const DEBUGGERCOLOR = "gray";
+const DEBUGGERCOLOR = "rgba(113, 113, 122, 1)";
 const SHADOWCOLOR = "gold";
 
 let current_line = 0;
@@ -186,9 +186,6 @@ export class Debuger {
 
   public draw(ctx: CanvasRenderingContext2D, cell: Cell | null, grid: Grid) {
     if (!globals.debugBookletIsOn || cell === null) return;
-
-    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillRect(this.#x, this.#y, 100, 100);
 
     ctx.fillStyle = DEBUGGERCOLOR;
     setShadowStyle(ctx, { blur: 10, color: SHADOWCOLOR })
