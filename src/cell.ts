@@ -9,6 +9,7 @@ import { link } from "./types/cell/link.type.ts";
 import { color } from "./types/color.type.ts";
 import { Wall } from "./wall.ts";
 import { globals } from "./configs/globals.ts";
+import { setTextStyle } from "./canvas_ctx_style_manipulation/text.ts";
 
 
 
@@ -188,6 +189,15 @@ export class Cell {
   };
   //!SECTION
 
+  get xOutwardWidth() {
+    return this.#xOutwardWidth;
+  }
+
+  get xOutwardSteps() {
+    return this.#xOutwardSteps;
+  }
+
+
   //SECTION - initialization methods
   public init(gridx: number, gridy: number, x: number, y: number, length: number, wallState: wallState) {
     this.gridx = gridx;
@@ -211,6 +221,7 @@ export class Cell {
     this.#cellVector.endy = this.#y - endlength;
 
     this.#xOutwardWidth = endlength * 2 + startlength;
+    this.#xOutwardSteps = 0;
 
     this.#cellVector.currentx = this.#cellVector.startx;
     this.#cellVector.currenty = this.#cellVector.starty;
@@ -468,10 +479,13 @@ export class Cell {
 
     if (globals.debugModeOn) {
       //FIXME - replace this with the set style method
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillStyle = "black";
-      ctx.font = "15px Arial";
+      setTextStyle(ctx, {
+        textAlign: "center",
+        textBaseline: "middle",
+        font: "13px Arial",
+        fillStyle: "black"
+      })
+
       ctx.fillText(
         `${this.gridx},${this.gridy}`,
         this.#cellVector.currentx + (this.#cellVector.currentlength / 2),

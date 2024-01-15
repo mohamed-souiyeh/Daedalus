@@ -20,8 +20,10 @@ import { globals } from "@/src/configs/globals";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Select, SelectItem, Selection, Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
 import { mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "@/src/configs/controlCenter.config";
 import { AlgorithmDescription } from "./algorithmDescription";
+import { FirstSection } from "./firstSection";
+import { color } from "@/types";
+import { SecondSection } from "./secondSection";
 
-const color = undefined as "primary" | "default" | "secondary" | "success" | "warning" | "danger" | undefined;
 
 export const Navbar = () => {
 
@@ -33,8 +35,7 @@ export const Navbar = () => {
   const increment = createRef<HTMLButtonElement>();
   const decrement = createRef<HTMLButtonElement>();
   const numberInput = createRef<HTMLInputElement>();
-  const mazeBuildingInspector = createRef<HTMLButtonElement>();
-  const mazeSolvingInspector = createRef<HTMLButtonElement>();
+
   const depthFilterButton = createRef<HTMLButtonElement>();
 
 
@@ -127,7 +128,7 @@ export const Navbar = () => {
 
     const windowShortcutes = (event: any) => {
 
-      // console.log("event => ", event);
+      console.log("event => ", event);
       if (event.code === 'KeyC') {
         if (!isControlCenterOpen.current)
           onOpen();
@@ -147,10 +148,10 @@ export const Navbar = () => {
       if (event.code === 'KeyB' && globals.debugModeOn) {
         handleDebugBooklet();
       }
-      if (event.code === 'NumpadSubtract') {
+      if (event.key === '-') {
         decrementDelay();
       }
-      if (event.code === 'NumpadAdd') {
+      if (event.code === '+' || event.key === '=') {
         incrementDelay();
       }
     }
@@ -185,52 +186,11 @@ export const Navbar = () => {
     }
   };
 
-  const [mazeBuildingInspectorColor, setMazeBuildingInspectorColor] = useState("primary" as typeof color);
-  const [mazeSolvingInspectorColor, setMazeSolvingInspectorColor] = useState("primary" as typeof color);
 
   return (
     <NextUINavbar maxWidth="full" position="sticky" isBordered id="nav">
       <NavbarContent id="firstSection" as="div" justify="start">
-        <div className=" flex flex-row items-center flex-grow justify-between">
-          <MyAvatar />
-          <div className=" flex flex-row gap-2">
-            <Tooltip content="Maze Building Algorithm" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
-              <div>
-                <Popover placement="bottom" showArrow={true} color="default" backdrop="opaque">
-                  <PopoverTrigger>
-                    <Button ref={mazeBuildingInspector} color={mazeBuildingInspectorColor} isIconOnly size="sm" isDisabled={false}>
-                      <FontAwesomeIcon icon={faTrowelBricks} size="lg" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    {
-                      //TODO - use algorithm description from config file in algorithm description component
-                    }
-                    <AlgorithmDescription />
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </Tooltip>
-            <Tooltip content="Maze Solving Algorithm" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
-              <div>
-                <Popover placement="bottom" showArrow={true} color="default" backdrop="opaque">
-
-                  <PopoverTrigger>
-                    <Button ref={mazeSolvingInspector} color={mazeSolvingInspectorColor} isIconOnly size="sm" isDisabled={false}>
-                      <FontAwesomeIcon icon={faRoute} size="lg" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    {
-                      //TODO - use algorithm description from config file in algorithm description component
-                    }
-                    <AlgorithmDescription />
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </Tooltip>
-          </div>
-        </div>
+        <FirstSection tooltipDelayRef={tooltipDelayRef} />
       </NavbarContent>
 
       <NavbarContent id="secondSection" as="div" justify="center">
@@ -376,7 +336,7 @@ export const Navbar = () => {
               <FontAwesomeIcon icon={debugButtonIcon} size="lg" />
             </Button>
           </Tooltip>
-          
+
         </ButtonGroup>
 
         <Tooltip content="Depth Filter" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
