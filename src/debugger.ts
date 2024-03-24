@@ -56,16 +56,16 @@ export class Debuger {
   constructor() { }
 
   public update() {
-    const horizontalDirection = mouse.x >= this.#offsetLeftFromMouse * 2 + Debuger.d_length ? directions.LEFT : directions.RIGHT;
-    const verticalDirection = mouse.y >= this.#offsetTopFromMouse * 2 + Debuger.d_width ? directions.UP : directions.DOWN;
+    const horizontalDirection = mouse.bx >= this.#offsetLeftFromMouse * 2 + Debuger.d_length ? directions.LEFT : directions.RIGHT;
+    const verticalDirection = mouse.by >= this.#offsetTopFromMouse * 2 + Debuger.d_width ? directions.UP : directions.DOWN;
 
     let offset = horizontalDirection === directions.LEFT ? this.#offsetLeftFromMouse + Debuger.d_length : this.#offsetLeftFromMouse;
 
-    this.#x = mouse.x + (offset * horizontalDirection);
+    this.#x = mouse.bx + (offset * horizontalDirection);
 
     offset = verticalDirection === directions.UP ? this.#offsetTopFromMouse + Debuger.d_width : this.#offsetTopFromMouse;
 
-    this.#y = mouse.y + (offset * verticalDirection);
+    this.#y = mouse.by + (offset * verticalDirection);
   }
 
 
@@ -185,7 +185,12 @@ export class Debuger {
   }
 
   public draw(ctx: CanvasRenderingContext2D, cell: Cell | null, grid: Grid) {
-    if (!globals.debugBookletIsOn || cell === null) return;
+    if (!globals.debugBookletIsOn || cell === null) {
+      console.log("this is the cell: ", cell);
+      console.log("is booklet on?: ", globals.debugBookletIsOn);
+      return;
+    };
+
 
     ctx.fillStyle = DEBUGGERCOLOR;
     setShadowStyle(ctx, { blur: 10, color: SHADOWCOLOR })

@@ -190,7 +190,7 @@ export class Grid {
     setShadowStyle(ctx, { blur: 5, color: "#338EF7" })
     for (let cell of this.eachCell()) {
       if (cell.animation !== CellAnimation.STOPPED) {
-        if (cell.gridx !== this.#mouseCellx || cell.gridy !== this.#mouseCelly || !globals.debugModeOn){
+        if (cell.gridx !== this.#mouseCellx || cell.gridy !== this.#mouseCelly || !globals.debugModeOn) {
           cell.draw(ctx);
         }
       }
@@ -209,24 +209,25 @@ export class Grid {
   public updateDebuger(ctx: CanvasRenderingContext2D) {
     if (!globals.debugModeOn) return;
 
-    this.#mousexInGrid = mouse.x - this.#offsetLeft;
-    this.#mouseyInGrid = mouse.y - this.#offsetTop;
+    this.#mousexInGrid = mouse.dx - this.#offsetLeft;
+    this.#mouseyInGrid = mouse.dy - this.#offsetTop;
 
 
     this.#mouseCellx = Math.floor(this.#mousexInGrid / CELLSIZE);
     this.#mouseCelly = Math.floor(this.#mouseyInGrid / CELLSIZE);
 
     this.debuger.update();
-
   }
 
   public drawDebuger(ctx: CanvasRenderingContext2D) {
 
-    if (!globals.debugModeOn) return;
+    if (!globals.debugModeOn) {
+      console.log("shit debugger is not debugging");
+      return;
+    }
     // this.writeMousePosition(ctx);
     this.debuger.draw(ctx, this.at(this.#mouseCellx, this.#mouseCelly), this);
   }
 
-  //write the current mouss position on the arria at the top of the canvas between 0 ana #offsetTop
   //!SECTION
 }

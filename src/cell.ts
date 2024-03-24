@@ -415,7 +415,7 @@ export class Cell {
       this.#cellVector.currenty = this.#y;
     }
     else {
-      //NOTE - update the cell vector position
+      // NOTE: - update the cell vector position
       this.#cellVector.currentx += step;
       this.#cellVector.currenty += step;
 
@@ -430,7 +430,7 @@ export class Cell {
     this.#color.b = Math.abs(this.#nextColor.b - (this.#colorDists.b * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
     this.#color.a = Math.abs(this.#nextColor.a - (this.#colorDists.a * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
 
-    //NOTE - update the walls and corners
+    // NOTE: - update the walls and corners
     for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
       let currentAlpha: number = 0;
       if (this.walls[i].getAnimation() === WallAnimation.STOPPED)
@@ -443,7 +443,7 @@ export class Cell {
       this.walls[i].update(this.#cellVector.currentx, this.#cellVector.currenty, this.#cellVector.currentlength, currentAlpha);
     }
 
-    //NOTE - update the corners
+    // NOTE: - update the corners
     for (let i = CornerDirections.NORTHWEST; i <= CornerDirections.SOUTHWEST; i++) {
       let currentAlpha: number = 0;
       if (this.corners[i].getAnimation() === WallAnimation.STOPPED)
@@ -545,7 +545,7 @@ export class Cell {
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
       current_line++;
 
-      cellInfo = `Color: rgba(${this.#color.r}, ${this.#color.g}, ${this.#color.b}, ${this.#color.a.toFixed(3)})`;
+      cellInfo = `Color: rgba(${this.#color.r.toFixed(1)}, ${this.#color.g.toFixed(1)}, ${this.#color.b.toFixed(1)}, ${this.#color.a.toFixed(3)})`;
 
       xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;
@@ -553,7 +553,7 @@ export class Cell {
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
       current_line++;
 
-      cellInfo = `nextColor: rgba(${this.#nextColor.r}, ${this.#nextColor.g}, ${this.#nextColor.b}, ${this.#nextColor.a.toFixed(3)})`;
+      cellInfo = `nextColor: rgba(${this.#nextColor.r.toFixed(1)}, ${this.#nextColor.g.toFixed(1)}, ${this.#nextColor.b.toFixed(1)}, ${this.#nextColor.a.toFixed(3)})`;
 
       xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
@@ -562,7 +562,7 @@ export class Cell {
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
       current_line++;
 
-      cellInfo = `colorDists: rgba(${this.#colorDists.r}, ${this.#colorDists.g}, ${this.#colorDists.b}, ${this.#colorDists.a.toFixed(3)})`;
+      cellInfo = `colorDists: rgba(${this.#colorDists.r.toFixed(1)}, ${this.#colorDists.g.toFixed(1)}, ${this.#colorDists.b.toFixed(1)}, ${this.#colorDists.a.toFixed(3)})`;
 
       xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;
       yoffset += Debuger.textVOffset + Debuger.textSize;

@@ -18,6 +18,8 @@ export const globals = {
   debugBookletIsOn: inputDefaults.DEBUGBOOKLETISON as unknown as boolean,
 
   mouseCellPosIsLocked: inputDefaults.MOUSECELLPOSISLOCKED as unknown as boolean,
+  BookletMouseCellPosIsLocked: inputDefaults.MOUSECELLPOSISLOCKED as unknown as boolean,
+  DebugMouseCellPosIsLocked: inputDefaults.MOUSECELLPOSISLOCKED as unknown as boolean,
 
   currentdebugPageIndex: inputDefaults.DEFAULTDEBUGPAGEINDEX as unknown as number,
 

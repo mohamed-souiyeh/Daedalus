@@ -2,16 +2,21 @@ import { color } from "../types/color.type.ts";
 
 export const CELLSIZE = 40;
 
-const colore = "rgba(006FEE)"
+// NOTE: the states i have in mind are:
+// in queue
+// visited
+// unvisited
+// current
 
+// rgba(153, 199, 251, 1)
 export const UNVISITED_CELLCOLOR = {
-  r: 153,
-  g: 199,
-  b: 251,
+  r: 255, // 153
+  g: 255, // 199
+  b: 255, // 251
   a: 1,
 };
 
-
+// rgba(153, 199, 251, 1)
 export const VISITED_CELLCOLOR = {
   r: 153,
   g: 199,

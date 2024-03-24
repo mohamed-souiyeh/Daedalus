@@ -3,6 +3,7 @@ import { debugPagesSize } from "../configs/input.config.ts";
 import { Debuger } from "../debugger.ts";
 import { globals } from "../configs/globals.ts";
 
+//NOTE: - to index the debugPagesSize array
 export const LENGTH = 0;
 export const WIDTH = 1;
 
@@ -12,7 +13,7 @@ export async function addCanvasShortCutsEventListeners(canvas: HTMLCanvasElement
       globals.currentdebugPageIndex = parseInt(event.key);
 
 
-      //NOTE - to set the debugger window size
+      //NOTE: - to set the debugger window size
       Debuger.d_length = debugPagesSize[globals.currentdebugPageIndex][LENGTH];
       Debuger.d_width = debugPagesSize[globals.currentdebugPageIndex][WIDTH];
     }

@@ -23,7 +23,7 @@ export function reset() {
   globals.currentAnimation = 0;
 
   grid.initialize(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
-  
+
   deltaTime.reset();
   counter = 0;
 
@@ -77,7 +77,7 @@ export function animation(dt: number) {
   if (deltaTime.oneStepIsDone()) {
     grid.update(ctx);
 
-    if (counter === 0 && grid.at(0, 0)?.animation === CellAnimation.STOPPED) {
+    if (counter === 0 && grid.at(10, 10)?.animation === CellAnimation.STOPPED) {
       let randomCell = grid.randomCell();
       // let randomCell = grid.at(10, 10);
 
@@ -85,11 +85,15 @@ export function animation(dt: number) {
 
       let cellneighbors = randomCell.neighbors();
 
+
       for (let cell of cellneighbors) {
-        randomCell.link(cell);
+        if (randomCell.state === CellStates.unvisited)
+          randomCell.link(cell);
+        else
+          randomCell.unlink(cell);
       }
 
-      randomCell.setState(CellStates.visited);
+      randomCell.setState(randomCell.state === CellStates.visited ? CellStates.unvisited : CellStates.visited);
 
       randomCell = grid.randomCell();
 
@@ -97,12 +101,13 @@ export function animation(dt: number) {
 
       cellneighbors = randomCell.neighbors();
 
-      for (let cell of cellneighbors) {
-        randomCell.unlink(cell);
+      if (randomCell.state === CellStates.visited) {
+        for (let cell of cellneighbors) {
+          randomCell.unlink(cell);
+        }
+
+        randomCell.setState(CellStates.unvisited);
       }
-
-      randomCell.setState(CellStates.unvisited);
-
       //   let cell = grid.at(0, 0);
 
       //   if (cell === null) return;

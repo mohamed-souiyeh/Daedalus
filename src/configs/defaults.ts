@@ -17,11 +17,11 @@ export enum inputDefaults {
   TOOLTIPDELAY = 300,
   DISABLETOOLTIP = 1000 * 60 * 60,
   DEFAULTTOOLTIPSTATE = DISABLETOOLTIP,
-  DELAY = 8,
+  DELAY = 800,
   MINDELAY = 8,
   MAXDELAY = 1000,
   ISPAUSED = false as unknown as number,
-  DEBUGMODEON = false as unknown as number,
+  DEBUGMODEON = true as unknown as number,
   DEBUGBOOKLETISON = inputDefaults.DEBUGMODEON as unknown as number,
   MOUSECELLPOSISLOCKED = false as unknown as number,
 

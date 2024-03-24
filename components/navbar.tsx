@@ -127,7 +127,7 @@ export const Navbar = () => {
 
     const windowShortcutes = (event: any) => {
 
-      console.log("event => ", event);
+      // console.log("event => ", event);
       if (event.code === 'KeyC') {
         if (!isControlCenterOpen.current)
           onOpen();

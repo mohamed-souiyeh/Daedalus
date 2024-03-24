@@ -3,7 +3,11 @@ import { inputDefaults } from "./defaults.ts";
 
 export let mouse: t_mouse = {
   x: 0,
-  y: 0
+  y: 0,
+  dx: 0,
+  dy: 0,
+  bx: 0,
+  by: 0,
 };
 
 export const debugPagesSize = [

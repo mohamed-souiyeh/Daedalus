@@ -36,7 +36,7 @@ export const setupEventListners = async () => {
 
   await initDefaultStates();
 
-  await addCanvasEventListeners(canvas); //ANCHOR - DONE
+  await addCanvasEventListeners(canvas); // NOTE: - DONE
 
-  await addCanvasShortCutsEventListeners(canvas); //ANCHOR - DONE
+  await addCanvasShortCutsEventListeners(canvas); //NOTE: - DONE
 };

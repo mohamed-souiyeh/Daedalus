@@ -1,3 +1,4 @@
+import { inputDefaults } from "./configs/defaults";
 import { globals } from "./configs/globals";
 
 
@@ -53,7 +54,7 @@ export class DeltaTime {
   }
 
   public oneDebugStepIsDone() {
-    if (this.#debugTimeStep >= 16) {
+    if (this.#debugTimeStep >= inputDefaults.MINDELAY) {
       this.#debugTimeStep = 0;
       return true;
     }
