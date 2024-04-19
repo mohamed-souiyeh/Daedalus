@@ -11,6 +11,7 @@ export const WALL_TARGETEDALPHA = 1;
 export enum WallAnimation {
   FADEOUT,
   FADEIN,
+  STOPPING,
   STOPPED,
 }
 

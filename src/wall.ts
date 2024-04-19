@@ -151,6 +151,12 @@ export class Wall {
     return true;
   }
 
+
+  public setStoppingAnimationRequirements() {
+    this.#animation = WallAnimation.STOPPING;
+    this.#color.a = this.#targetedAlpha;
+  }
+
   public setStoppedAnimationRequirements() {
     this.#animation = WallAnimation.STOPPED;
     this.#color.a = this.#targetedAlpha;

@@ -177,7 +177,7 @@ export class Grid {
 
   public draw(ctx: CanvasRenderingContext2D) {
 
-    ctx.clearRect(this.startX, this.startY, this.#length * CELLSIZE, this.#width * CELLSIZE);
+    // ctx.clearRect(this.startX, this.startY, this.#length * CELLSIZE, this.#width * CELLSIZE);
 
     for (let cell of this.eachCell()) {
       if (cell.animation === CellAnimation.STOPPED) {
@@ -187,7 +187,6 @@ export class Grid {
     }
 
 
-    setShadowStyle(ctx, { blur: 5, color: "#338EF7" })
     for (let cell of this.eachCell()) {
       if (cell.animation !== CellAnimation.STOPPED) {
         if (cell.gridx !== this.#mouseCellx || cell.gridy !== this.#mouseCelly || !globals.debugModeOn) {
@@ -195,7 +194,6 @@ export class Grid {
         }
       }
     }
-    resetShadowStyle(ctx);
 
     if (globals.debugModeOn) {
       setShadowStyle(ctx, { blur: 5, color: "gold" })
@@ -222,7 +220,6 @@ export class Grid {
   public drawDebuger(ctx: CanvasRenderingContext2D) {
 
     if (!globals.debugModeOn) {
-      console.log("shit debugger is not debugging");
       return;
     }
     // this.writeMousePosition(ctx);

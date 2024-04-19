@@ -33,8 +33,8 @@ export const VISITED_CELLCOLOR = {
 // };
 
 export enum cellDefaults {
-  INWARDSSCALINGFACTOR = 0.3,
-  OUTWARDSSCALINGFACTOR = 0.3,
+  INWARDSSCALINGFACTOR = 0.2, // NOTE: make this and the outwards one the same just trust me bro it is a long story about bad programing
+  OUTWARDSSCALINGFACTOR = 0.2,
   VELOCITY = 0.5,
   ACCELERATION = 0,
 }
@@ -52,8 +52,10 @@ export const stateColors: Map<CellStates, color> = new Map([
 export enum CellAnimation {
   OUTWARDS,
   INWARDS,
+  STOPPING,
   STOPPED,
   TOORIGINE,
+  ITOORIGINE,
 }
 
 export enum Directions {

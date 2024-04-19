@@ -62,6 +62,8 @@ export function animation(dt: number) {
 
   const canvas = globals.canvas;
   const ctx = globals.ctx;
+  let startTime;
+  let elapsedTime;
 
   if (canvas === null || ctx === null) {
     console.log("canvas or ctx is null");
@@ -75,8 +77,13 @@ export function animation(dt: number) {
   deltaTime.update(dt);
 
   if (deltaTime.oneStepIsDone()) {
+    startTime = performance.now();
     grid.update(ctx);
+    elapsedTime = performance.now() - startTime;
+    console.debug("grid.update time => ", elapsedTime);
 
+
+    startTime = performance.now();
     if (counter === 0 && grid.at(10, 10)?.animation === CellAnimation.STOPPED) {
       let randomCell = grid.randomCell();
       // let randomCell = grid.at(10, 10);
@@ -120,12 +127,17 @@ export function animation(dt: number) {
       // {
       //   // counter = 0;
     }
+    elapsedTime = performance.now() - startTime;
+    console.debug("if after grid.update time => ", elapsedTime);
   }
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  startTime = performance.now();
+  // ctx.clearRect(0, 0, canvas.width, canvas.height);
   // ctx.fillStyle = "rgb(33, 40, 49)"
   // ctx.fillRect(0, 0, canvas.width, canvas.height);
   grid.draw(ctx);
+  elapsedTime = performance.now() - startTime;
+  console.debug("grid.draw time => ", elapsedTime);
 
   if (deltaTime.oneDebugStepIsDone()) {
     grid.updateDebuger(globals.ctx as CanvasRenderingContext2D);

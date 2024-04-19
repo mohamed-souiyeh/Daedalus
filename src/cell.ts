@@ -66,6 +66,7 @@ export class Cell {
 
   static debugPage: number;
 
+  #redraw: boolean = true; // NOTE:: add the enum initialization
 
   //SECTION - algorithm properties
   gridx: number = -1;
@@ -161,7 +162,7 @@ export class Cell {
 
   #velocity: number = VELOCITY;
   #acceleration: number = ACCELERATION;
-  #animation: CellAnimation = CellAnimation.STOPPED;
+  #animation: CellAnimation = CellAnimation.STOPPING;
   #color: color = Object.create(UNVISITED_CELLCOLOR);
   #nextColor: color = Object.create(UNVISITED_CELLCOLOR);
   #colorDists: color = {
@@ -206,15 +207,16 @@ export class Cell {
     this.#x = x;
     this.#y = y;
     this.#length = length;
-    this.#setOutwardsAnimationRequirements();
+    this.#setInwardsAnimationRequirements();
+    // this.#setOutwardsAnimationRequirements();
 
-    //NOTE - calculate how much is the scaling factor from the length and divide it by 2 to get the offset on one side
+    // NOTE: - calculate how much is the scaling factor from the length and divide it by 2 to get the offset on one side
     let startlength = (this.#length * this.#inwardScalingFactor) / 2;
 
     this.#cellVector.startx = this.#x + startlength;
     this.#cellVector.starty = this.#y + startlength;
 
-    //NOTE - calculate how much is the scaling factor from the length and divide it by 2 to get the offset on one side
+    // NOTE: - calculate how much is the scaling factor from the length and divide it by 2 to get the offset on one side
     let endlength = (this.#length * this.#outwardScalingFactor) / 2;
 
     this.#cellVector.endx = this.#x - endlength;
@@ -223,9 +225,9 @@ export class Cell {
     this.#xOutwardWidth = endlength * 2 + startlength;
     this.#xOutwardSteps = 0;
 
-    this.#cellVector.currentx = this.#cellVector.startx;
-    this.#cellVector.currenty = this.#cellVector.starty;
-    this.#cellVector.currentlength = this.#length - this.#length * this.#inwardScalingFactor;
+    this.#cellVector.currentx = this.#x; // WARN: mods for debug
+    this.#cellVector.currenty = this.#y;
+    this.#cellVector.currentlength = this.#length;
 
     for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
       let color: color = Object.create(WALLCOLOR);
@@ -282,6 +284,10 @@ export class Cell {
     this.#setOutwardsAnimationRequirements();
   }
 
+  setInwardsAnimation() {
+    this.#setInwardsAnimationRequirements();
+  }
+
   #setOutwardsAnimationRequirements() {
     if (this.#animation === CellAnimation.OUTWARDS) return;
 
@@ -303,10 +309,31 @@ export class Cell {
     this.#velocity = this.#velocity < 0 ? -this.#velocity : this.#velocity;
   }
 
+  #setToOrigineAnimationRequirementsFromInside() {
+    if (this.#animation === CellAnimation.ITOORIGINE) return;
+
+    this.#animation = CellAnimation.ITOORIGINE;
+    this.#velocity = this.#velocity < 0 ? this.#velocity : -this.#velocity;
+  }
+
   #setStoppedAnimationRequirements() {
     if (this.#animation === CellAnimation.STOPPED) return;
 
     this.#animation = CellAnimation.STOPPED;
+
+
+    //NOTE - set the walls and corners to their targeted alpha
+    for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
+      this.walls[i].setStoppedAnimationRequirements();
+      this.corners[i].setStoppedAnimationRequirements();
+    }
+  }
+
+
+  #setStoppingAnimationRequirements() {
+    if (this.#animation === CellAnimation.STOPPING) return;
+
+    this.#animation = CellAnimation.STOPPING;
 
     this.#colorDists = {
       r: 0,
@@ -324,8 +351,8 @@ export class Cell {
 
     //NOTE - set the walls and corners to their targeted alpha
     for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
-      this.walls[i].setStoppedAnimationRequirements();
-      this.corners[i].setStoppedAnimationRequirements();
+      this.walls[i].setStoppingAnimationRequirements();
+      this.corners[i].setStoppingAnimationRequirements();
     }
   }
 
@@ -333,7 +360,8 @@ export class Cell {
     if (wallpos < Directions.NORTH || wallpos > Directions.WEST) return;
 
     if (this.walls[wallpos].setWallState(state)) {
-      this.#setOutwardsAnimationRequirements();
+      // this.#setOutwardsAnimationRequirements();
+      this.#setInwardsAnimationRequirements();
       // if (this.#decideCornerState(wallRelations[wallpos].first, state)) {
       //   this.corners[wallRelations[wallpos].first].setcornerState(state);
       // }
@@ -388,16 +416,27 @@ export class Cell {
     return false;
   }
 
+  #checkifcellVectorIsPastIOrigine(step: number): boolean {
+    if (Math.floor(this.#cellVector.currentx + step) <= this.#x) return true;
+    if (Math.floor(this.#cellVector.currenty + step) <= this.#y) return true;
+
+    return false;
+  }
 
   public update() {
     if (this.#animation === CellAnimation.STOPPED) return;
 
     let step = this.#velocity;
 
-    if (this.#animation === CellAnimation.INWARDS &&
+    if (this.#animation === CellAnimation.STOPPING) {
+
+      this.#setStoppedAnimationRequirements();
+      return;
+    }
+    else if (this.#animation === CellAnimation.INWARDS &&
       this.#checkifcellVectorIsPastStart(step)) {
 
-      this.#setOutwardsAnimationRequirements();
+      this.#setToOrigineAnimationRequirementsFromInside();
       this.#cellVector.currentx = this.#cellVector.startx;
       this.#cellVector.currenty = this.#cellVector.starty;
     }
@@ -410,7 +449,14 @@ export class Cell {
     }
     else if (this.#animation === CellAnimation.TOORIGINE &&
       this.#checkifcellVectorIsPastOrigine(step)) {
-      this.#setStoppedAnimationRequirements();
+      this.#setStoppingAnimationRequirements();
+      this.#cellVector.currentx = this.#x;
+      this.#cellVector.currenty = this.#y;
+    }
+    else if (this.#animation === CellAnimation.ITOORIGINE &&
+      this.#checkifcellVectorIsPastIOrigine(step)) {
+
+      this.#setStoppingAnimationRequirements();
       this.#cellVector.currentx = this.#x;
       this.#cellVector.currenty = this.#y;
     }
@@ -433,7 +479,7 @@ export class Cell {
     // NOTE: - update the walls and corners
     for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
       let currentAlpha: number = 0;
-      if (this.walls[i].getAnimation() === WallAnimation.STOPPED)
+      if (this.walls[i].getAnimation() === WallAnimation.STOPPING)
         currentAlpha = this.walls[i].getTargetedAlpha();
       if (this.walls[i].getAnimation() === WallAnimation.FADEIN)
         currentAlpha = this.#xOutwardSteps / this.#xOutwardWidth;
@@ -446,7 +492,7 @@ export class Cell {
     // NOTE: - update the corners
     for (let i = CornerDirections.NORTHWEST; i <= CornerDirections.SOUTHWEST; i++) {
       let currentAlpha: number = 0;
-      if (this.corners[i].getAnimation() === WallAnimation.STOPPED)
+      if (this.corners[i].getAnimation() === WallAnimation.STOPPING || this.corners[i].getAnimation() === WallAnimation.STOPPED)
         currentAlpha = this.corners[i].getTargetedAlpha();
       if (this.corners[i].getAnimation() === WallAnimation.FADEIN)
         currentAlpha = this.#xOutwardSteps / this.#xOutwardWidth;
@@ -458,6 +504,15 @@ export class Cell {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
+    if (this.#animation === CellAnimation.STOPPED) return;
+
+    // NOTE: clear the cell
+    ctx.clearRect(
+      this.#x,
+      this.#y,
+      this.#length,
+      this.#length
+    )
     //NOTE - draw the cell
     ctx.fillStyle = `rgba(${this.#color.r}, ${this.#color.g}, ${this.#color.b}, ${this.#color.a})`;
     ctx.fillRect(

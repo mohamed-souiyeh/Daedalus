@@ -193,11 +193,8 @@ export class Debuger {
 
 
     ctx.fillStyle = DEBUGGERCOLOR;
-    setShadowStyle(ctx, { blur: 10, color: SHADOWCOLOR })
 
     ctx.fillRect(this.#x, this.#y, Debuger.d_length, Debuger.d_width);
-
-    resetShadowStyle(ctx);
 
     setTextStyle(ctx, { textAlign: Debuger.textalign, textBaseline: Debuger.textBaseline, font: Debuger.textSize + "px " + Debuger.textFont, fillStyle: Debuger.textColor })
 
