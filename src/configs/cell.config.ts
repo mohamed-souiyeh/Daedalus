@@ -35,7 +35,7 @@ export const VISITED_CELLCOLOR = {
 export enum cellDefaults {
   INWARDSSCALINGFACTOR = 0.2, // NOTE: make this and the outwards one the same just trust me bro it is a long story about bad programing
   OUTWARDSSCALINGFACTOR = 0.2,
-  VELOCITY = 0.5,
+  VELOCITY = 0.2,
   ACCELERATION = 0,
 }
 

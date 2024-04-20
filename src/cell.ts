@@ -413,12 +413,14 @@ export class Cell {
   #checkifcellVectorIsPastOrigine(step: number): boolean {
     if (Math.floor(this.#cellVector.currentx + step) >= this.#x) return true;
     if (Math.floor(this.#cellVector.currenty + step) >= this.#y) return true;
+    if (Math.floor(this.#cellVector.currentlength - (step * 2)) <= this.#length) return true;
     return false;
   }
 
   #checkifcellVectorIsPastIOrigine(step: number): boolean {
     if (Math.floor(this.#cellVector.currentx + step) <= this.#x) return true;
     if (Math.floor(this.#cellVector.currenty + step) <= this.#y) return true;
+    if (Math.floor(this.#cellVector.currentlength - (step * 2)) >= this.#length) return true;
 
     return false;
   }
@@ -449,6 +451,7 @@ export class Cell {
     }
     else if (this.#animation === CellAnimation.TOORIGINE &&
       this.#checkifcellVectorIsPastOrigine(step)) {
+
       this.#setStoppingAnimationRequirements();
       this.#cellVector.currentx = this.#x;
       this.#cellVector.currenty = this.#y;
@@ -504,7 +507,7 @@ export class Cell {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    if (this.#animation === CellAnimation.STOPPED) return;
+    if (this.#animation === CellAnimation.STOPPED && globals.debugModeOn !== true) return;
 
     // NOTE: clear the cell
     ctx.clearRect(

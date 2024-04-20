@@ -180,7 +180,7 @@ export class Grid {
     // ctx.clearRect(this.startX, this.startY, this.#length * CELLSIZE, this.#width * CELLSIZE);
 
     for (let cell of this.eachCell()) {
-      if (cell.animation === CellAnimation.STOPPED) {
+      if (cell.animation === CellAnimation.STOPPED || cell.animation === CellAnimation.STOPPING) {
         if (cell.gridx !== this.#mouseCellx || cell.gridy !== this.#mouseCelly || !globals.debugModeOn)
           cell.draw(ctx);
       }

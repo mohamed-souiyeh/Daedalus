@@ -132,7 +132,8 @@ export function animation(dt: number) {
   }
 
   startTime = performance.now();
-  // ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // ctx.fillStyle = "gold";
+  // ctx.fillRect(0, 0, canvas.width, canvas.height);
   // ctx.fillStyle = "rgb(33, 40, 49)"
   // ctx.fillRect(0, 0, canvas.width, canvas.height);
   grid.draw(ctx);

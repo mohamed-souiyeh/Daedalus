@@ -17,7 +17,7 @@ export enum inputDefaults {
   TOOLTIPDELAY = 300,
   DISABLETOOLTIP = 1000 * 60 * 60,
   DEFAULTTOOLTIPSTATE = DISABLETOOLTIP,
-  DELAY = 400,
+  DELAY = 32,
   MINDELAY = 8,
   MAXDELAY = 1000,
   ISPAUSED = false as unknown as number,
