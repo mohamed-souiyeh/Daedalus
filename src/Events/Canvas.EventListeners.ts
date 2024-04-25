@@ -1,7 +1,7 @@
 import { mouse } from "../configs/input.config.ts";
 import { globals } from "../configs/globals.ts";
 
-export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
+export async function addCanvasEventListeners(canvas: HTMLDivElement) {
   //NOTE: - to update mouse position if not locked
   canvas.addEventListener("mousemove", async function (event: MouseEvent) {
     mouse.x = event.x - canvas.offsetLeft;

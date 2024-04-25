@@ -1,9 +1,10 @@
+import { Application } from "pixi.js";
 import { inputDefaults } from "./defaults";
 
 export const globals = {
-  canvas: null as HTMLCanvasElement | null,
+  app: null as Application | null,
 
-  ctx: null as CanvasRenderingContext2D | null,
+  canvas: null as HTMLCanvasElement | null,
 
   setup: false as boolean,
 

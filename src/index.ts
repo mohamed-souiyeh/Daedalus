@@ -12,10 +12,9 @@ let counter: number;
 
 export function reset() {
   const canvas = globals.canvas;
-  const ctx = globals.ctx;
 
-  if (canvas === null || ctx === null) {
-    console.log("canvas or ctx is null");
+  if (!canvas) {
+    console.log("canvas is null");
     return;
   }
 
@@ -32,21 +31,11 @@ export function reset() {
 
 export function setup() {
   const canvas = globals.canvas;
-  const ctx = globals.ctx;
 
-  if (canvas === null || ctx === null) {
-    console.log("canvas or ctx is null");
+  if (canvas === null) {
+    console.log("canvas is null");
     return;
   }
-
-  // console.log("canvas => ", canvas);
-  // console.log("canvas offset width => ", canvas.offsetWidth);
-  // console.log("canvas offset height => ", canvas.offsetHeight);
-  // console.log("canvas width => ", canvas.width);
-  // console.log("canvas height => ", canvas.height);
-
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
 
   grid = new Grid(canvas.width, canvas.height, wallState.PRESENT);
 
@@ -54,19 +43,19 @@ export function setup() {
   deltaTime = new DeltaTime();
 
   globals.setup = true;
-  globals.currentAnimation = requestAnimationFrame(animation);
+
+  globals.app?.ticker.add((time) => animation(time.deltaTime));
 }
 
 export function animation(dt: number) {
-  globals.currentAnimation = requestAnimationFrame(animation);
 
   const canvas = globals.canvas;
-  const ctx = globals.ctx;
+
   let startTime;
   let elapsedTime;
 
-  if (canvas === null || ctx === null) {
-    console.log("canvas or ctx is null");
+  if (canvas === null) {
+    console.log("canvas is null");
     return;
   }
 

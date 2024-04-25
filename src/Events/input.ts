@@ -9,11 +9,9 @@ import { addCanvasEventListeners } from "./Canvas.EventListeners.ts";
 import { LENGTH, WIDTH, addCanvasShortCutsEventListeners } from "./Canvas.ShortCuts.EventListeners.ts";
 
 
-export const setupEventListners = async () => {
+export const setupEventListners = async (mazeElement: HTMLDivElement) => {
 
-  const canvas = globals.canvas as unknown as HTMLCanvasElement;
-
-  canvas.setAttribute('tabindex', '0'); // make the canvas focusable
+  mazeElement.setAttribute('tabindex', '0'); // make the canvas focusable
 
   async function initDefaultStates() {
 
@@ -36,7 +34,7 @@ export const setupEventListners = async () => {
 
   await initDefaultStates();
 
-  await addCanvasEventListeners(canvas); // NOTE: - DONE
+  await addCanvasEventListeners(mazeElement); // NOTE: - DONE
 
-  await addCanvasShortCutsEventListeners(canvas); //NOTE: - DONE
+  await addCanvasShortCutsEventListeners(mazeElement); //NOTE: - DONE
 };

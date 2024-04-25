@@ -12,36 +12,53 @@ import { useEffect, useRef } from "react";
 import { setupEventListners } from "@/src/Events/input";
 import { setup } from "@/src";
 import { globals } from "@/src/configs/globals";
+import { Application } from "pixi.js";
 
 
 export default function Home() {
-  const canvaRef = useRef<HTMLCanvasElement>(null);
-  
-  useEffect(() => {
-    if (!canvaRef.current || globals.setup)
-      return;
-    globals.canvas = canvaRef.current;
-    globals.ctx = canvaRef.current.getContext("2d");
-    if (!globals.ctx)
-      return;
-    
-    console.log("setup");
-    console.log("canvaRef => ",canvaRef);
-    console.log("globals canvas => ", globals.canvas);
-    console.log("globals ctx =>", globals.ctx);
-    setupEventListners();
 
-    setup();
-    
+  const mazeRef = useRef<HTMLDivElement>(null);
+
+  const pixiSetup = async (mazeElement: HTMLDivElement) => {
+    const app = new Application();
+
+    await app.init({
+      background: "#1099bb",
+      resizeTo: window,
+    });
+
+    globals.app = app;
+
+    globals.canvas = app.canvas;
+
+    mazeElement.appendChild(app.canvas);
+  }
+
+
+  useEffect(() => {
+
+    if (!mazeRef.current || globals.setup)
+      return;
+
+
+    pixiSetup(mazeRef.current).then(async () => {
+
+      if (!mazeRef.current)
+        return;
+
+      await setupEventListners(mazeRef.current);
+
+      setup();
+
+    })
   }, []);
 
 
   return (
     <>
       <Navbar />
-      <main id="maze">
-        <canvas id="canvas" ref={canvaRef}/>
-      </main>
+      <div id="maze" ref={mazeRef}>
+      </div>
     </>
   );
 }

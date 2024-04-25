@@ -7,11 +7,12 @@ import { globals } from "../configs/globals.ts";
 export const LENGTH = 0;
 export const WIDTH = 1;
 
-export async function addCanvasShortCutsEventListeners(canvas: HTMLCanvasElement) {
+export async function addCanvasShortCutsEventListeners(canvas: HTMLDivElement) {
   canvas.addEventListener('keydown', async (event) => {
     if (parseInt(event.key) >= pageIndexs.summary && parseInt(event.key) <= pageIndexs.NE_corner) {
       globals.currentdebugPageIndex = parseInt(event.key);
 
+      console.log("page index is: ", event.key);
 
       //NOTE: - to set the debugger window size
       Debuger.d_length = debugPagesSize[globals.currentdebugPageIndex][LENGTH];
