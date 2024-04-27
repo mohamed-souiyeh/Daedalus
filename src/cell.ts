@@ -163,8 +163,8 @@ export class Cell {
   #velocity: number = VELOCITY;
   #acceleration: number = ACCELERATION;
   #animation: CellAnimation = CellAnimation.STOPPING;
-  #color: color = Object.create(UNVISITED_CELLCOLOR);
-  #nextColor: color = Object.create(UNVISITED_CELLCOLOR);
+  #color: color;
+  #nextColor: color;
   #colorDists: color = {
     r: 0,
     g: 0,
@@ -204,6 +204,8 @@ export class Cell {
     this.gridx = gridx;
     this.gridy = gridy;
 
+    this.#color = Object.create(UNVISITED_CELLCOLOR);
+    this.#nextColor = Object.create(UNVISITED_CELLCOLOR);
     this.#x = x;
     this.#y = y;
     this.#length = length;

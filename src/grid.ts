@@ -83,13 +83,16 @@ export class Grid {
     this.#startX = Math.floor((canvasLength - (this.#length * CELLSIZE)) / 2);
     this.#startY = Math.floor((canvasWidth - (this.#width * CELLSIZE)) * 0.5);
 
-    this.#offsetLeft = this.#startX;
-    this.#offsetTop = this.#startY;
+    globals.canvas!.width = this.#length * CELLSIZE;
+    globals.canvas!.height = this.#width * CELLSIZE;
+
+    this.#offsetLeft = 0;
+    this.#offsetTop = 0;
 
     for (let y = 0; y < this.#width; y++) {
       for (let x = 0; x < this.#length; x++) {
-        let cellx = this.#startX + x * CELLSIZE;
-        let celly = this.#startY + y * CELLSIZE;
+        let cellx = x * CELLSIZE;
+        let celly = y * CELLSIZE;
 
         this.grid[y][x].init(x, y, cellx, celly, CELLSIZE, wallState);
       }
@@ -176,7 +179,7 @@ export class Grid {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-
+    ctx.clearRect(0, 0, globals.canvas!.width, this.#offsetTop);
     // ctx.clearRect(this.startX, this.startY, this.#length * CELLSIZE, this.#width * CELLSIZE);
 
     for (let cell of this.eachCell()) {

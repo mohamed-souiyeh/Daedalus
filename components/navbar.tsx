@@ -257,44 +257,6 @@ export const Navbar = () => {
                   <div id="algorithm selection" className="flex flex-row gap-3 w-full">
                     {//TODO - add sections for maze building and maze solving algorithms for each behavior group 
                     }
-                    <Select
-                      label="Maze Building Algorithm"
-                      size="md"
-                      radius="sm"
-                      placeholder="Select an Algorithm"
-                      // startContent={<FontAwesomeIcon icon={faTrowelBricks} size="sm" />}
-                      selectorIcon={<FontAwesomeIcon icon={faTrowelBricks} size="sm" />}
-                      disableSelectorIconRotation
-                      // defaultSelectedKeys={["Random"]}
-                      description="The algorithm used to build the maze"
-                      selectedKeys={mazeBuildingAlgorithmValue}
-                      onSelectionChange={setmazeBuildingAlgorithmValue}
-                    >
-                      {mazeGenerationAlgorithms.map((algo) => (
-                        <SelectItem key={algo.key} value={algo.name} >
-                          {algo.name}
-                        </SelectItem>
-                      ))}
-                    </Select>
-                    <Select
-                      label="Maze solving Algorithm"
-                      size="md"
-                      radius="sm"
-                      placeholder="Select an Algorithm"
-                      // startContent={<FontAwesomeIcon icon={faMagnifyingGlassLocation} size="sm" />}
-                      selectorIcon={<FontAwesomeIcon icon={faRoute} size="sm" />}
-                      disableSelectorIconRotation
-                      // defaultSelectedKeys={["Random"]}
-                      description="The algorithm used to solve the maze"
-                      selectedKeys={mazeSolvingAlgorithmValue}
-                      onSelectionChange={setmazeSolvingAlgorithmValue}
-                    >
-                      {mazeSolvingAlgorithms.map((algo) => (
-                        <SelectItem key={algo.key} value={algo.name}>
-                          {algo.name}
-                        </SelectItem>
-                      ))}
-                    </Select>
                   </div>
                 </ModalBody>
                 <ModalFooter>

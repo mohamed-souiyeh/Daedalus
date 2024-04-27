@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.fixed-width-select {
+  width: 150px; /* or any fixed width you want */
+}
 
 html {
   display: flex;
