@@ -27,6 +27,13 @@ export const FirstSection = (props: any) => {
   const [mazeBuildingAlgorithmValue, setmazeBuildingAlgorithmValue] = useState<Selection>(new Set([]));
 
 
+  useEffect(() => {
+    console.log("mazeBuildingAlgorithmValue => ", Array.from(mazeBuildingAlgorithmValue)[0]);
+    console.log("mazeSolvingAlgorithmValue => ", Array.from(mazeSolvingAlgorithmValue)[0]);
+  }, [mazeSolvingAlgorithmValue, mazeBuildingAlgorithmValue]);
+
+
+
   return (
     <>
       <div className=" flex flex-row items-center flex-grow justify-between">
@@ -53,22 +60,10 @@ export const FirstSection = (props: any) => {
               </SelectItem>
             ))}
           </Select>
-          <Tooltip content="Maze Building Algorithm" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
-            <div>
-              <Popover placement="bottom" showArrow={true} color="default" backdrop="opaque">
-                <PopoverTrigger>
-                  <Button ref={mazeBuildingInspector} color={mazeBuildingInspectorColor} isIconOnly size="sm" isDisabled={false}>
-                    <FontAwesomeIcon icon={faTrowelBricks} size="lg" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  {
-                    //TODO - use algorithm description from config file in algorithm description component
-                  }
-                  <AlgorithmDescription />
-                </PopoverContent>
-              </Popover>
-            </div>
+          <Tooltip content="Maze Building Start/Stop" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+            <Button ref={mazeBuildingInspector} color={mazeBuildingInspectorColor} isIconOnly size="sm" isDisabled={false}>
+              <FontAwesomeIcon icon={faTrowelBricks} size="lg" />
+            </Button>
           </Tooltip>
           <Select
             label="Path Finding"
@@ -91,23 +86,10 @@ export const FirstSection = (props: any) => {
               </SelectItem>
             ))}
           </Select>
-          <Tooltip content="Maze Solving Algorithm" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
-            <div>
-              <Popover placement="bottom" showArrow={true} color="default" backdrop="opaque">
-
-                <PopoverTrigger>
-                  <Button ref={mazeSolvingInspector} color={mazeSolvingInspectorColor} isIconOnly size="sm" isDisabled={false}>
-                    <FontAwesomeIcon icon={faRoute} size="lg" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  {
-                    //TODO - use algorithm description from config file in algorithm description component
-                  }
-                  <AlgorithmDescription />
-                </PopoverContent>
-              </Popover>
-            </div>
+          <Tooltip content="Maze Solving Start/Stop" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+            <Button ref={mazeSolvingInspector} color={mazeSolvingInspectorColor} isIconOnly size="sm" isDisabled={false}>
+              <FontAwesomeIcon icon={faRoute} size="lg" />
+            </Button>
           </Tooltip>
         </div>
       </div>

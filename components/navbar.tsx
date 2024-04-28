@@ -1,14 +1,8 @@
 import {
   Navbar as NextUINavbar,
   NavbarContent,
-  NavbarMenu,
-  NavbarMenuToggle,
-  NavbarBrand,
-  NavbarItem,
-  NavbarMenuItem,
 } from "@nextui-org/navbar";
 import { Key, createRef, use, useEffect, useRef, useState } from "react";
-import { MyAvatar } from "./avatar";
 import { title } from "./primitives";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,15 +12,12 @@ import { DELAYSTEP, updateDelay } from "@/src/Events/Delay.EventListeners";
 import { reset } from "@/src";
 import { globals } from "@/src/configs/globals";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Select, SelectItem, Selection, Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
-import { mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "@/src/configs/controlCenter.config";
-import { AlgorithmDescription } from "./algorithmDescription";
 import { FirstSection } from "./firstSection";
 import { color } from "@/types";
 
 
 export const Navbar = () => {
 
-  const controleCenterButton = createRef<HTMLButtonElement>();
   const resetButton = createRef<HTMLButtonElement>();
   const pauseButton = createRef<HTMLButtonElement>();
   const debugButton = createRef<HTMLButtonElement>();
@@ -102,38 +93,11 @@ export const Navbar = () => {
     console.log("addDepthFilter");
   };
 
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const isControlCenterOpen = useRef(isOpen);
-  useEffect(() => {
-    isControlCenterOpen.current = isOpen;
-  }, [isOpen]);
-
-  const [mazeSolvingAlgorithmValue, setmazeSolvingAlgorithmValue] = useState<Selection>(new Set([]));
-  const [mazeBuildingAlgorithmValue, setmazeBuildingAlgorithmValue] = useState<Selection>(new Set([]));
-
-  // useEffect(() => {
-  //   console.log("mazeBuildingAlgorithmValue => ", Array.from(mazeBuildingAlgorithmValue)[0]);
-  //   console.log("mazeSolvingAlgorithmValue => ", Array.from(mazeSolvingAlgorithmValue)[0]);
-  // }, [mazeSolvingAlgorithmValue, mazeBuildingAlgorithmValue]);
-
-
-  const handleLaunchButton = () => {
-    globals.mazeBuildingAlgorithm = Array.from(mazeBuildingAlgorithmValue)[0] as string;
-    globals.mazeSolvingAlgorithm = Array.from(mazeSolvingAlgorithmValue)[0] as string;
-    onClose();
-  };
-
   useEffect(() => {
 
     const windowShortcutes = (event: any) => {
 
       // console.log("event => ", event);
-      if (event.code === 'KeyC') {
-        if (!isControlCenterOpen.current)
-          onOpen();
-        if (isControlCenterOpen.current)
-          onClose();
-      }
       if (event.code === 'KeyR' && !event.ctrlKey) {
         handleResetButton();
       }
@@ -160,7 +124,6 @@ export const Navbar = () => {
     return () => {
       window.removeEventListener('keydown', windowShortcutes);
     }
-
   }, []);
 
 
@@ -236,45 +199,7 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent id="thirdSection" as="div" justify="end">
-        <Tooltip content="Control Center" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200} placement="bottom-end">
-          <Button ref={controleCenterButton} color="primary" isIconOnly size="sm" onClick={onOpen}>
-            <FontAwesomeIcon icon={faGear} rotation={90} size="lg" />
-          </Button>
-        </Tooltip>
 
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="items-center" size="xl" backdrop="blur">
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">Control Center</ModalHeader>
-                <ModalBody className="flex flex-grow w-full">
-                  <p>
-                    here u can chose the algorithm u want to use to build the
-                    maze/mazes (if u choose to apply areas) and the
-                    algorithm/algorithms (if u choose to apply areas) u want to
-                    use to solve the maze.
-                  </p>
-                  <div id="algorithm selection" className="flex flex-row gap-3 w-full">
-                    {//TODO - add sections for maze building and maze solving algorithms for each behavior group 
-                    }
-                  </div>
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Close
-                  </Button>
-                  <Button
-                    isDisabled={!Array.from(mazeBuildingAlgorithmValue)[0] || !Array.from(mazeSolvingAlgorithmValue)[0]}
-                    color="primary"
-                    onPress={handleLaunchButton}
-                  >
-                    Launch
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
         <Tooltip content="Reset" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
           <Button ref={resetButton} color="primary" isIconOnly size="sm" onClick={handleResetButton}>
             <FontAwesomeIcon icon={faRepeat} size="lg" />
@@ -345,107 +270,3 @@ export const Navbar = () => {
   );
 };
 
-// const searchInput = (
-// 	<Input
-// 		aria-label="Search"
-// 		classNames={{
-// 			inputWrapper: "bg-default-100",
-// 			input: "text-sm",
-// 		}}
-// 		endContent={
-// 			<Kbd className="hidden lg:inline-block" keys={["command"]}>
-// 				K
-// 			</Kbd>
-// 		}
-// 		labelPlacement="outside"
-// 		placeholder="Search..."
-// 		startContent={
-// 			<SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-// 		}
-// 		type="search"
-// 	/>
-// );
-{/* <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-				<NavbarBrand as="li" className="gap-3 max-w-fit">
-					<NextLink className="flex justify-start items-center gap-1" href="/">
-						<Logo />
-						<p className="font-bold text-inherit">ACME</p>
-					</NextLink>
-				</NavbarBrand>
-				<ul className="hidden lg:flex gap-4 justify-start ml-2">
-					{siteConfig.navItems.map((item) => (
-						<NavbarItem key={item.href}>
-							<NextLink
-								className={clsx(
-									linkStyles({ color: "foreground" }),
-									"data-[active=true]:text-primary data-[active=true]:font-medium"
-								)}
-								color="foreground"
-								href={item.href}
-							>
-								{item.label}
-							</NextLink>
-						</NavbarItem>
-					))}
-				</ul>
-			</NavbarContent>
-
-			<NavbarContent
-				className="hidden sm:flex basis-1/5 sm:basis-full"
-				justify="end"
-			>
-				<NavbarItem className="hidden sm:flex gap-2">
-					<Link isExternal href={siteConfig.links.twitter} aria-label="Twitter">
-						<TwitterIcon className="text-default-500" />
-					</Link>
-					<Link isExternal href={siteConfig.links.discord} aria-label="Discord">
-						<DiscordIcon className="text-default-500" />
-					</Link>
-					<Link isExternal href={siteConfig.links.github} aria-label="Github">
-						<GithubIcon className="text-default-500" />
-					</Link>
-				</NavbarItem>
-				<NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-				<NavbarItem className="hidden md:flex">
-					<Button
-            isExternal
-						as={Link}
-						className="text-sm font-normal text-default-600 bg-default-100"
-						href={siteConfig.links.sponsor}
-						startContent={<HeartFilledIcon className="text-danger" />}
-						variant="flat"
-					>
-						Sponsor
-					</Button>
-				</NavbarItem>
-			</NavbarContent>
-
-			<NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-				<Link isExternal href={siteConfig.links.github} aria-label="Github">
-					<GithubIcon className="text-default-500" />
-				</Link>
-				<NavbarMenuToggle />
-			</NavbarContent>
-
-			<NavbarMenu>
-				{searchInput}
-				<div className="mx-4 mt-2 flex flex-col gap-2">
-					{siteConfig.navMenuItems.map((item, index) => (
-						<NavbarMenuItem key={`${item}-${index}`}>
-							<Link
-								color={
-									index === 2
-										? "primary"
-										: index === siteConfig.navMenuItems.length - 1
-										? "danger"
-										: "foreground"
-								}
-								href="#"
-								size="lg"
-							>
-								{item.label}
-							</Link>
-						</NavbarMenuItem>
-					))}
-				</div>
-			</NavbarMenu> */}

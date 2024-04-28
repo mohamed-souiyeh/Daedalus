@@ -80,7 +80,7 @@ export function animation(dt: number) {
     startTime = performance.now();
     grid.update(ctx);
     elapsedTime = performance.now() - startTime;
-    console.debug("grid.update time => ", elapsedTime);
+    // console.debug("grid.update time => ", elapsedTime);
 
 
     startTime = performance.now();
@@ -128,7 +128,7 @@ export function animation(dt: number) {
       //   // counter = 0;
     }
     elapsedTime = performance.now() - startTime;
-    console.debug("if after grid.update time => ", elapsedTime);
+    // console.debug("if after grid.update time => ", elapsedTime);
   }
 
   startTime = performance.now();
@@ -138,7 +138,7 @@ export function animation(dt: number) {
   // ctx.fillRect(0, 0, canvas.width, canvas.height);
   grid.draw(ctx);
   elapsedTime = performance.now() - startTime;
-  console.debug("grid.draw time => ", elapsedTime);
+  // console.debug("grid.draw time => ", elapsedTime);
 
   if (deltaTime.oneDebugStepIsDone()) {
     grid.updateDebuger(globals.ctx as CanvasRenderingContext2D);
