@@ -87,7 +87,11 @@ export const Navbar = () => {
 
   const handleResetButton = () => {
     reset();
+    if (globals.setDisableLaunch)
+      globals.setDisableLaunch(false);
   };
+
+  globals.handleResetButton = handleResetButton;
 
   const addDepthFilter = () => {
     console.log("addDepthFilter");

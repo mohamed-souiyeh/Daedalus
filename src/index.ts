@@ -22,7 +22,10 @@ export function reset() {
   cancelAnimationFrame(globals.currentAnimation);
   globals.currentAnimation = 0;
 
+  globals.startAlgo = false;
+
   grid.initialize(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
+
 
   deltaTime.reset();
   counter = 0;
@@ -126,6 +129,10 @@ export function animation(dt: number) {
       // if (counter === 1 && grid.at(0, 0)?.animation === CellAnimation.STOPPED) 
       // {
       //   // counter = 0;
+    }
+
+    if (counter % 5 === 0 && globals.startAlgo) {
+      grid.launchAlgo();
     }
     elapsedTime = performance.now() - startTime;
     // console.debug("if after grid.update time => ", elapsedTime);

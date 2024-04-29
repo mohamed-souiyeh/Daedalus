@@ -1,3 +1,5 @@
+import { algoState } from "../types/algos.types";
+import { algosKeys } from "./algos.config";
 import { inputDefaults } from "./defaults";
 
 export const globals = {
@@ -23,6 +25,11 @@ export const globals = {
 
   currentdebugPageIndex: inputDefaults.DEFAULTDEBUGPAGEINDEX as unknown as number,
 
-  mazeBuildingAlgorithm: null as string | null,
-  mazeSolvingAlgorithm: null as string | null,
+  mazeBuildingAlgorithm: null as algosKeys | null,
+  mazeSolvingAlgorithm: null as algosKeys | null,
+  startAlgo: false as boolean,
+
+  // HACK: this is weird i know
+  setDisableLaunch: null as any,
+  handleResetButton: null as any,
 }

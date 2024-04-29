@@ -1,10 +1,15 @@
+import { bfs } from "./algos/bfs.algo.ts";
+import { randomWalkDFS } from "./algos/randomWalkDFS.algo.ts";
 import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.ts";
 import { Cell } from "./cell.ts";
+import { algosKeys } from "./configs/algos.config.ts";
 import { CELLSIZE, CellAnimation, Directions } from "./configs/cell.config.ts";
 import { globals } from "./configs/globals.ts";
 import { mouse } from "./configs/input.config.ts";
 import { wallState } from "./configs/wall.config.ts";
 import { Debuger } from "./debugger.ts";
+import { algoState } from "./types/algos.types.ts";
+import { gridState } from "./types/grid.types.ts";
 
 
 
@@ -20,6 +25,10 @@ export class Grid {
   #mouseyInGrid: number = 0;
   #mouseCellx: number = 0;
   #mouseCelly: number = 0;
+
+  #algos: Map<algosKeys, (grid: Grid) => algoState>;
+  gridState: gridState = gridState.IDLE;
+  currentAlgo: algosKeys;
 
   #initialWallState: wallState = wallState.PRESENT;
 
@@ -65,6 +74,7 @@ export class Grid {
     // this.#width = 1;
     this.#initialWallState = initialWallState;
 
+    this.#algos = new Map<algosKeys, (grid: Grid) => algoState>();
     this.#prepareGrid();
     this.initialize(canvasLength, canvasWidth, initialWallState);
   }
@@ -98,6 +108,7 @@ export class Grid {
       }
     }
     this.#configureCells();
+    this.#initAlgos();
   }
 
   #configureCells() {
@@ -123,6 +134,11 @@ export class Grid {
         cell.walls[Directions.WEST].setWallState(wallState.PRESENT);
       }
     }
+  }
+
+  #initAlgos() {
+    this.#algos.set(algosKeys.RandomWalkDFS, randomWalkDFS);
+    this.#algos.set(algosKeys.BFS, bfs);
   }
   //!SECTION
 
@@ -159,6 +175,46 @@ export class Grid {
     return this.at(x, y);
   }
   //!SECTION
+
+  // NOTE: algos section
+  public launchAlgo() {
+    if (this.gridState === gridState.IDLE)
+      this.prepAlgo();
+    if (!this.#algos.has(this.currentAlgo)) {
+      console.log("ma guy we aint have an algo for what u chose");
+      globals.setDisableLaunch(false);
+      globals.startAlgo = false;
+      return;
+    }
+
+    const state = this.#algos.get(this.currentAlgo)!(this);
+    if (state === algoState.done) {
+      this.gridState = gridState.IDLE;
+    }
+    else if (state === algoState.foundPath || state === algoState.noPath) {
+      globals.startAlgo = false;
+      this.gridState = gridState.IDLE;
+      globals.setDisableLaunch(false);
+    }
+  }
+
+  public prepAlgo() {
+    if (globals.mazeBuildingAlgorithm && this.gridState === gridState.IDLE) {
+      this.gridState = gridState.BUILDING;
+      this.currentAlgo = globals.mazeBuildingAlgorithm;
+      globals.mazeBuildingAlgorithm = null;
+      // NOTE: here reset the stuff needed for the algo to run
+      console.log("algo prepared all good: ", this.currentAlgo);
+    }
+    if (globals.mazeSolvingAlgorithm && this.gridState === gridState.IDLE) {
+      this.gridState = gridState.SEARCHING;
+      this.currentAlgo = globals.mazeSolvingAlgorithm;
+      globals.mazeSolvingAlgorithm = null;
+      // NOTE: here reset the stuff needed for the algo to run
+      console.log("algo prepared all good: ", this.currentAlgo);
+    }
+  }
+  //
 
   //SECTION - animation methods
 
