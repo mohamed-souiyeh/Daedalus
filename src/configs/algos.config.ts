@@ -10,35 +10,35 @@ export enum algosKeys {
 }
 
 export const mazeGenerationAlgorithms = [
-  {
-    key: algosKeys.Random,
-    name: "Random",
-  },
+  // {
+  //   key: algosKeys.Random,
+  //   name: "Random",
+  // },
   {
     key: algosKeys.RandomWalkDFS,
     name: "Random Walk DFS",
   },
-  {
-    key: algosKeys.recursiveDivider,
-    name: "recursive devider (wall adder)",
-  },
+  // {
+  //   key: algosKeys.recursiveDivider,
+  //   name: "recursive devider (wall adder)",
+  // },
 ];
 
 export const mazeSolvingAlgorithms = [
-  {
-    key: algosKeys.Random,
-    name: "Random",
-  },
+  // {
+  //   key: algosKeys.Random,
+  //   name: "Random",
+  // },
   {
     key: algosKeys.BFS,
     name: "Breadth first search (BFS)",
   },
-  {
-    key: algosKeys.Astar,
-    name: "A* Algorithm",
-  },
-  {
-    key: algosKeys.Dijkstra,
-    name: "Dijkstra's Algorithm",
-  },
+  // {
+  //   key: algosKeys.Astar,
+  //   name: "A* Algorithm",
+  // },
+  // {
+  //   key: algosKeys.Dijkstra,
+  //   name: "Dijkstra's Algorithm",
+  // },
 ];

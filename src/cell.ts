@@ -146,6 +146,18 @@ export class Cell {
     return neighbors;
   }
 
+  public neighbor(direction: Directions) {
+    if (direction === Directions.NORTH)
+      return this.north;
+    if (direction === Directions.EAST)
+      return this.east;
+    if (direction === Directions.SOUTH)
+      return this.south;
+    if (direction === Directions.WEST)
+      return this.west;
+    return null;
+  }
+
   constructor() {
     this.walls = new Array<Wall>();
     this.corners = new Array<Corner>();
@@ -204,6 +216,7 @@ export class Cell {
     this.gridx = gridx;
     this.gridy = gridy;
 
+    this.#state = CellStates.unvisited;
     this.#color = Object.create(UNVISITED_CELLCOLOR);
     this.#nextColor = Object.create(UNVISITED_CELLCOLOR);
     this.#x = x;

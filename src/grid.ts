@@ -8,7 +8,7 @@ import { globals } from "./configs/globals.ts";
 import { mouse } from "./configs/input.config.ts";
 import { wallState } from "./configs/wall.config.ts";
 import { Debuger } from "./debugger.ts";
-import { algoState } from "./types/algos.types.ts";
+import { Frame, algoState } from "./types/algos.types.ts";
 import { gridState } from "./types/grid.types.ts";
 
 
@@ -177,6 +177,15 @@ export class Grid {
   //!SECTION
 
   // NOTE: algos section
+  start: Pos = {
+    x: 0,
+    y: 0,
+  }
+  finish: Pos = {
+    x: this.length - 1,
+    y: this.width - 1,
+  }
+
   public launchAlgo() {
     if (this.gridState === gridState.IDLE)
       this.prepAlgo();
@@ -189,7 +198,9 @@ export class Grid {
 
     const state = this.#algos.get(this.currentAlgo)!(this);
     if (state === algoState.done) {
+      globals.startAlgo = false;
       this.gridState = gridState.IDLE;
+      globals.setDisableLaunch(false);
     }
     else if (state === algoState.foundPath || state === algoState.noPath) {
       globals.startAlgo = false;
@@ -203,6 +214,16 @@ export class Grid {
       this.gridState = gridState.BUILDING;
       this.currentAlgo = globals.mazeBuildingAlgorithm;
       globals.mazeBuildingAlgorithm = null;
+      globals.BuildStack.clear();
+      if (this.currentAlgo === algosKeys.RandomWalkDFS) {
+        let x: number = Math.floor(Math.random() * this.length);
+        let y: number = Math.floor(Math.random() * this.width);
+        let frame: Frame = new Frame(x, y);
+
+        console.log("this is the frame: ", frame.moves);
+        globals.BuildStack.push(frame);
+        console.log("this is the stack: ", globals.BuildStack);
+      }
       // NOTE: here reset the stuff needed for the algo to run
       console.log("algo prepared all good: ", this.currentAlgo);
     }

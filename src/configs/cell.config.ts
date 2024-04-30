@@ -8,6 +8,13 @@ export const CELLSIZE = 40;
 // unvisited
 // current
 
+export const CURRENT_CELLCOLOR = {
+  r: 0,
+  g: 150,
+  b: 0,
+  a: 1,
+}
+
 // rgba(153, 199, 251, 1)
 export const UNVISITED_CELLCOLOR = {
   r: 255, // 153
@@ -40,6 +47,7 @@ export enum cellDefaults {
 }
 
 export enum CellStates {
+  current,
   visited,
   unvisited,
 }

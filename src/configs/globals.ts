@@ -1,4 +1,5 @@
-import { algoState } from "../types/algos.types";
+import { Stack } from "../types/DataStructures/stack.type";
+import { Frame } from "../types/algos.types";
 import { algosKeys } from "./algos.config";
 import { inputDefaults } from "./defaults";
 
@@ -32,4 +33,7 @@ export const globals = {
   // HACK: this is weird i know
   setDisableLaunch: null as any,
   handleResetButton: null as any,
+
+  // NOTE: i will put them here untill further notice (aka maybe until next refactor XD)
+  BuildStack: new Stack<Frame>(),
 }

@@ -88,36 +88,36 @@ export function animation(dt: number) {
 
     startTime = performance.now();
     if (counter === 0 && grid.at(10, 10)?.animation === CellAnimation.STOPPED) {
-      let randomCell = grid.randomCell();
-      // let randomCell = grid.at(10, 10);
-
-      if (randomCell === null) return;
-
-      let cellneighbors = randomCell.neighbors();
-
-
-      for (let cell of cellneighbors) {
-        if (randomCell.state === CellStates.unvisited)
-          randomCell.link(cell);
-        else
-          randomCell.unlink(cell);
-      }
-
-      randomCell.setState(randomCell.state === CellStates.visited ? CellStates.unvisited : CellStates.visited);
-
-      randomCell = grid.randomCell();
-
-      if (randomCell === null) return;
-
-      cellneighbors = randomCell.neighbors();
-
-      if (randomCell.state === CellStates.visited) {
-        for (let cell of cellneighbors) {
-          randomCell.unlink(cell);
-        }
-
-        randomCell.setState(CellStates.unvisited);
-      }
+      // let randomCell = grid.randomCell();
+      // // let randomCell = grid.at(10, 10);
+      //
+      // if (randomCell === null) return;
+      //
+      // let cellneighbors = randomCell.neighbors();
+      //
+      //
+      // for (let cell of cellneighbors) {
+      //   if (randomCell.state === CellStates.unvisited)
+      //     randomCell.link(cell);
+      //   else
+      //     randomCell.unlink(cell);
+      // }
+      //
+      // randomCell.setState(randomCell.state === CellStates.visited ? CellStates.unvisited : CellStates.visited);
+      //
+      // randomCell = grid.randomCell();
+      //
+      // if (randomCell === null) return;
+      //
+      // cellneighbors = randomCell.neighbors();
+      //
+      // if (randomCell.state === CellStates.visited) {
+      //   for (let cell of cellneighbors) {
+      //     randomCell.unlink(cell);
+      //   }
+      //
+      //   randomCell.setState(CellStates.unvisited);
+      // }
       //   let cell = grid.at(0, 0);
 
       //   if (cell === null) return;
@@ -131,8 +131,9 @@ export function animation(dt: number) {
       //   // counter = 0;
     }
 
-    if (counter % 5 === 0 && globals.startAlgo) {
+    if (globals.startAlgo) {
       grid.launchAlgo();
+      counter++;
     }
     elapsedTime = performance.now() - startTime;
     // console.debug("if after grid.update time => ", elapsedTime);
