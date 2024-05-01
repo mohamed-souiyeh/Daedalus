@@ -49,6 +49,8 @@ export const FirstSection = (props: any) => {
     console.log("mazeSolvingAlgorithmValue => ", Array.from(mazeSolvingAlgorithmValue)[0]);
   }
 
+  globals.handleAlgoLaunch = handleAlgoLaunch;
+
   return (
     <>
       <div className=" flex flex-row items-center flex-grow justify-between">

@@ -17,12 +17,13 @@ export enum inputDefaults {
   TOOLTIPDELAY = 300,
   DISABLETOOLTIP = 1000 * 60 * 60,
   DEFAULTTOOLTIPSTATE = DISABLETOOLTIP,
-  DELAY = 32,
+  DELAY = 8,
   MINDELAY = 8,
   MAXDELAY = 1000,
+  ALGOSPEED = 4, // NOTE: the higher this number the slower it is XD
   ISPAUSED = false as unknown as number,
   DEBUGMODEON = false as unknown as number,
-  DEBUGBOOKLETISON = inputDefaults.DEBUGMODEON as unknown as number,
+  DEBUGBOOKLETISON = false as unknown as number,
   MOUSECELLPOSISLOCKED = false as unknown as number,
 
   DEFAULTDEBUGPAGEINDEX = pageIndexs.cell,

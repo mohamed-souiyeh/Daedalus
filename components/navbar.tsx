@@ -6,7 +6,7 @@ import { Key, createRef, use, useEffect, useRef, useState } from "react";
 import { title } from "./primitives";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookBookmark, faBookOpen, faBug, faBugSlash, faCircleInfo, faCircleQuestion, faGear, faGraduationCap, faLink, faMagnifyingGlassLocation, faMinus, faPause, faPlay, faPlus, faRepeat, faRoute, faStreetView, faTextSlash, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
+import { faBookBookmark, faBookOpen, faBug, faBugSlash, faCircleInfo, faCircleQuestion, faForward, faGear, faGraduationCap, faLink, faMagnifyingGlassLocation, faMinus, faPause, faPlay, faPlus, faRepeat, faRoute, faStreetView, faTextSlash, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
 import { inputDefaults } from "@/src/configs/defaults";
 import { DELAYSTEP, updateDelay } from "@/src/Events/Delay.EventListeners";
 import { reset } from "@/src";
@@ -20,6 +20,7 @@ export const Navbar = () => {
 
   const resetButton = createRef<HTMLButtonElement>();
   const pauseButton = createRef<HTMLButtonElement>();
+  const skipButton = createRef<HTMLButtonElement>();
   const debugButton = createRef<HTMLButtonElement>();
   const debugBooklet = createRef<HTMLButtonElement>();
   const increment = createRef<HTMLButtonElement>();
@@ -93,6 +94,11 @@ export const Navbar = () => {
 
   globals.handleResetButton = handleResetButton;
 
+  const handleSkipButton = () => {
+    console.log("skipping");
+    globals.skipAlgoAnimaiton = true;
+  }
+
   const addDepthFilter = () => {
     console.log("addDepthFilter");
   };
@@ -102,6 +108,10 @@ export const Navbar = () => {
     const windowShortcutes = (event: any) => {
 
       // console.log("event => ", event);
+      if (event.code === 'KeyL') {
+        console.log("event => ", event);
+        globals.handleAlgoLaunch();
+      }
       if (event.code === 'KeyR' && !event.ctrlKey) {
         handleResetButton();
       }
@@ -207,6 +217,11 @@ export const Navbar = () => {
         <Tooltip content="Reset" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
           <Button ref={resetButton} color="primary" isIconOnly size="sm" onClick={handleResetButton}>
             <FontAwesomeIcon icon={faRepeat} size="lg" />
+          </Button>
+        </Tooltip>
+        <Tooltip content="skip" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+          <Button ref={skipButton} color="primary" isIconOnly size="sm" onClick={handleSkipButton}>
+            <FontAwesomeIcon icon={faForward} size="lg" />
           </Button>
         </Tooltip>
         <Tooltip content="Play-Pause" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>

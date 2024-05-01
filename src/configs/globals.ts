@@ -1,3 +1,4 @@
+import svgPath from "svgpath";
 import { Stack } from "../types/DataStructures/stack.type";
 import { Frame } from "../types/algos.types";
 import { algosKeys } from "./algos.config";
@@ -33,7 +34,13 @@ export const globals = {
   // HACK: this is weird i know
   setDisableLaunch: null as any,
   handleResetButton: null as any,
+  handleAlgoLaunch: null as any,
 
   // NOTE: i will put them here untill further notice (aka maybe until next refactor XD)
+  skipAlgoAnimaiton: false as boolean,
   BuildStack: new Stack<Frame>(),
+
+  // NOTE: SVGs
+  homePath: svgPath,
+  finishPath: svgPath,
 }

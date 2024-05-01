@@ -1,6 +1,6 @@
 import { color } from "../types/color.type.ts";
 
-export const CELLSIZE = 40;
+export const CELLSIZE = 30;
 
 // NOTE: the states i have in mind are:
 // in queue
@@ -46,6 +46,13 @@ export enum cellDefaults {
   ACCELERATION = 0,
 }
 
+export enum CellType {
+  start,
+  finish,
+  air,
+  whater,
+}
+
 export enum CellStates {
   current,
   visited,
@@ -53,6 +60,7 @@ export enum CellStates {
 }
 
 export const stateColors: Map<CellStates, color> = new Map([
+  [CellStates.current, Object.create(CURRENT_CELLCOLOR)],
   [CellStates.visited, Object.create(VISITED_CELLCOLOR)],
   [CellStates.unvisited, Object.create(UNVISITED_CELLCOLOR)],
 ])

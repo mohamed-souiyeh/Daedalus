@@ -22,7 +22,7 @@ export class Stack<T> implements IStack<T> {
   }
 
   pop(): T | undefined {
-    return this.storage.shift();
+    return this.storage.pop();
   }
 
   peek(): T | undefined {

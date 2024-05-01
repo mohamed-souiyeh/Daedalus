@@ -2,6 +2,7 @@ import { shuffleCellDirections } from "../algos/randomWalkDFS.utils";
 import { Directions } from "../configs/cell.config";
 
 export enum algoState {
+  noState,
   searching,
   foundPath,
   noPath,
@@ -19,6 +20,6 @@ export class Frame {
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
-    this.moves = [Directions.NORTH, Directions.EAST, Directions.SOUTH, Directions.WEST, 3];
+    this.moves = shuffleCellDirections([Directions.NORTH, Directions.EAST, Directions.SOUTH, Directions.WEST]);
   }
 }

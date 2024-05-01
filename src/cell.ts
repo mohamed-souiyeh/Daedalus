@@ -1,6 +1,6 @@
-import { UNVISITED_CELLCOLOR, cellDefaults, stateColors } from "./configs/cell.config.ts";
+import { CellType, UNVISITED_CELLCOLOR, cellDefaults, stateColors } from "./configs/cell.config.ts";
 import { CORNERCOLOR } from "./configs/corner.config.ts";
-import { WALLCOLOR, WallAnimation, wallState } from "./configs/wall.config.ts";
+import { WALLCOLOR, WALL_PERSENTAGE, WallAnimation, wallState } from "./configs/wall.config.ts";
 import { Corner } from "./corner.ts";
 import { Debuger } from "./debugger.ts";
 import { CellAnimation, CellStates, CornerDirections, Directions } from "./configs/cell.config.ts";
@@ -10,6 +10,7 @@ import { color } from "./types/color.type.ts";
 import { Wall } from "./wall.ts";
 import { globals } from "./configs/globals.ts";
 import { setTextStyle } from "./canvas_ctx_style_manipulation/text.ts";
+import svgPath from "svgpath";
 
 
 
@@ -73,6 +74,7 @@ export class Cell {
   gridy: number = -1;
 
   #state: CellStates = CellStates.unvisited;
+  cellType: CellType = CellType.air;
 
   walls: Wall[];
   north: Cell | null = null;
@@ -212,18 +214,22 @@ export class Cell {
 
 
   //SECTION - initialization methods
-  public init(gridx: number, gridy: number, x: number, y: number, length: number, wallState: wallState) {
+  public init(gridx: number, gridy: number, x: number, y: number, length: number, wallState: wallState, type: CellType) {
     this.gridx = gridx;
     this.gridy = gridy;
 
     this.#state = CellStates.unvisited;
+    this.cellType = type;
+    this.#links.clear();
+
     this.#color = Object.create(UNVISITED_CELLCOLOR);
     this.#nextColor = Object.create(UNVISITED_CELLCOLOR);
     this.#x = x;
     this.#y = y;
     this.#length = length;
-    this.#setInwardsAnimationRequirements();
+    // this.#setInwardsAnimationRequirements();
     // this.#setOutwardsAnimationRequirements();
+    this.#setToOrigineAnimationRequirementsFromInside();
 
     // NOTE: - calculate how much is the scaling factor from the length and divide it by 2 to get the offset on one side
     let startlength = (this.#length * this.#inwardScalingFactor) / 2;
@@ -277,7 +283,7 @@ export class Cell {
 
   setState(state: CellStates) {
     this.#state = state;
-    this.#nextColor = Object.create(stateColors.get(state) as color);
+    this.#color = Object.create(stateColors.get(state) as color);
     this.#colorDists = {
       r: this.#nextColor.r - this.#color.r,
       g: this.#nextColor.g - this.#color.g,
@@ -489,15 +495,15 @@ export class Cell {
     }
 
     //NOTE - update the color
-    this.#color.r = Math.abs(this.#nextColor.r - (this.#colorDists.r * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
-    this.#color.g = Math.abs(this.#nextColor.g - (this.#colorDists.g * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
-    this.#color.b = Math.abs(this.#nextColor.b - (this.#colorDists.b * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
-    this.#color.a = Math.abs(this.#nextColor.a - (this.#colorDists.a * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
+    // this.#color.g = Math.abs(this.#nextColor.g - (this.#colorDists.g * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
+    // this.#color.r = Math.abs(this.#nextColor.r - (this.#colorDists.r * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
+    // this.#color.b = Math.abs(this.#nextColor.b - (this.#colorDists.b * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
+    // this.#color.a = Math.abs(this.#nextColor.a - (this.#colorDists.a * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
 
     // NOTE: - update the walls and corners
     for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
       let currentAlpha: number = 0;
-      if (this.walls[i].getAnimation() === WallAnimation.STOPPING)
+      if (this.walls[i].getAnimation() === WallAnimation.STOPPING || this.walls[i].getAnimation() === WallAnimation.STOPPED)
         currentAlpha = this.walls[i].getTargetedAlpha();
       if (this.walls[i].getAnimation() === WallAnimation.FADEIN)
         currentAlpha = this.#xOutwardSteps / this.#xOutwardWidth;
@@ -549,6 +555,18 @@ export class Cell {
     for (let i = CornerDirections.NORTHWEST; i <= CornerDirections.SOUTHWEST; i++) {
       this.corners[i].draw(ctx);
     }
+
+    if (this.cellType === CellType.start) {
+      const path = new Path2D(svgPath.from(globals.homePath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.2), this.#y + this.#length * (WALL_PERSENTAGE * 1.6)).toString());
+      ctx.fillStyle = "blue";
+      ctx.fill(path)
+    }
+    else if (this.cellType === CellType.finish) {
+      const path = new Path2D(svgPath.from(globals.finishPath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.8), this.#y + this.#length * (WALL_PERSENTAGE * 1.2)).toString());
+      ctx.fillStyle = "blue";
+      ctx.fill(path)
+    }
+
 
     if (globals.debugModeOn) {
       //FIXME - replace this with the set style method

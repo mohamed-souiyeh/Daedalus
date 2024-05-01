@@ -186,8 +186,8 @@ export class Debuger {
 
   public draw(ctx: CanvasRenderingContext2D, cell: Cell | null, grid: Grid) {
     if (!globals.debugBookletIsOn || cell === null) {
-      console.log("this is the cell: ", cell);
-      console.log("is booklet on?: ", globals.debugBookletIsOn);
+      // console.log("this is the cell: ", cell);
+      // console.log("is booklet on?: ", globals.debugBookletIsOn);
       return;
     };
 

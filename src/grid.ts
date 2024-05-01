@@ -3,7 +3,7 @@ import { randomWalkDFS } from "./algos/randomWalkDFS.algo.ts";
 import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.ts";
 import { Cell } from "./cell.ts";
 import { algosKeys } from "./configs/algos.config.ts";
-import { CELLSIZE, CellAnimation, Directions } from "./configs/cell.config.ts";
+import { CELLSIZE, CellAnimation, CellType, Directions } from "./configs/cell.config.ts";
 import { globals } from "./configs/globals.ts";
 import { mouse } from "./configs/input.config.ts";
 import { wallState } from "./configs/wall.config.ts";
@@ -103,10 +103,25 @@ export class Grid {
       for (let x = 0; x < this.#length; x++) {
         let cellx = x * CELLSIZE;
         let celly = y * CELLSIZE;
+        let type: CellType = CellType.air;
 
-        this.grid[y][x].init(x, y, cellx, celly, CELLSIZE, wallState);
+        this.grid[y][x].init(x, y, cellx, celly, CELLSIZE, wallState, type);
       }
     }
+
+    this.start = {
+      x: 0,
+      y: 0,
+    }
+    console.log(this.length, this.width);
+
+    this.finish = {
+      x: this.length - 1,
+      y: this.width - 1,
+    }
+    this.grid[this.start.y][this.start.x].cellType = CellType.start;
+    this.grid[this.finish.y][this.finish.x].cellType = CellType.finish;
+
     this.#configureCells();
     this.#initAlgos();
   }
@@ -177,14 +192,8 @@ export class Grid {
   //!SECTION
 
   // NOTE: algos section
-  start: Pos = {
-    x: 0,
-    y: 0,
-  }
-  finish: Pos = {
-    x: this.length - 1,
-    y: this.width - 1,
-  }
+  start: Pos;
+  finish: Pos;
 
   public launchAlgo() {
     if (this.gridState === gridState.IDLE)
@@ -196,8 +205,15 @@ export class Grid {
       return;
     }
 
-    const state = this.#algos.get(this.currentAlgo)!(this);
+    let once: boolean = true;
+    let state: algoState = algoState.noState;
+
+    while (once || globals.skipAlgoAnimaiton) {
+      state = this.#algos.get(this.currentAlgo)!(this);
+      once = false;
+    }
     if (state === algoState.done) {
+      globals.skipAlgoAnimaiton = false;
       globals.startAlgo = false;
       this.gridState = gridState.IDLE;
       globals.setDisableLaunch(false);
@@ -218,11 +234,15 @@ export class Grid {
       if (this.currentAlgo === algosKeys.RandomWalkDFS) {
         let x: number = Math.floor(Math.random() * this.length);
         let y: number = Math.floor(Math.random() * this.width);
+        // let x: number = 2;
+        // let y: number = 13;
         let frame: Frame = new Frame(x, y);
 
-        console.log("this is the frame: ", frame.moves);
+        // for (let i = 0; i < frame.moves.length; i++) {
+        //   console.log("this is the frame: ", frame.moves[i]);
+        // }
         globals.BuildStack.push(frame);
-        console.log("this is the stack: ", globals.BuildStack);
+        // console.log("this is the stack: ", globals.BuildStack);
       }
       // NOTE: here reset the stuff needed for the algo to run
       console.log("algo prepared all good: ", this.currentAlgo);
