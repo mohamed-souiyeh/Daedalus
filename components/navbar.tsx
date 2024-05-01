@@ -108,6 +108,9 @@ export const Navbar = () => {
     const windowShortcutes = (event: any) => {
 
       // console.log("event => ", event);
+      if (event.code === 'KeyS') {
+        handleSkipButton();
+      }
       if (event.code === 'KeyL') {
         console.log("event => ", event);
         globals.handleAlgoLaunch();
