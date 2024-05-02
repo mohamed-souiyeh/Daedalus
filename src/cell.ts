@@ -299,6 +299,9 @@ export class Cell {
       b: this.#nextColor.b - this.#color.b,
       a: this.#nextColor.a - this.#color.a,
     };
+    if (this.#animation === CellAnimation.STOPPED || this.#animation === CellAnimation.STOPPING) {
+      this.#setInwardsAnimationRequirements();
+    }
   }
 
 
@@ -319,14 +322,14 @@ export class Cell {
   }
 
   #setOutwardsAnimationRequirements() {
-    if (this.#animation === CellAnimation.OUTWARDS) return;
+    if (this.#animation === CellAnimation.OUTWARDS || this.#animation === CellAnimation.TOORIGINE) return;
 
     this.#animation = CellAnimation.OUTWARDS;
     this.#velocity = this.#velocity > 0 ? -this.#velocity : this.#velocity;
   }
 
   #setInwardsAnimationRequirements() {
-    if (this.#animation === CellAnimation.INWARDS) return;
+    if (this.#animation === CellAnimation.INWARDS || this.#animation === CellAnimation.ITOORIGINE) return;
 
     this.#animation = CellAnimation.INWARDS;
     this.#velocity = this.#velocity < 0 ? -this.#velocity : this.#velocity;

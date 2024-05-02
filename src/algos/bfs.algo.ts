@@ -36,7 +36,7 @@ export function bfs(grid: Grid) {
       continue;
 
     let nextCell = grid.at(current!.x, current!.y)!.neighbor(nextDirection);
-    if (nextCell!.state === CellStates.unvisited) {
+    if (nextCell && nextCell!.state === CellStates.unvisited && currentCell.islinked(nextCell)) {
       nextCell?.setState(CellStates.inqueue);
       nextCell!.parrent = currentCell;
       nextCell!.distenceFromStart = nextCell!.parrent!.distenceFromStart + 1;
@@ -46,7 +46,8 @@ export function bfs(grid: Grid) {
     }
   }
   currentCell.setState(CellStates.visited);
-  grid.at(globals.searchQueue.peek()!.x, globals.searchQueue.peek()!.y)?.setState(CellStates.current);
+  if (globals.searchQueue.size())
+    grid.at(globals.searchQueue.peek()!.x, globals.searchQueue.peek()!.y)?.setState(CellStates.current);
 
   return algoState.searching;
 }

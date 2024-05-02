@@ -93,16 +93,16 @@ export class Grid {
     this.#startX = Math.floor((canvasLength - (this.#length * CELLSIZE)) / 2);
     this.#startY = Math.floor((canvasWidth - (this.#width * CELLSIZE)) * 0.5);
 
-    globals.canvas!.width = this.#length * CELLSIZE;
-    globals.canvas!.height = this.#width * CELLSIZE;
+    // globals.canvas!.width = this.#length * CELLSIZE;
+    // globals.canvas!.height = this.#width * CELLSIZE;
 
-    this.#offsetLeft = 0;
-    this.#offsetTop = 0;
+    this.#offsetLeft = this.#startX;
+    this.#offsetTop = this.#startY;
 
     for (let y = 0; y < this.#width; y++) {
       for (let x = 0; x < this.#length; x++) {
-        let cellx = x * CELLSIZE;
-        let celly = y * CELLSIZE;
+        let cellx = this.startX + x * CELLSIZE;
+        let celly = this.startY + y * CELLSIZE;
         let type: CellType = CellType.air;
 
         this.grid[y][x].init(x, y, cellx, celly, CELLSIZE, wallState, type);
@@ -183,6 +183,9 @@ export class Grid {
   public launchAlgo() {
     if (this.gridState === gridState.IDLE) {
       this.prepAlgo();
+      console.log("finished preparing for search");
+      // if (this.gridState === gridState.SEARCHING)
+      // globals.startAlgo = false;
       return;
     }
     if (!this.#algos.has(this.currentAlgo)) {
@@ -200,10 +203,13 @@ export class Grid {
       once = false;
     }
     if (state === algoState.done) {
+      console.log("done building");
       globals.skipAlgoAnimaiton = false;
-      globals.startAlgo = false;
+      if (!globals.mazeSolvingAlgorithm) {
+        globals.startAlgo = false;
+        globals.setDisableLaunch(false);
+      }
       this.gridState = gridState.IDLE;
-      globals.setDisableLaunch(false);
     }
     else if (state === algoState.foundPath || state === algoState.noPath) {
       globals.skipAlgoAnimaiton = false;
@@ -236,7 +242,7 @@ export class Grid {
       this.at(frame.x, frame.y)?.setState(CellStates.current);
       globals.BuildStack.push(frame);
     }
-    if (globals.mazeSolvingAlgorithm && this.gridState === gridState.IDLE) {
+    else if (globals.mazeSolvingAlgorithm && this.gridState === gridState.IDLE) {
       this.gridState = gridState.SEARCHING;
       this.currentAlgo = globals.mazeSolvingAlgorithm;
       globals.mazeSolvingAlgorithm = null;
@@ -251,6 +257,12 @@ export class Grid {
       this.at(frame.x, frame.y)!.distenceFromStart = 0;
       globals.searchQueue.enqueue(frame);
     }
+    else {
+      globals.skipAlgoAnimaiton = false;
+      globals.startAlgo = false;
+      this.gridState = gridState.IDLE;
+      globals.setDisableLaunch(false);
+    }
   }
   //
 
@@ -258,6 +270,8 @@ export class Grid {
 
   public update(ctx: CanvasRenderingContext2D) {
 
+    // console.log("start: ", globals.start);
+    // console.log("finish: ", globals.finish);
     this.grid[globals.start.oldy][globals.start.oldx].setCellType(CellType.air);
     this.grid[globals.finish.oldy][globals.finish.oldx].setCellType(CellType.air);
 

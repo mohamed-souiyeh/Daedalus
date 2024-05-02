@@ -44,6 +44,8 @@ export const globals = {
   searchQueue: new Queue<Frame>(),
 
   // NOTE: SVGs
+  gridOffsetLeft: 0,
+  gridOffsetTop: 0,
   start: { x: 0, y: 0, oldx: 0, oldy: 0 } as Pos,
   finish: { x: 1, y: 1, oldx: 1, oldy: 1 } as Pos,
   homePath: svgPath,
