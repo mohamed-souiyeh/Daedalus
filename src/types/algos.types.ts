@@ -1,4 +1,5 @@
 import { shuffleCellDirections } from "../algos/randomWalkDFS.utils";
+import { algosKeys } from "../configs/algos.config";
 import { Directions } from "../configs/cell.config";
 
 export enum algoState {
@@ -17,9 +18,14 @@ export class Frame {
   y: number;
   moves: Directions[];
 
-  constructor(x: number, y: number) {
+  constructor(x: number, y: number, algo: algosKeys) {
     this.x = x;
     this.y = y;
-    this.moves = shuffleCellDirections([Directions.NORTH, Directions.EAST, Directions.SOUTH, Directions.WEST]);
+
+    console.log(algo);
+    if (algo === algosKeys.RandomWalkDFS)
+      this.moves = shuffleCellDirections([Directions.NORTH, Directions.EAST, Directions.SOUTH, Directions.WEST]);
+    else if (algo === algosKeys.BFS)
+      this.moves = [Directions.NORTH, Directions.EAST, Directions.SOUTH, Directions.WEST];
   }
 }

@@ -73,8 +73,10 @@ export class Cell {
   gridx: number = -1;
   gridy: number = -1;
 
+  parrent: Cell | null = null;
+  distenceFromStart: number = Infinity;
   #state: CellStates = CellStates.unvisited;
-  cellType: CellType = CellType.air;
+  #cellType: CellType = CellType.air;
 
   walls: Wall[];
   north: Cell | null = null;
@@ -218,8 +220,10 @@ export class Cell {
     this.gridx = gridx;
     this.gridy = gridy;
 
+    this.parrent = null;
+    this.distenceFromStart = Infinity;
     this.#state = CellStates.unvisited;
-    this.cellType = type;
+    this.#cellType = type;
     this.#links.clear();
 
     this.#color = Object.create(UNVISITED_CELLCOLOR);
@@ -280,6 +284,11 @@ export class Cell {
   //!SECTION
 
   //SECTION - setters and getters
+
+  setCellType(type: CellType) {
+    this.#cellType = type;
+    this.#setToOrigineAnimationRequirementsFromInside();
+  }
 
   setState(state: CellStates) {
     this.#state = state;
@@ -556,12 +565,12 @@ export class Cell {
       this.corners[i].draw(ctx);
     }
 
-    if (this.cellType === CellType.start) {
+    if (this.#cellType === CellType.start) {
       const path = new Path2D(svgPath.from(globals.homePath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.2), this.#y + this.#length * (WALL_PERSENTAGE * 1.6)).toString());
       ctx.fillStyle = "blue";
       ctx.fill(path)
     }
-    else if (this.cellType === CellType.finish) {
+    else if (this.#cellType === CellType.finish) {
       const path = new Path2D(svgPath.from(globals.finishPath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.8), this.#y + this.#length * (WALL_PERSENTAGE * 1.2)).toString());
       ctx.fillStyle = "blue";
       ctx.fill(path)

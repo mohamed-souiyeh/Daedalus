@@ -3,7 +3,7 @@ import { randomWalkDFS } from "./algos/randomWalkDFS.algo.ts";
 import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.ts";
 import { Cell } from "./cell.ts";
 import { algosKeys } from "./configs/algos.config.ts";
-import { CELLSIZE, CellAnimation, CellType, Directions } from "./configs/cell.config.ts";
+import { CELLSIZE, CellAnimation, CellStates, CellType, Directions } from "./configs/cell.config.ts";
 import { globals } from "./configs/globals.ts";
 import { mouse } from "./configs/input.config.ts";
 import { wallState } from "./configs/wall.config.ts";
@@ -109,19 +109,6 @@ export class Grid {
       }
     }
 
-    this.start = {
-      x: 0,
-      y: 0,
-    }
-    console.log(this.length, this.width);
-
-    this.finish = {
-      x: this.length - 1,
-      y: this.width - 1,
-    }
-    this.grid[this.start.y][this.start.x].cellType = CellType.start;
-    this.grid[this.finish.y][this.finish.x].cellType = CellType.finish;
-
     this.#configureCells();
     this.#initAlgos();
   }
@@ -192,12 +179,12 @@ export class Grid {
   //!SECTION
 
   // NOTE: algos section
-  start: Pos;
-  finish: Pos;
 
   public launchAlgo() {
-    if (this.gridState === gridState.IDLE)
+    if (this.gridState === gridState.IDLE) {
       this.prepAlgo();
+      return;
+    }
     if (!this.#algos.has(this.currentAlgo)) {
       console.log("ma guy we aint have an algo for what u chose");
       globals.setDisableLaunch(false);
@@ -219,9 +206,18 @@ export class Grid {
       globals.setDisableLaunch(false);
     }
     else if (state === algoState.foundPath || state === algoState.noPath) {
+      globals.skipAlgoAnimaiton = false;
       globals.startAlgo = false;
       this.gridState = gridState.IDLE;
       globals.setDisableLaunch(false);
+    }
+  }
+
+  public resetForSearchAlgo() {
+    for (let cell of this.eachCell()) {
+      cell.setState(CellStates.unvisited);
+      cell.parrent = null;
+      cell.distenceFromStart = Infinity;
     }
   }
 
@@ -231,28 +227,29 @@ export class Grid {
       this.currentAlgo = globals.mazeBuildingAlgorithm;
       globals.mazeBuildingAlgorithm = null;
       globals.BuildStack.clear();
-      if (this.currentAlgo === algosKeys.RandomWalkDFS) {
-        let x: number = Math.floor(Math.random() * this.length);
-        let y: number = Math.floor(Math.random() * this.width);
-        // let x: number = 2;
-        // let y: number = 13;
-        let frame: Frame = new Frame(x, y);
 
-        // for (let i = 0; i < frame.moves.length; i++) {
-        //   console.log("this is the frame: ", frame.moves[i]);
-        // }
-        globals.BuildStack.push(frame);
-        // console.log("this is the stack: ", globals.BuildStack);
-      }
-      // NOTE: here reset the stuff needed for the algo to run
-      console.log("algo prepared all good: ", this.currentAlgo);
+      let x: number = Math.floor(Math.random() * this.length);
+      let y: number = Math.floor(Math.random() * this.width);
+      console.log("current algo: ", this.currentAlgo);
+      const frame = new Frame(x, y, this.currentAlgo);
+
+      this.at(frame.x, frame.y)?.setState(CellStates.current);
+      globals.BuildStack.push(frame);
     }
     if (globals.mazeSolvingAlgorithm && this.gridState === gridState.IDLE) {
       this.gridState = gridState.SEARCHING;
       this.currentAlgo = globals.mazeSolvingAlgorithm;
       globals.mazeSolvingAlgorithm = null;
-      // NOTE: here reset the stuff needed for the algo to run
-      console.log("algo prepared all good: ", this.currentAlgo);
+      globals.searchQueue.clear();
+      this.resetForSearchAlgo();
+
+      const frame = new Frame(globals.start.x, globals.start.y, this.currentAlgo);
+
+
+      this.at(frame.x, frame.y)!.setState(CellStates.current);
+      this.at(frame.x, frame.y)!.parrent = null;
+      this.at(frame.x, frame.y)!.distenceFromStart = 0;
+      globals.searchQueue.enqueue(frame);
     }
   }
   //
@@ -260,6 +257,13 @@ export class Grid {
   //SECTION - animation methods
 
   public update(ctx: CanvasRenderingContext2D) {
+
+    this.grid[globals.start.oldy][globals.start.oldx].setCellType(CellType.air);
+    this.grid[globals.finish.oldy][globals.finish.oldx].setCellType(CellType.air);
+
+    this.grid[globals.start.y][globals.start.x].setCellType(CellType.start);
+    this.grid[globals.finish.y][globals.finish.x].setCellType(CellType.finish);
+
     for (let cell of this.eachCell()) {
       cell.update();
     }

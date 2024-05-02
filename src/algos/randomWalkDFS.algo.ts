@@ -30,7 +30,7 @@ export function randomWalkDFS(grid: Grid): algoState {
         break;
 
       nextCell = currentCell!.neighbor(nextDirection);
-      if (nextCell === null || nextCell.state === CellStates.visited) {
+      if (nextCell === null || nextCell.state !== CellStates.unvisited) {
         nextCell = null;
         nextDirection = undefined;
         continue;
@@ -53,7 +53,7 @@ export function randomWalkDFS(grid: Grid): algoState {
   }
 
 
-  const toPush = new Frame(nextCell!.gridx, nextCell!.gridy);
+  const toPush = new Frame(nextCell!.gridx, nextCell!.gridy, grid.currentAlgo);
 
   currentCell!.link(nextCell, true);
 

@@ -3,6 +3,8 @@ import { Stack } from "../types/DataStructures/stack.type";
 import { Frame } from "../types/algos.types";
 import { algosKeys } from "./algos.config";
 import { inputDefaults } from "./defaults";
+import { Pos } from "../types/pos.type";
+import { Queue } from "../types/DataStructures/queue.type";
 
 export const globals = {
   canvas: null as HTMLCanvasElement | null,
@@ -39,8 +41,11 @@ export const globals = {
   // NOTE: i will put them here untill further notice (aka maybe until next refactor XD)
   skipAlgoAnimaiton: false as boolean,
   BuildStack: new Stack<Frame>(),
+  searchQueue: new Queue<Frame>(),
 
   // NOTE: SVGs
+  start: { x: 0, y: 0, oldx: 0, oldy: 0 } as Pos,
+  finish: { x: 1, y: 1, oldx: 1, oldy: 1 } as Pos,
   homePath: svgPath,
   finishPath: svgPath,
 }

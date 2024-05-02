@@ -3,10 +3,17 @@ import { color } from "../types/color.type.ts";
 export const CELLSIZE = 30;
 
 // NOTE: the states i have in mind are:
-// in queue
+// inQueue
 // visited
 // unvisited
 // current
+
+export const INQUEUE = {
+  r: 200,
+  g: 200,
+  b: 0,
+  a: 1,
+}
 
 export const CURRENT_CELLCOLOR = {
   r: 0,
@@ -55,12 +62,14 @@ export enum CellType {
 
 export enum CellStates {
   current,
+  inqueue,
   visited,
   unvisited,
 }
 
 export const stateColors: Map<CellStates, color> = new Map([
   [CellStates.current, Object.create(CURRENT_CELLCOLOR)],
+  [CellStates.inqueue, Object.create(INQUEUE)],
   [CellStates.visited, Object.create(VISITED_CELLCOLOR)],
   [CellStates.unvisited, Object.create(UNVISITED_CELLCOLOR)],
 ])
