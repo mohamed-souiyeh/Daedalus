@@ -24,6 +24,14 @@ export function bfs(grid: Grid) {
   if (currentCell.gridx === globals.finish.x && currentCell.gridy === globals.finish.y) {
     globals.skipAlgoAnimaiton = false;
     console.log("yeeep there is a path");
+    globals.animatePath = true;
+    let cell = currentCell;
+    while (cell.gridx !== globals.start.x && cell.gridy !== globals.start.y) {
+      grid.path.push(cell);
+      console.log(cell);
+      if (cell.parrent === null) continue;
+      cell = cell.parrent;
+    }
     return algoState.foundPath;
   }
 

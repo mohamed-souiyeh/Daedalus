@@ -101,6 +101,7 @@ export class Grid {
     this.#offsetLeft = this.#startX;
     this.#offsetTop = this.#startY;
 
+    this.path = [];
     for (let y = 0; y < this.#width; y++) {
       for (let x = 0; x < this.#length; x++) {
         let cellx = this.startX + x * CELLSIZE;
@@ -187,6 +188,17 @@ export class Grid {
   //!SECTION
 
   // NOTE: algos section
+  path: Cell[] = [];
+
+  public animatePath() {
+    if (this.path.length === 0) {
+      globals.animatePath = false;
+      return;
+    }
+    const cell = this.path.pop();
+
+    cell?.setState(CellStates.path);
+  }
 
   public launchAlgo() {
     if (this.gridState === gridState.IDLE) {
@@ -208,7 +220,6 @@ export class Grid {
 
     while (howMany && (state === algoState.noState || state === algoState.building || state === algoState.searching)) {
       state = this.#algos.get(this.currentAlgo)!(this);
-      console.log("wa3");
       howMany--;
     }
     if (state === algoState.done) {
@@ -240,24 +251,26 @@ export class Grid {
     }
     else if (this.#currentResetColumn >= this.length) {
       this.#currentResetColumn = this.length - 1;
+      this.#resetPatternDirection = this.#resetPatternDirection * -1;
       globals.reset = false;
       return;
     }
     // if (this.#currentResetColumn + -this.#resetPatternDirection >= 0 && this.#currentResetColumn + -this.#resetPatternDirection <= this.length) {
     // }
 
+    this.#resetPatternDirection = this.#resetPatternDirection * -1;
     // console.log("  animationPercentage: ", this.at(this.#currentResetColumn, 0)!.animationPercentage)
     // console.log("currentResetColumn: ", this.#currentResetColumn);
-    if (this.at(this.#currentResetColumn, 0)!.animationPercentage <= 0) {
-      let x = this.#currentResetColumn;
-      for (let y = 0; y < this.width; y++) {
-        // console.log("x: ", x);
-        // console.log("y: ", y);
-        this.at(x, y)!.setState(CellStates.unvisited);
-      }
+    // if (this.at(this.#currentResetColumn, 0)!.animationPercentage <= 20) {
+    let x = this.#currentResetColumn;
+    for (let y = 0; y < this.width; y++) {
+      // console.log("x: ", x);
+      // console.log("y: ", y);
+      this.at(x, y)!.setState(CellStates.unvisited);
     }
+    // }
 
-    if (this.at(this.#currentResetColumn, 0)!.animationPercentage >= 5.0)
+    if (this.at(this.#currentResetColumn, 0)!.animationPercentage >= 10.0)
       this.#currentResetColumn += this.#resetPatternDirection;
   }
 
@@ -288,6 +301,7 @@ export class Grid {
       this.currentAlgo = globals.mazeSolvingAlgorithm;
       globals.mazeSolvingAlgorithm = null;
       globals.searchQueue.clear();
+      this.path = [];
       globals.reset = true;
       this.resetForSearchAlgo();
 

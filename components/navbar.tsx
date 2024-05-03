@@ -96,7 +96,8 @@ export const Navbar = () => {
 
   const handleSkipButton = () => {
     console.log("skipping");
-    globals.skipAlgoAnimaiton = true;
+    if (globals.startAlgo)
+      globals.skipAlgoAnimaiton = true;
   }
 
   const addDepthFilter = () => {

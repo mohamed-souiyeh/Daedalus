@@ -32,6 +32,7 @@ export const globals = {
   mazeBuildingAlgorithm: null as algosKeys | null,
   mazeSolvingAlgorithm: null as algosKeys | null,
   startAlgo: false as boolean,
+  animatePath: false as boolean,
 
   reset: false as boolean,
 

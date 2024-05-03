@@ -8,6 +8,13 @@ export const CELLSIZE = 30;
 // unvisited
 // current
 
+export const PATH_CELLCOLOR = {
+  r: 200,
+  g: 0,
+  b: 250,
+  a: 1,
+}
+
 export const INQUEUE = {
   r: 200,
   g: 200,
@@ -65,6 +72,7 @@ export enum CellStates {
   inqueue,
   visited,
   unvisited,
+  path,
 }
 
 export const stateColors: Map<CellStates, color> = new Map([
@@ -72,6 +80,7 @@ export const stateColors: Map<CellStates, color> = new Map([
   [CellStates.inqueue, Object.create(INQUEUE)],
   [CellStates.visited, Object.create(VISITED_CELLCOLOR)],
   [CellStates.unvisited, Object.create(UNVISITED_CELLCOLOR)],
+  [CellStates.path, Object.create(PATH_CELLCOLOR)],
 ])
 
 export enum CellAnimation {

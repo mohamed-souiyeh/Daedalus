@@ -25,6 +25,7 @@ export function reset() {
   globals.currentAnimation = 0;
 
   globals.startAlgo = false;
+  globals.animatePath = false;
   globals.mazeSolvingAlgorithm = null;
   globals.mazeBuildingAlgorithm = null;
 
@@ -74,6 +75,7 @@ export function setup() {
 
   grid.initialize(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
   globals.reset = true;
+  globals.animatePath = false;
 
   globals.gridOffsetLeft = Math.floor((canvas.width - (grid.length * CELLSIZE)) / 2);
   globals.gridOffsetTop = Math.floor((canvas.height - (grid.width * CELLSIZE)) * 0.5);
@@ -119,8 +121,11 @@ export function animation(dt: number) {
 
     startTime = performance.now();
 
-    if (counter % inputDefaults.ALGOSPEED === 0 && globals.startAlgo && globals.reset === false) {
-      grid.launchAlgo();
+    if (counter % inputDefaults.ALGOSPEED === 0 && globals.reset === false) {
+      if (globals.startAlgo)
+        grid.launchAlgo();
+      if (globals.animatePath)
+        grid.animatePath();
     }
     counter++;
     elapsedTime = performance.now() - startTime;
