@@ -298,6 +298,13 @@ export class Cell {
     this.#redraw = true;
   }
 
+  resetWallAndLinks(state: wallState) {
+    for (let i = 0; i < 4; i++) {
+      this.walls[i].setWallState(state);
+    }
+    this.#links.clear();
+  }
+
   setState(state: CellStates) {
     // console.log("gridx: ", this.gridx);
     // console.log("gridy: ", this.gridy);
@@ -311,7 +318,6 @@ export class Cell {
       a: this.#nextColor.a - this.#color.a,
     };
     if (this.animation === CellAnimation.STOPPED || this.animation === CellAnimation.STOPPING) {
-      // console.log("wa3");
       this.#setInwardsAnimationRequirements();
     }
   }

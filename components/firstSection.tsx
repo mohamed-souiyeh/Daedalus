@@ -1,6 +1,6 @@
 import { Tooltip } from "@nextui-org/tooltip";
 import { MyAvatar } from "./avatar";
-import { Button, Popover, PopoverContent, PopoverTrigger, Select, SelectItem, Selection } from "@nextui-org/react";
+import { Button, Popover, PopoverContent, PopoverTrigger, Select, SelectItem, SelectSection, Selection } from "@nextui-org/react";
 import { AlgorithmDescription } from "./algorithmDescription";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRocket, faRoute, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
@@ -9,44 +9,49 @@ import { color } from "@/types";
 import { globals } from "@/src/configs/globals";
 import { algoState } from "@/src/types/algos.types";
 import { algosKeys, mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "@/src/configs/algos.config";
+import { Bounce, toast } from "react-toastify";
 
 
 
 export const FirstSection = (props: any) => {
-  const mazeBuildingInspector = createRef<HTMLButtonElement>();
-  const mazeSolvingInspector = createRef<HTMLButtonElement>();
+  const mazeLaunching = createRef<HTMLButtonElement>();
 
 
   const { tooltipDelayRef } = props;
   const tooltipDelay = tooltipDelayRef.current;
 
 
-  const [mazeBuildingInspectorColor, setMazeBuildingInspectorColor] = useState("primary" as typeof color);
-  const [mazeSolvingInspectorColor, setMazeSolvingInspectorColor] = useState("primary" as typeof color);
 
 
-  const [mazeSolvingAlgorithmValue, setmazeSolvingAlgorithmValue] = useState<Selection>(new Set([]));
-  const [mazeBuildingAlgorithmValue, setmazeBuildingAlgorithmValue] = useState<Selection>(new Set([]));
+  const [algorithmValue, setAlgorithmValue] = useState<Selection>(new Set([]));
 
 
   useEffect(() => {
-    console.log("mazeBuildingAlgorithmValue => ", Array.from(mazeBuildingAlgorithmValue)[0]);
-    console.log("mazeSolvingAlgorithmValue => ", Array.from(mazeSolvingAlgorithmValue)[0]);
-  }, [mazeSolvingAlgorithmValue, mazeBuildingAlgorithmValue]);
+    console.log("mazeBuildingAlgorithmValue => ", Array.from(algorithmValue)[0]);
+  }, [algorithmValue]);
 
   const [disableLaunch, setDisableLaunch] = useState<boolean>(globals.startAlgo);
 
   // NOTE: this need ot be used in it's apropriate place after patching the reset button and priseajur
   // to take into account the algorithms launching
   const handleAlgoLaunch = () => {
-    globals.mazeSolvingAlgorithm = Array.from(mazeSolvingAlgorithmValue)[0] as algosKeys;
-    globals.mazeBuildingAlgorithm = Array.from(mazeBuildingAlgorithmValue)[0] as algosKeys;
+    if (mazeSolvingAlgorithms.find((item) => item.key === Array.from(algorithmValue)[0] as algosKeys)) {
+      globals.mazeSolvingAlgorithm = Array.from(algorithmValue)[0] as algosKeys;
+      globals.mazeBuildingAlgorithm = null;
+    }
+    else if (mazeGenerationAlgorithms.find((item) => item.key === Array.from(algorithmValue)[0] as algosKeys)) {
+      globals.mazeBuildingAlgorithm = Array.from(algorithmValue)[0] as algosKeys;
+      globals.mazeSolvingAlgorithm = null;
+    }
+
+    if (!globals.mazeSolvingAlgorithm && !globals.mazeBuildingAlgorithm)
+      return;
+
     globals.startAlgo = true;
-    setDisableLaunch(globals.startAlgo);
+    setDisableLaunch(true);
     globals.setDisableLaunch = setDisableLaunch;
 
-    console.log("mazeBuildingAlgorithmValue => ", Array.from(mazeBuildingAlgorithmValue)[0]);
-    console.log("mazeSolvingAlgorithmValue => ", Array.from(mazeSolvingAlgorithmValue)[0]);
+    console.log("algorithmValue => ", Array.from(algorithmValue)[0]);
   }
 
   globals.handleAlgoLaunch = handleAlgoLaunch;
@@ -57,7 +62,7 @@ export const FirstSection = (props: any) => {
         <MyAvatar />
         <div className=" flex flex-row gap-2 items-center">
           <Select
-            label="Maze Building"
+            label="algorithms"
             className="fixed-width-select"
             size="sm"
             radius="sm"
@@ -66,40 +71,26 @@ export const FirstSection = (props: any) => {
             // startContent={<FontAwesomeIcon icon={faTrowelBricks} size="sm" />}
             selectorIcon={<FontAwesomeIcon icon={faTrowelBricks} size="sm" />}
             disableSelectorIconRotation
-            // defaultSelectedKeys={["Random"]}
-            // description="The algorithm used to build the maze"
-            selectedKeys={mazeBuildingAlgorithmValue}
-            onSelectionChange={setmazeBuildingAlgorithmValue}
+            selectedKeys={algorithmValue}
+            onSelectionChange={setAlgorithmValue}
           >
-            {mazeGenerationAlgorithms.map((algo: typeof mazeGenerationAlgorithms[0]) => (
-              <SelectItem key={algo.key} value={algo.name} >
-                {algo.name}
-              </SelectItem>
-            ))}
+            <SelectSection title={"maze generation"}>
+              {mazeGenerationAlgorithms.map((algo: typeof mazeGenerationAlgorithms[0]) => (
+                <SelectItem key={algo.key} value={algo.name} >
+                  {algo.name}
+                </SelectItem>
+              ))}
+            </SelectSection>
+            <SelectSection title={"path finding"}>
+              {mazeSolvingAlgorithms.map((algo: typeof mazeSolvingAlgorithms[0]) => (
+                <SelectItem key={algo.key} value={algo.name}>
+                  {algo.name}
+                </SelectItem>
+              ))}
+            </SelectSection>
           </Select>
-          <Select
-            label="Path Finding"
-            className="fixed-width-select"
-            size="sm"
-            radius="sm"
-            variant="underlined"
-            placeholder="Select an Algorithm"
-            // startContent={<FontAwesomeIcon icon={faMagnifyingGlassLocation} size="sm" />}
-            selectorIcon={<FontAwesomeIcon icon={faRoute} size="sm" />}
-            disableSelectorIconRotation
-            // defaultSelectedKeys={["Random"]}
-            // description="The algorithm used to solve the maze"
-            selectedKeys={mazeSolvingAlgorithmValue}
-            onSelectionChange={setmazeSolvingAlgorithmValue}
-          >
-            {mazeSolvingAlgorithms.map((algo: typeof mazeSolvingAlgorithms[0]) => (
-              <SelectItem key={algo.key} value={algo.name}>
-                {algo.name}
-              </SelectItem>
-            ))}
-          </Select>
-          <Tooltip content="algorithms launching" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
-            <Button ref={mazeSolvingInspector} color={mazeSolvingInspectorColor} isIconOnly size="sm" isDisabled={disableLaunch} onClick={handleAlgoLaunch}>
+          <Tooltip content="algorithms launching" showArrow={true} color={"primary"} delay={tooltipDelay} closeDelay={200}>
+            <Button ref={mazeLaunching} isIconOnly size="sm" color="primary" isDisabled={disableLaunch} onClick={handleAlgoLaunch}>
               <FontAwesomeIcon icon={faRocket} size="lg" />
             </Button>
           </Tooltip>

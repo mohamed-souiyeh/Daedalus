@@ -16,7 +16,7 @@ import { globals } from "@/src/configs/globals";
 
 export default function Home() {
   const canvaRef = useRef<HTMLCanvasElement>(null);
-  
+
   useEffect(() => {
     if (!canvaRef.current || globals.setup)
       return;
@@ -24,15 +24,15 @@ export default function Home() {
     globals.ctx = canvaRef.current.getContext("2d");
     if (!globals.ctx)
       return;
-    
+
     console.log("setup");
-    console.log("canvaRef => ",canvaRef);
+    console.log("canvaRef => ", canvaRef);
     console.log("globals canvas => ", globals.canvas);
     console.log("globals ctx =>", globals.ctx);
     setupEventListners();
 
     setup();
-    
+
   }, []);
 
 
@@ -40,7 +40,7 @@ export default function Home() {
     <>
       <Navbar />
       <main id="maze">
-        <canvas id="canvas" ref={canvaRef}/>
+        <canvas id="canvas" ref={canvaRef} />
       </main>
     </>
   );

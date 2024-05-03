@@ -193,11 +193,18 @@ export class Grid {
   public animatePath() {
     if (this.path.length === 0) {
       globals.animatePath = false;
+      globals.skipAlgoAnimaiton = false;
+      this.gridState = gridState.IDLE;
       return;
     }
-    const cell = this.path.pop();
+    console.log("this is the skiping: ", globals.skipAlgoAnimaiton);
+    let howMany: number = globals.skipAlgoAnimaiton ? 10 : 1;
 
-    cell?.setState(CellStates.path);
+    while (howMany && this.path.length) {
+      const cell = this.path.shift();
+      cell!.setState(CellStates.path);
+      howMany--;
+    }
   }
 
   public launchAlgo() {
@@ -225,17 +232,17 @@ export class Grid {
     if (state === algoState.done) {
       console.log("done building");
       globals.skipAlgoAnimaiton = false;
-      if (!globals.mazeSolvingAlgorithm) {
-        globals.startAlgo = false;
-        globals.setDisableLaunch(false);
-      }
+      globals.startAlgo = false;
+      globals.needclear = true;
+      globals.setDisableLaunch(false);
       this.gridState = gridState.IDLE;
     }
     else if (state === algoState.foundPath || state === algoState.noPath) {
       globals.skipAlgoAnimaiton = false;
+      globals.needclear = true;
       globals.startAlgo = false;
-      this.gridState = gridState.IDLE;
       globals.setDisableLaunch(false);
+      this.gridState = gridState.IDLE;
     }
   }
 
@@ -281,19 +288,33 @@ export class Grid {
     }
   }
 
+  public resetForBuildAlgo() {
+    let wallsState: wallState = wallState.PRESENT;
+    for (let cell of this.eachCell()) {
+      const neighbors = cell.neighbors();
+      for (let neighbor of neighbors) {
+        if (neighbor === null) continue;
+        cell.resetWallAndLinks(wallsState);
+      }
+    }
+  }
+
   public prepAlgo() {
     if (globals.mazeBuildingAlgorithm && this.gridState === gridState.IDLE) {
       this.gridState = gridState.BUILDING;
       this.currentAlgo = globals.mazeBuildingAlgorithm;
       globals.mazeBuildingAlgorithm = null;
-      globals.BuildStack.clear();
+      if (globals.needclear) {
+        globals.BuildStack.clear();
+        globals.reset = true;
+      }
+      this.resetForBuildAlgo();
 
       let x: number = Math.floor(Math.random() * this.length);
       let y: number = Math.floor(Math.random() * this.width);
       console.log("current algo: ", this.currentAlgo);
       const frame = new Frame(x, y, this.currentAlgo);
 
-      this.at(frame.x, frame.y)?.setState(CellStates.current);
       globals.BuildStack.push(frame);
     }
     else if (globals.mazeSolvingAlgorithm && this.gridState === gridState.IDLE) {
@@ -302,13 +323,13 @@ export class Grid {
       globals.mazeSolvingAlgorithm = null;
       globals.searchQueue.clear();
       this.path = [];
-      globals.reset = true;
-      this.resetForSearchAlgo();
-
+      if (globals.needclear) {
+        globals.reset = true;
+        this.resetForSearchAlgo();
+      }
       const frame = new Frame(globals.start.x, globals.start.y, this.currentAlgo);
 
 
-      this.at(frame.x, frame.y)!.setState(CellStates.current);
       this.at(frame.x, frame.y)!.parrent = null;
       this.at(frame.x, frame.y)!.distenceFromStart = 0;
       globals.searchQueue.enqueue(frame);
@@ -361,6 +382,9 @@ export class Grid {
 
   public draw(ctx: CanvasRenderingContext2D) {
     ctx.clearRect(0, 0, globals.canvas!.width, this.#offsetTop);
+    ctx.clearRect(0, 0, this.#offsetLeft, globals.canvas!.height);
+    ctx.clearRect(0, globals.canvas!.height - this.#offsetTop, globals.canvas!.width, this.#offsetTop);
+    ctx.clearRect(globals.canvas!.width - this.#offsetLeft, 0, this.#offsetLeft, globals.canvas!.height);
     // ctx.clearRect(this.startX, this.startY, this.#length * CELLSIZE, this.#width * CELLSIZE);
 
     for (let cell of this.eachCell()) {

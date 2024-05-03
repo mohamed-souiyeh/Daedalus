@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import 'react-toastify/dist/ReactToastify.css';
 
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
@@ -7,6 +8,7 @@ import { fontSans } from "@/config/fonts";
 import { Providers } from "./providers";
 import { Navbar } from "@/components/navbar";
 import { Link } from "@nextui-org/link";
+import { ToastContainer } from "react-toastify";
 
 
 export const metadata: Metadata = {
@@ -36,6 +38,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <div id="body">
+            <ToastContainer />
             {children}
           </div>
         </Providers>

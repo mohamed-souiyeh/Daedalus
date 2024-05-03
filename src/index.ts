@@ -31,6 +31,7 @@ export function reset() {
 
   grid.initialize(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
   globals.reset = true;
+  globals.needclear = false;
 
   deltaTime.reset();
   counter = 0;
@@ -76,6 +77,8 @@ export function setup() {
   grid.initialize(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
   globals.reset = true;
   globals.animatePath = false;
+  globals.startAlgo = false;
+  globals.needclear = false;
 
   globals.gridOffsetLeft = Math.floor((canvas.width - (grid.length * CELLSIZE)) / 2);
   globals.gridOffsetTop = Math.floor((canvas.height - (grid.width * CELLSIZE)) * 0.5);

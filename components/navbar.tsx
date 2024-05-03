@@ -96,7 +96,7 @@ export const Navbar = () => {
 
   const handleSkipButton = () => {
     console.log("skipping");
-    if (globals.startAlgo)
+    if (globals.startAlgo || globals.animatePath)
       globals.skipAlgoAnimaiton = true;
   }
 
