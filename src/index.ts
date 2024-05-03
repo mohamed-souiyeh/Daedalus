@@ -12,6 +12,7 @@ let counter: number;
 
 
 export function reset() {
+  if (globals.reset) return;
   const canvas = globals.canvas;
   const ctx = globals.ctx;
 
@@ -28,7 +29,7 @@ export function reset() {
   globals.mazeBuildingAlgorithm = null;
 
   grid.initialize(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
-
+  globals.reset = true;
 
   deltaTime.reset();
   counter = 0;
@@ -55,7 +56,7 @@ export function setup() {
   canvas.height = canvas.offsetHeight;
 
 
-  grid = new Grid(canvas.width, canvas.height, wallState.PRESENT);
+  grid = new Grid(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
 
   globals.start = {
     x: 0,
@@ -71,6 +72,8 @@ export function setup() {
     oldy: globals.finish.y,
   }
 
+  grid.initialize(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
+  globals.reset = true;
 
   globals.gridOffsetLeft = Math.floor((canvas.width - (grid.length * CELLSIZE)) / 2);
   globals.gridOffsetTop = Math.floor((canvas.height - (grid.width * CELLSIZE)) * 0.5);
@@ -116,7 +119,7 @@ export function animation(dt: number) {
 
     startTime = performance.now();
 
-    if (counter % inputDefaults.ALGOSPEED === 0 && globals.startAlgo) {
+    if (counter % inputDefaults.ALGOSPEED === 0 && globals.startAlgo && globals.reset === false) {
       grid.launchAlgo();
     }
     counter++;

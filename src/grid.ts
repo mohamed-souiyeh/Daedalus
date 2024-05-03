@@ -76,7 +76,6 @@ export class Grid {
 
     this.#algos = new Map<algosKeys, (grid: Grid) => algoState>();
     this.#prepareGrid();
-    this.initialize(canvasLength, canvasWidth, initialWallState);
   }
 
   #prepareGrid() {
@@ -96,6 +95,9 @@ export class Grid {
     // globals.canvas!.width = this.#length * CELLSIZE;
     // globals.canvas!.height = this.#width * CELLSIZE;
 
+    this.#currentResetColumn = 0;
+    this.#resetPatternDirection = 1;
+
     this.#offsetLeft = this.#startX;
     this.#offsetTop = this.#startY;
 
@@ -104,6 +106,12 @@ export class Grid {
         let cellx = this.startX + x * CELLSIZE;
         let celly = this.startY + y * CELLSIZE;
         let type: CellType = CellType.air;
+        if (x === globals.start.x && y === globals.start.y) {
+          type = CellType.start;
+        }
+        else if (x === globals.finish.x && y === globals.finish.y) {
+          type = CellType.finish;
+        }
 
         this.grid[y][x].init(x, y, cellx, celly, CELLSIZE, wallState, type);
       }
@@ -195,12 +203,13 @@ export class Grid {
       return;
     }
 
-    let once: boolean = true;
+    let howMany: number = globals.skipAlgoAnimaiton ? 18 : 1;
     let state: algoState = algoState.noState;
 
-    while (once || globals.skipAlgoAnimaiton) {
+    while (howMany && (state === algoState.noState || state === algoState.building || state === algoState.searching)) {
       state = this.#algos.get(this.currentAlgo)!(this);
-      once = false;
+      console.log("wa3");
+      howMany--;
     }
     if (state === algoState.done) {
       console.log("done building");
@@ -219,9 +228,41 @@ export class Grid {
     }
   }
 
+  #currentResetColumn: number = 0;
+  #resetPatternDirection: number = 1;
+
+  public resetPatternMKI() {
+    if (this.#currentResetColumn < 0) {
+      this.#currentResetColumn = 0;
+      this.#resetPatternDirection = this.#resetPatternDirection * -1;
+      globals.reset = false;
+      return;
+    }
+    else if (this.#currentResetColumn >= this.length) {
+      this.#currentResetColumn = this.length - 1;
+      globals.reset = false;
+      return;
+    }
+    // if (this.#currentResetColumn + -this.#resetPatternDirection >= 0 && this.#currentResetColumn + -this.#resetPatternDirection <= this.length) {
+    // }
+
+    // console.log("  animationPercentage: ", this.at(this.#currentResetColumn, 0)!.animationPercentage)
+    // console.log("currentResetColumn: ", this.#currentResetColumn);
+    if (this.at(this.#currentResetColumn, 0)!.animationPercentage <= 0) {
+      let x = this.#currentResetColumn;
+      for (let y = 0; y < this.width; y++) {
+        // console.log("x: ", x);
+        // console.log("y: ", y);
+        this.at(x, y)!.setState(CellStates.unvisited);
+      }
+    }
+
+    if (this.at(this.#currentResetColumn, 0)!.animationPercentage >= 5.0)
+      this.#currentResetColumn += this.#resetPatternDirection;
+  }
+
   public resetForSearchAlgo() {
     for (let cell of this.eachCell()) {
-      cell.setState(CellStates.unvisited);
       cell.parrent = null;
       cell.distenceFromStart = Infinity;
     }
@@ -247,6 +288,7 @@ export class Grid {
       this.currentAlgo = globals.mazeSolvingAlgorithm;
       globals.mazeSolvingAlgorithm = null;
       globals.searchQueue.clear();
+      globals.reset = true;
       this.resetForSearchAlgo();
 
       const frame = new Frame(globals.start.x, globals.start.y, this.currentAlgo);
@@ -272,11 +314,21 @@ export class Grid {
 
     // console.log("start: ", globals.start);
     // console.log("finish: ", globals.finish);
-    this.grid[globals.start.oldy][globals.start.oldx].setCellType(CellType.air);
-    this.grid[globals.finish.oldy][globals.finish.oldx].setCellType(CellType.air);
+    if (globals.replaceStart) {
+      this.grid[globals.start.oldy][globals.start.oldx].setCellType(CellType.air);
+      this.grid[globals.start.y][globals.start.x].setCellType(CellType.start);
+      globals.replaceStart = false;
+    }
+    if (globals.replaceFinish) {
+      this.grid[globals.finish.oldy][globals.finish.oldx].setCellType(CellType.air);
+      this.grid[globals.finish.y][globals.finish.x].setCellType(CellType.finish);
+      globals.replaceFinish = false;
+    }
 
-    this.grid[globals.start.y][globals.start.x].setCellType(CellType.start);
-    this.grid[globals.finish.y][globals.finish.x].setCellType(CellType.finish);
+
+    if (globals.reset) {
+      this.resetPatternMKI();
+    }
 
     for (let cell of this.eachCell()) {
       cell.update();

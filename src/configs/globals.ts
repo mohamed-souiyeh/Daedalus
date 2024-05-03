@@ -33,6 +33,8 @@ export const globals = {
   mazeSolvingAlgorithm: null as algosKeys | null,
   startAlgo: false as boolean,
 
+  reset: false as boolean,
+
   // HACK: this is weird i know
   setDisableLaunch: null as any,
   handleResetButton: null as any,
@@ -48,6 +50,8 @@ export const globals = {
   gridOffsetTop: 0,
   start: { x: 0, y: 0, oldx: 0, oldy: 0 } as Pos,
   finish: { x: 1, y: 1, oldx: 1, oldy: 1 } as Pos,
+  replaceStart: false,
+  replaceFinish: false,
   homePath: svgPath,
   finishPath: svgPath,
 }

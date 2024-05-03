@@ -67,7 +67,7 @@ export class Cell {
 
   static debugPage: number;
 
-  #redraw: boolean = true; // NOTE:: add the enum initialization
+  #redraw: boolean = false; // NOTE:: add the enum initialization
 
   //SECTION - algorithm properties
   gridx: number = -1;
@@ -172,6 +172,7 @@ export class Cell {
   }
 
   //SECTION - animation properties
+  animationPercentage: number = 0;
   #x: number = -1;
   #y: number = -1;
   #length: number = -1;
@@ -226,14 +227,17 @@ export class Cell {
     this.#cellType = type;
     this.#links.clear();
 
+    this.#redraw = false;
+    this.animationPercentage = 0;
     this.#color = Object.create(UNVISITED_CELLCOLOR);
     this.#nextColor = Object.create(UNVISITED_CELLCOLOR);
     this.#x = x;
     this.#y = y;
     this.#length = length;
+    this.#setStoppedAnimationRequirements();
     // this.#setInwardsAnimationRequirements();
     // this.#setOutwardsAnimationRequirements();
-    this.#setToOrigineAnimationRequirementsFromInside();
+    // this.#setToOrigineAnimationRequirementsFromInside();
 
     // NOTE: - calculate how much is the scaling factor from the length and divide it by 2 to get the offset on one side
     let startlength = (this.#length * this.#inwardScalingFactor) / 2;
@@ -284,13 +288,20 @@ export class Cell {
   //!SECTION
 
   //SECTION - setters and getters
+  private set animation(animation: CellAnimation) {
+    this.#animation = animation;
+    this.#redraw = animation === CellAnimation.STOPPED ? false : true;
+  }
 
   setCellType(type: CellType) {
     this.#cellType = type;
-    this.#setToOrigineAnimationRequirementsFromInside();
+    this.#redraw = true;
   }
 
   setState(state: CellStates) {
+    // console.log("gridx: ", this.gridx);
+    // console.log("gridy: ", this.gridy);
+    // console.log("animation: ", this.animation);
     this.#state = state;
     this.#color = Object.create(stateColors.get(state) as color);
     this.#colorDists = {
@@ -299,7 +310,8 @@ export class Cell {
       b: this.#nextColor.b - this.#color.b,
       a: this.#nextColor.a - this.#color.a,
     };
-    if (this.#animation === CellAnimation.STOPPED || this.#animation === CellAnimation.STOPPING) {
+    if (this.animation === CellAnimation.STOPPED || this.animation === CellAnimation.STOPPING) {
+      // console.log("wa3");
       this.#setInwardsAnimationRequirements();
     }
   }
@@ -322,37 +334,37 @@ export class Cell {
   }
 
   #setOutwardsAnimationRequirements() {
-    if (this.#animation === CellAnimation.OUTWARDS || this.#animation === CellAnimation.TOORIGINE) return;
+    if (this.animation === CellAnimation.OUTWARDS || this.animation === CellAnimation.TOORIGINE) return;
 
-    this.#animation = CellAnimation.OUTWARDS;
+    this.animation = CellAnimation.OUTWARDS;
     this.#velocity = this.#velocity > 0 ? -this.#velocity : this.#velocity;
   }
 
   #setInwardsAnimationRequirements() {
-    if (this.#animation === CellAnimation.INWARDS || this.#animation === CellAnimation.ITOORIGINE) return;
+    if (this.animation === CellAnimation.INWARDS || this.animation === CellAnimation.ITOORIGINE) return;
 
-    this.#animation = CellAnimation.INWARDS;
+    this.animation = CellAnimation.INWARDS;
     this.#velocity = this.#velocity < 0 ? -this.#velocity : this.#velocity;
   }
 
   #setToOrigineAnimationRequirements() {
-    if (this.#animation === CellAnimation.TOORIGINE) return;
+    if (this.animation === CellAnimation.TOORIGINE) return;
 
-    this.#animation = CellAnimation.TOORIGINE;
+    this.animation = CellAnimation.TOORIGINE;
     this.#velocity = this.#velocity < 0 ? -this.#velocity : this.#velocity;
   }
 
   #setToOrigineAnimationRequirementsFromInside() {
-    if (this.#animation === CellAnimation.ITOORIGINE) return;
+    if (this.animation === CellAnimation.ITOORIGINE) return;
 
-    this.#animation = CellAnimation.ITOORIGINE;
+    this.animation = CellAnimation.ITOORIGINE;
     this.#velocity = this.#velocity < 0 ? this.#velocity : -this.#velocity;
   }
 
   #setStoppedAnimationRequirements() {
-    if (this.#animation === CellAnimation.STOPPED) return;
+    if (this.animation === CellAnimation.STOPPED) return;
 
-    this.#animation = CellAnimation.STOPPED;
+    this.animation = CellAnimation.STOPPED;
 
 
     //NOTE - set the walls and corners to their targeted alpha
@@ -364,9 +376,9 @@ export class Cell {
 
 
   #setStoppingAnimationRequirements() {
-    if (this.#animation === CellAnimation.STOPPING) return;
+    if (this.animation === CellAnimation.STOPPING) return;
 
-    this.#animation = CellAnimation.STOPPING;
+    this.animation = CellAnimation.STOPPING;
 
     this.#colorDists = {
       r: 0,
@@ -459,37 +471,37 @@ export class Cell {
   }
 
   public update() {
-    if (this.#animation === CellAnimation.STOPPED) return;
+    if (this.animation === CellAnimation.STOPPED) return;
 
     let step = this.#velocity;
 
-    if (this.#animation === CellAnimation.STOPPING) {
+    if (this.animation === CellAnimation.STOPPING) {
 
       this.#setStoppedAnimationRequirements();
       return;
     }
-    else if (this.#animation === CellAnimation.INWARDS &&
+    else if (this.animation === CellAnimation.INWARDS &&
       this.#checkifcellVectorIsPastStart(step)) {
 
       this.#setToOrigineAnimationRequirementsFromInside();
       this.#cellVector.currentx = this.#cellVector.startx;
       this.#cellVector.currenty = this.#cellVector.starty;
     }
-    else if (this.#animation === CellAnimation.OUTWARDS &&
+    else if (this.animation === CellAnimation.OUTWARDS &&
       this.#checkifcellVectorIsPastEnd(step)) {
 
       this.#setToOrigineAnimationRequirements();
       this.#cellVector.currentx = this.#cellVector.endx;
       this.#cellVector.currenty = this.#cellVector.endy;
     }
-    else if (this.#animation === CellAnimation.TOORIGINE &&
+    else if (this.animation === CellAnimation.TOORIGINE &&
       this.#checkifcellVectorIsPastOrigine(step)) {
 
       this.#setStoppingAnimationRequirements();
       this.#cellVector.currentx = this.#x;
       this.#cellVector.currenty = this.#y;
     }
-    else if (this.#animation === CellAnimation.ITOORIGINE &&
+    else if (this.animation === CellAnimation.ITOORIGINE &&
       this.#checkifcellVectorIsPastIOrigine(step)) {
 
       this.#setStoppingAnimationRequirements();
@@ -506,6 +518,11 @@ export class Cell {
       this.#xOutwardSteps += step < 0 ? -step : step;
     }
 
+    // console.log("this.outwardsteps: ", this.xOutwardSteps);
+    // console.log("this.outwardwidth: ", this.xOutwardWidth);
+    // console.log("(this.#xOutwardSteps / this.#xOutwardWidth): ", (this.#xOutwardSteps / this.#xOutwardWidth) * 100);
+    this.animationPercentage = (this.#xOutwardSteps / this.#xOutwardWidth) * 100;
+    // console.log("animationpercentage: ", this.animationPercentage);
     //NOTE - update the color
     // this.#color.g = Math.abs(this.#nextColor.g - (this.#colorDists.g * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
     // this.#color.r = Math.abs(this.#nextColor.r - (this.#colorDists.r * ((this.#xOutwardWidth - this.#xOutwardSteps) / this.#xOutwardWidth)));
@@ -540,7 +557,8 @@ export class Cell {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    if (this.#animation === CellAnimation.STOPPED && globals.debugModeOn !== true) return;
+    // console.log("this.redraw: ", this.#redraw);
+    if (this.#redraw === false && globals.debugModeOn === false) return;
 
     // NOTE: clear the cell
     ctx.clearRect(
@@ -579,6 +597,8 @@ export class Cell {
       ctx.fill(path)
     }
 
+    if (this.animation === CellAnimation.STOPPED)
+      this.#redraw = false;
 
     if (globals.debugModeOn) {
       //FIXME - replace this with the set style method
@@ -639,7 +659,7 @@ export class Cell {
       ctx.fillText(cellInfo, startx + xoffset, starty + yoffset);
       current_line++;
 
-      cellInfo = `Animation: ${cellAnimation[this.#animation]}`
+      cellInfo = `Animation: ${cellAnimation[this.animation]}`
       //` | color: rgba(${this.#color.r}, ${this.#color.g}, ${this.#color.b}, ${this.#color.a.toFixed(3)})`;
 
       xoffset = Debuger.d_length / 2 - ctx.measureText(cellInfo).width / 2;

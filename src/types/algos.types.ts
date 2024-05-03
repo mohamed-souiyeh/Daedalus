@@ -5,12 +5,10 @@ import { Directions } from "../configs/cell.config";
 export enum algoState {
   noState,
   searching,
+  building,
   foundPath,
   noPath,
   done,
-
-  building,
-
 }
 
 export class Frame {
