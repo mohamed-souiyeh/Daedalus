@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .fixed-width-select {
-  width: 120px; /* or any fixed width you want */
+  width: 160px; /* or any fixed width you want */
 }
 
 .avatar {
