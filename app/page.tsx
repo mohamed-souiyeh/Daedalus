@@ -35,8 +35,8 @@ export default function Home() {
 
   }, []);
 
-  console.log("window innerWidth: ", window.innerWidth);
-  console.log("window outer width: ", window.outerWidth);
+  // console.log("window innerWidth: ", window.innerWidth);
+  // console.log("window outer width: ", window.outerWidth);
 
   // if (window.innerWidth <= 780) {
   //   return (
