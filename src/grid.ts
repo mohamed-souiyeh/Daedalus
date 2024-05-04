@@ -349,13 +349,24 @@ export class Grid {
 
     // console.log("start: ", globals.start);
     // console.log("finish: ", globals.finish);
-    if (globals.replaceStart) {
+    if (globals.replaceStart &&
+      (globals.start.oldx >= 0 && globals.start.oldx < this.length && globals.start.oldy >= 0 && globals.start.oldy < this.width)) {
       this.grid[globals.start.oldy][globals.start.oldx].setCellType(CellType.air);
+    }
+
+    if (globals.replaceStart &&
+      (globals.start.x >= 0 && globals.start.x < this.length && globals.start.y >= 0 && globals.start.y < this.width)) {
       this.grid[globals.start.y][globals.start.x].setCellType(CellType.start);
       globals.replaceStart = false;
     }
-    if (globals.replaceFinish) {
+
+    if (globals.replaceFinish &&
+      (globals.finish.oldx >= 0 && globals.finish.oldx < this.length && globals.finish.oldy >= 0 && globals.finish.oldy < this.width)) {
       this.grid[globals.finish.oldy][globals.finish.oldx].setCellType(CellType.air);
+    }
+
+    if (globals.replaceFinish &&
+      (globals.finish.x >= 0 && globals.finish.x < this.length && globals.finish.y >= 0 && globals.finish.y < this.width)) {
       this.grid[globals.finish.y][globals.finish.x].setCellType(CellType.finish);
       globals.replaceFinish = false;
     }

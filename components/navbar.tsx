@@ -6,7 +6,7 @@ import { Key, createRef, use, useEffect, useRef, useState } from "react";
 import { title } from "./primitives";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookBookmark, faBookOpen, faBug, faBugSlash, faCircleInfo, faCircleQuestion, faForward, faGear, faGraduationCap, faLink, faMagnifyingGlassLocation, faMinus, faPause, faPlay, faPlus, faRepeat, faRoute, faStreetView, faTextSlash, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
+import { faBookBookmark, faBookOpen, faBug, faBugSlash, faCircleInfo, faCircleQuestion, faCodeBranch, faForward, faGear, faGraduationCap, faLink, faMagnifyingGlassLocation, faMinus, faPause, faPlay, faPlus, faRepeat, faRoute, faStreetView, faTextSlash, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
 import { inputDefaults } from "@/src/configs/defaults";
 import { DELAYSTEP, updateDelay } from "@/src/Events/Delay.EventListeners";
 import { reset } from "@/src";
@@ -176,7 +176,6 @@ export const Navbar = () => {
       <NavbarContent id="secondSection" as="div" justify="center">
         <Tooltip content="project menu" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200} placement="bottom">
           <div>
-
             <Dropdown>
               <DropdownTrigger>
                 <Button color="primary" variant="light" size="lg">
@@ -198,11 +197,13 @@ export const Navbar = () => {
                 >
                   Tutorial</DropdownItem>
                 <DropdownItem
-                  key="copy"
-                  description="Share it with ur friends"
-                  endContent={<FontAwesomeIcon icon={faLink} size="lg" />}
+                  key="Project Repo"
+                  description="Check the Repo"
+                  endContent={<FontAwesomeIcon icon={faCodeBranch} size="lg" />}
+                  href="https://github.com/mohamed-souiyeh/Daedalus"
+                  target="_blank"
                 >
-                  Copy link
+                  Project Repo
                 </DropdownItem>
                 <DropdownItem
                   key="Tooltips"
@@ -216,7 +217,7 @@ export const Navbar = () => {
         </Tooltip>
       </NavbarContent>
 
-      <NavbarContent id="thirdSection" as="div" justify="end">
+      <NavbarContent id="thirdSection" as="div" justify="end" className="gap-2">
 
         <Tooltip content="Reset" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
           <Button ref={resetButton} color="primary" isIconOnly size="sm" onClick={handleResetButton}>
@@ -233,29 +234,33 @@ export const Navbar = () => {
             <FontAwesomeIcon icon={pauseButtonIcon} size="lg" />
           </Button>
         </Tooltip>
-        <ButtonGroup >
-          <Tooltip content="Debug Booklet Toggel" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
-            <Button ref={debugBooklet} color={debugBookletColor} isIconOnly size="sm" onClick={handleDebugBooklet}>
-              <FontAwesomeIcon icon={faBookOpen} size="lg" />
-            </Button>
-          </Tooltip>
+        {
+          // <ButtonGroup >
+          //   <Tooltip content="Debug Booklet Toggel" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+          //     <Button ref={debugBooklet} color={debugBookletColor} isIconOnly size="sm" onClick={handleDebugBooklet}>
+          //       <FontAwesomeIcon icon={faBookOpen} size="lg" />
+          //     </Button>
+          //   </Tooltip>
+          //
+          //   <Tooltip content="Debuger Toggel" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+          //     <Button ref={debugButton} color={debugButtonColor} isIconOnly size="sm" onClick={handleDebugButton}>
+          //       <FontAwesomeIcon icon={debugButtonIcon} size="lg" />
+          //     </Button>
+          //   </Tooltip>
+          //
+          // </ButtonGroup>
+        }
 
-          <Tooltip content="Debuger Toggel" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
-            <Button ref={debugButton} color={debugButtonColor} isIconOnly size="sm" onClick={handleDebugButton}>
-              <FontAwesomeIcon icon={debugButtonIcon} size="lg" />
-            </Button>
-          </Tooltip>
-
-        </ButtonGroup>
-
-        <Tooltip content="Depth Filter" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
-          <Button ref={depthFilterButton} color="primary" isIconOnly size="sm" onClick={addDepthFilter}>
-            {
-              //TODO - handle the depth filter stuff
-            }
-            <FontAwesomeIcon icon={faStreetView} size="lg" />
-          </Button>
-        </Tooltip>
+        {
+          //   <Tooltip content="Depth Filter" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+          //   <Button ref={depthFilterButton} color="primary" isIconOnly size="sm" onClick={addDepthFilter}>
+          //     {
+          //       //TODO - handle the depth filter stuff
+          //     }
+          //     <FontAwesomeIcon icon={faStreetView} size="lg" />
+          //   </Button>
+          // </Tooltip> 
+        }
 
         <ButtonGroup>
           <Tooltip content="Decrement Delay" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>

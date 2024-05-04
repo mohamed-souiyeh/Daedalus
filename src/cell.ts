@@ -594,12 +594,12 @@ export class Cell {
 
     if (this.#cellType === CellType.start) {
       const path = new Path2D(svgPath.from(globals.homePath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.2), this.#y + this.#length * (WALL_PERSENTAGE * 1.6)).toString());
-      ctx.fillStyle = "blue";
+      ctx.fillStyle = "#0072F5";
       ctx.fill(path)
     }
     else if (this.#cellType === CellType.finish) {
       const path = new Path2D(svgPath.from(globals.finishPath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.8), this.#y + this.#length * (WALL_PERSENTAGE * 1.2)).toString());
-      ctx.fillStyle = "blue";
+      ctx.fillStyle = "#0072F5";
       ctx.fill(path)
     }
 

@@ -6,6 +6,11 @@
   width: 120px; /* or any fixed width you want */
 }
 
+.avatar {
+  width: 32px;
+  height: 32px;
+}
+
 html {
   display: flex;
   overflow: hidden;
@@ -28,19 +33,25 @@ span {
   margin: 0;
 }
 
+header {
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+  gap: 0.5rem !important;
+}
+
 #nav {
   display: flex;
   flex-direction: row;
   align-items: baseline;
-  gap: 10px;
   width: 100vw;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 #firstSection {
   display: flex;
   flex-direction: row;
   /* flex-grow: 1; */
-  gap: 10px;
 }
 
 #secondSection {
@@ -56,7 +67,6 @@ span {
   flex-direction: row-reverse;
   justify-content: flex-start;
   /* flex-grow: 1; */
-  gap: 10px;
 }
 
 

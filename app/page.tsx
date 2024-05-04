@@ -35,7 +35,16 @@ export default function Home() {
 
   }, []);
 
+  console.log("window innerWidth: ", window.innerWidth);
+  console.log("window outer width: ", window.outerWidth);
 
+  // if (window.innerWidth <= 780) {
+  //   return (
+  //     <>
+  //       <p>u need a bigger screen</p>
+  //     </>
+  //   );
+  // }
   return (
     <>
       <Navbar />
@@ -43,5 +52,6 @@ export default function Home() {
         <canvas id="canvas" ref={canvaRef} />
       </main>
     </>
-  );
+  )
+
 }

@@ -9,7 +9,6 @@ import { color } from "@/types";
 import { globals } from "@/src/configs/globals";
 import { algoState } from "@/src/types/algos.types";
 import { algosKeys, mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "@/src/configs/algos.config";
-import { Bounce, toast } from "react-toastify";
 
 
 
