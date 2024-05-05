@@ -1,7 +1,25 @@
+import { Roboto } from "next/font/google";
 import { tv } from "tailwind-variants";
 
+// export declare function Roboto<T extends CssVariable | undefined = undefined>(options: {
+//     weight: '100' | '300' | '400' | '500' | '700' | '900' | Array<'100' | '300' | '400' | '500' | '700' | '900'>;
+//     style?: 'normal' | 'italic' | Array<'normal' | 'italic'>;
+//     display?: Display;
+//     variable?: T;
+//     preload?: boolean;
+//     fallback?: string[];
+//     adjustFontFallback?: boolean;
+//     subsets?: Array<'cyrillic' | 'cyrillic-ext' | 'greek' | 'greek-ext' | 'latin' | 'latin-ext' | 'vietnamese'>;
+// }): T extends undefined ? NextFont : NextFontWithVariable;
+
+const roboto = Roboto({
+  weight: '700',
+  subsets: ['latin'],
+  variable: '--font-roboto',
+})
+
 export const title = tv({
-  base: "tracking-tight inline font-semibold",
+  base: `${roboto.variable} tracking-tight inline font-semibold`,
   variants: {
     color: {
       violet: "from-[#FF1CF7] to-[#b249f8]",
