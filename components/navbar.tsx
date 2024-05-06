@@ -90,9 +90,11 @@ export const Navbar = () => {
     reset();
     if (globals.setDisableLaunch)
       globals.setDisableLaunch(false);
+    globals.depthFilterOn = false;
+    setDisableDepthFilter(true)
+    // setDepthFilterColor(globals.depthFilterOn ? "primary" : "default");
   };
 
-  globals.handleResetButton = handleResetButton;
 
   const handleSkipButton = () => {
     console.log("skipping");
@@ -100,8 +102,24 @@ export const Navbar = () => {
       globals.skipAlgoAnimaiton = true;
   }
 
+  const [depthFilterColor, setDepthFilterColor] = useState("primary");
+  const [disableDepthFilter, setDisableDepthFilter] = useState(!globals.depthFilterOn);
+
   const addDepthFilter = () => {
-    console.log("addDepthFilter");
+    if (globals.startAlgo) {
+      globals.depthFilterOn = false;
+      setDisableDepthFilter(true)
+      // setDepthFilterColor(globals.depthFilterOn ? "primary" : "default");
+      globals.gridRedraw = true;
+      return;
+    }
+    globals.depthFilterOn = !globals.depthFilterOn;
+    // setDepthFilterColor(globals.depthFilterOn ? "primary" : "default");
+    console.log("addDepthFilter: ", globals.depthFilterOn);
+    globals.colorComposition.r = Math.random() - 0.5 > 0;
+    globals.colorComposition.g = Math.random() - 0.5 > 0;
+    globals.colorComposition.b = Math.random() - 0.5 > 0;
+    globals.gridRedraw = true;
   };
 
   useEffect(() => {
@@ -166,6 +184,9 @@ export const Navbar = () => {
     }
   };
 
+
+  globals.handleResetButton = handleResetButton;
+  globals.setDisableDepthFilter = setDisableDepthFilter;
 
   return (
     <NextUINavbar maxWidth="full" position="sticky" isBordered id="nav">
@@ -252,14 +273,11 @@ export const Navbar = () => {
         }
 
         {
-          //   <Tooltip content="Depth Filter" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
-          //   <Button ref={depthFilterButton} color="primary" isIconOnly size="sm" onClick={addDepthFilter}>
-          //     {
-          //       //TODO - handle the depth filter stuff
-          //     }
-          //     <FontAwesomeIcon icon={faStreetView} size="lg" />
-          //   </Button>
-          // </Tooltip> 
+          <Tooltip content="Depth Filter" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+            <Button ref={depthFilterButton} color={depthFilterColor} isIconOnly size="sm" onClick={addDepthFilter} isDisabled={disableDepthFilter}>
+              <FontAwesomeIcon icon={faStreetView} size="lg" />
+            </Button>
+          </Tooltip>
         }
 
         <ButtonGroup>

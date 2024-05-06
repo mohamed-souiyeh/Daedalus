@@ -8,6 +8,7 @@ import { globals } from "./configs/globals.ts";
 import { mouse } from "./configs/input.config.ts";
 import { wallState } from "./configs/wall.config.ts";
 import { Debuger } from "./debugger.ts";
+import { Stack } from "./types/DataStructures/stack.type.ts";
 import { Frame, algoState } from "./types/algos.types.ts";
 import { gridState } from "./types/grid.types.ts";
 
@@ -190,6 +191,46 @@ export class Grid {
   // NOTE: algos section
   path: Cell[] = [];
 
+  public depthFilter() {
+    const gridcp = Array<CellStates[]>(this.width);
+
+    for (let y = 0; y < this.#width; y++) {
+      gridcp[y] = Array<CellStates>(this.length);
+      for (let x = 0; x < this.#length; x++) {
+        gridcp[y][x] = CellStates.unvisited;
+      }
+    }
+
+    const stack: Stack<Frame> = new Stack<Frame>();
+
+    stack.push(new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, algosKeys.BFS));
+
+    this.grid[stack.peek()!.y][stack.peek()!.x].depth = 0;
+    gridcp[stack.peek()!.y][stack.peek()!.x] = CellStates.inqueue;
+
+    while (stack.size()) {
+      const currentFrame = stack.pop();
+      const currentCell = this.at(currentFrame!.x, currentFrame!.y);
+
+      if (currentCell!.depth > globals.maxDepth)
+        globals.maxDepth = currentCell!.depth;
+      for (let cell of currentCell!.neighbors()) {
+        if (cell === null) continue;
+
+        if (gridcp[cell!.gridy][cell!.gridx] === CellStates.unvisited && currentCell?.islinked(cell)) {
+          cell!.depth = currentCell!.depth + 1;
+          gridcp[cell!.gridy][cell!.gridx] = CellStates.inqueue;
+          stack.push(new Frame(cell!.gridx, cell!.gridy, algosKeys.BFS));
+        }
+      }
+
+      gridcp[currentFrame!.y][currentFrame!.x] = CellStates.visited;
+    }
+    if (globals.depthFilterOn)
+      globals.gridRedraw = true;
+    console.log("done updating depth filter");
+  }
+
   public animatePath() {
     if (this.path.length === 0) {
       globals.animatePath = false;
@@ -233,8 +274,10 @@ export class Grid {
       console.log("done building");
       globals.skipAlgoAnimaiton = false;
       globals.startAlgo = false;
+      globals.updateDepthFilter = true;
       globals.needclear = true;
       globals.setDisableLaunch(false);
+      globals.setDisableDepthFilter(false);
       this.gridState = gridState.IDLE;
     }
     else if (state === algoState.foundPath || state === algoState.noPath) {
@@ -310,10 +353,8 @@ export class Grid {
       }
       this.resetForBuildAlgo();
 
-      let x: number = Math.floor(Math.random() * this.length);
-      let y: number = Math.floor(Math.random() * this.width);
       console.log("current algo: ", this.currentAlgo);
-      const frame = new Frame(x, y, this.currentAlgo);
+      const frame = new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, this.currentAlgo);
 
       globals.BuildStack.push(frame);
     }
@@ -337,8 +378,10 @@ export class Grid {
     else {
       globals.skipAlgoAnimaiton = false;
       globals.startAlgo = false;
+      globals.updateDepthFilter = true;
       this.gridState = gridState.IDLE;
       globals.setDisableLaunch(false);
+      globals.setDisableDepthFilter(false);
     }
   }
   //
@@ -349,6 +392,12 @@ export class Grid {
 
     // console.log("start: ", globals.start);
     // console.log("finish: ", globals.finish);
+    if (globals.replaceDepthFilterPos &&
+      (globals.depthFilterPos.oldx >= 0 && globals.depthFilterPos.oldx < this.length && globals.depthFilterPos.oldy >= 0 && globals.depthFilterPos.oldy < this.width)) {
+      this.grid[globals.depthFilterPos.oldy][globals.depthFilterPos.oldx].setCellType(CellType.air);
+      globals.replaceDepthFilterPos = false;
+    }
+
     if (globals.replaceStart &&
       (globals.start.oldx >= 0 && globals.start.oldx < this.length && globals.start.oldy >= 0 && globals.start.oldy < this.width)) {
       this.grid[globals.start.oldy][globals.start.oldx].setCellType(CellType.air);
@@ -419,6 +468,7 @@ export class Grid {
       this.at(this.#mouseCellx, this.#mouseCelly)?.draw(ctx);
       resetShadowStyle(ctx);
     }
+    globals.gridRedraw = false;
   }
 
 

@@ -31,23 +31,37 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
     // globals.canvas!.width = this.#length * CELLSIZE;
     // globals.canvas!.height = this.#width * CELLSIZE;
     // console.log("mouse down event: ", event);
-    if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 0 && !(Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.finish.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.finish.y)) {
-      globals.start.oldx = globals.start.x;
-      globals.start.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
+    if (globals.depthFilterOn) {
+      if (globals.depthFilterOn && event.button === 0) {
+        globals.depthFilterPos.oldx = globals.depthFilterPos.x;
+        globals.depthFilterPos.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
 
-      globals.start.oldy = globals.start.y;
-      globals.start.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
+        globals.depthFilterPos.oldy = globals.depthFilterPos.y;
+        globals.depthFilterPos.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
 
-      globals.replaceStart = true;
+        globals.replaceDepthFilterPos = true;
+        globals.updateDepthFilter = true;
+      }
     }
-    if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 2 && !(Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.start.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.start.y)) {
-      globals.finish.oldx = globals.finish.x;
-      globals.finish.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
+    else {
+      if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 0 && !(Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.finish.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.finish.y)) {
+        globals.start.oldx = globals.start.x;
+        globals.start.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
 
-      globals.finish.oldy = globals.finish.y;
-      globals.finish.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
+        globals.start.oldy = globals.start.y;
+        globals.start.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
 
-      globals.replaceFinish = true;
+        globals.replaceStart = true;
+      }
+      if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 2 && !(Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.start.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.start.y)) {
+        globals.finish.oldx = globals.finish.x;
+        globals.finish.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
+
+        globals.finish.oldy = globals.finish.y;
+        globals.finish.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
+
+        globals.replaceFinish = true;
+      }
     }
     if (event.button === 0 && event.shiftKey) {
       globals.BookletMouseCellPosIsLocked = !globals.BookletMouseCellPosIsLocked;

@@ -1,10 +1,33 @@
+import { algosKeys, mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "@/src/configs/algos.config";
+import { globals } from "@/src/configs/globals";
 import { Card, CardBody, CardFooter, CardHeader, Divider } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 
 
-export const AlgorithmDescription = () => {
+export const AlgorithmDescription = (props: { algo: any }) => {
 
+  const [algorithmDescription, setAlgorithmDescription] = useState<string | undefined>("chouse an algorithm first");
+  const [algorithmName, setAlgorithmName] = useState<string | undefined>("chouse first");
 
+  useEffect(() => {
+    console.log("algorithm description is mounted: ", Array.from(props.algo)[0]);
+    if (mazeSolvingAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)) {
+      setAlgorithmDescription(mazeSolvingAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.description);
+      setAlgorithmName(mazeSolvingAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.name);
+    }
+    else if (mazeGenerationAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)) {
+      setAlgorithmDescription(mazeGenerationAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.description);
+      setAlgorithmName(mazeGenerationAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.name);
+    }
 
+    console.log("algo discreption: ", algorithmDescription);
+    if (algorithmDescription === undefined)
+      setAlgorithmDescription("chouse an algorithm first");
+    if (algorithmName === undefined)
+      setAlgorithmName("chouse first");
+  }, [props.algo])
+
+  console.log("outside algorithn discreption useEffect");
 
   return (
     <>
@@ -15,22 +38,20 @@ export const AlgorithmDescription = () => {
         <Divider />
         <CardBody>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-            voluptatum, voluptate, quibusdam, quas voluptatibus voluptates
-            voluptas nemo quos laboriosam atque repellendus? Quisquam voluptatum,
-            voluptate, quibusdam, quas voluptatibus voluptates voluptas nemo
-            quos laboriosam atque repellendus? Quisquam voluptatum, voluptate,
-            quibusdam, quas voluptatibus voluptates voluptas nemo quos
-            laboriosam atque repellendus?
+            {`Name: ${algorithmName}`}
+          </p>
+          <p>
+            {algorithmDescription}
           </p>
         </CardBody>
-        <Divider />
-        <CardFooter>
-          <p>
-            here are some ressources to learn more about this algorithm:
-          </p>
-        </CardFooter>
-      </Card>
+        {
+          //   <Divider />
+          // <CardFooter>
+          //   <p>
+          //   </p>
+          // </CardFooter> 
+        }
+      </Card >
     </>
   );
 };

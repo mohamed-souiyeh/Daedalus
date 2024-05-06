@@ -75,6 +75,12 @@ export class Cell {
 
   parrent: Cell | null = null;
   distenceFromStart: number = Infinity;
+
+  // NOTE: depth filter stuff
+  weight: number = 1;
+  depth: number = Infinity;
+
+
   #state: CellStates = CellStates.unvisited;
   #cellType: CellType = CellType.air;
 
@@ -223,6 +229,12 @@ export class Cell {
 
     this.parrent = null;
     this.distenceFromStart = Infinity;
+
+    this.weight = 1;
+    this.depth = Infinity;
+
+
+
     this.#state = CellStates.unvisited;
     this.#cellType = type;
     this.#links.clear();
@@ -564,7 +576,7 @@ export class Cell {
 
   public draw(ctx: CanvasRenderingContext2D) {
     // console.log("this.redraw: ", this.#redraw);
-    if (this.#redraw === false && globals.debugModeOn === false) return;
+    if (this.#redraw === false && globals.debugModeOn === false && globals.gridRedraw === false) return;
 
     // NOTE: clear the cell
     ctx.clearRect(
@@ -574,7 +586,28 @@ export class Cell {
       this.#length
     )
     //NOTE - draw the cell
-    ctx.fillStyle = `rgba(${this.#color.r}, ${this.#color.g}, ${this.#color.b}, ${this.#color.a})`;
+    if (globals.depthFilterOn) {
+      const intensity = (globals.maxDepth - this.depth) / globals.maxDepth;
+      const dark = Math.round(255 * intensity);
+      const bright = 128 + Math.round(127 * intensity);
+
+      const red = globals.colorComposition.r ? bright : dark;
+      const green = globals.colorComposition.g ? bright : dark;
+      const blue = globals.colorComposition.b ? bright : dark;
+
+      // if (this.depth === 1) {
+      //   console.log("intensity: ", globals.maxDepth);
+      //   console.log("intensity: ", intensity);
+      //   console.log("dark: ", dark);
+      //   console.log("bright: ", bright);
+      //   console.log("red: ", red);
+      //   console.log("green: ", green);
+      //   console.log("blue: ", blue);
+      // }
+      ctx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${1})`;
+    }
+    else
+      ctx.fillStyle = `rgba(${this.#color.r}, ${this.#color.g}, ${this.#color.b}, ${this.#color.a})`;
     ctx.fillRect(
       this.#cellVector.currentx,
       this.#cellVector.currenty,
@@ -592,13 +625,18 @@ export class Cell {
       this.corners[i].draw(ctx);
     }
 
-    if (this.#cellType === CellType.start) {
+    if (this.#cellType === CellType.start && globals.depthFilterOn === false) {
       const path = new Path2D(svgPath.from(globals.homePath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.2), this.#y + this.#length * (WALL_PERSENTAGE * 1.6)).toString());
       ctx.fillStyle = "#0072F5";
       ctx.fill(path)
     }
-    else if (this.#cellType === CellType.finish) {
+    else if (this.#cellType === CellType.finish && globals.depthFilterOn === false) {
       const path = new Path2D(svgPath.from(globals.finishPath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.8), this.#y + this.#length * (WALL_PERSENTAGE * 1.2)).toString());
+      ctx.fillStyle = "#0072F5";
+      ctx.fill(path)
+    }
+    else if (this.gridx === globals.depthFilterPos.x && this.gridy === globals.depthFilterPos.y && globals.depthFilterOn) {
+      const path = new Path2D(svgPath.from(globals.depthFilterPath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.4), this.#y + this.#length * (WALL_PERSENTAGE * 1.4)).toString());
       ctx.fillStyle = "#0072F5";
       ctx.fill(path)
     }
@@ -606,7 +644,7 @@ export class Cell {
     if (this.animation === CellAnimation.STOPPED)
       this.#redraw = false;
 
-    if (globals.debugModeOn) {
+    if (globals.depthFilterOn && this.depth !== Infinity && !(this.gridx === globals.depthFilterPos.x && this.gridy === globals.depthFilterPos.y)) {
       //FIXME - replace this with the set style method
       setTextStyle(ctx, {
         textAlign: "center",
@@ -616,7 +654,7 @@ export class Cell {
       })
 
       ctx.fillText(
-        `${this.gridx},${this.gridy}`,
+        `${this.depth}`,
         this.#cellVector.currentx + (this.#cellVector.currentlength / 2),
         this.#cellVector.currenty + (this.#cellVector.currentlength / 2)
       );

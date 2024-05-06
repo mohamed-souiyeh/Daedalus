@@ -3,7 +3,7 @@ import { MyAvatar } from "./avatar";
 import { Button, Popover, PopoverContent, PopoverTrigger, Select, SelectItem, SelectSection, Selection } from "@nextui-org/react";
 import { AlgorithmDescription } from "./algorithmDescription";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRocket, faRoute, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
+import { faInfo, faInfoCircle, faRocket, faRoute, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
 import { JSXElementConstructor, Key, PromiseLikeOfReactNode, ReactElement, ReactNode, createRef, use, useEffect, useRef, useState } from "react";
 import { color } from "@/types";
 import { globals } from "@/src/configs/globals";
@@ -14,6 +14,7 @@ import { algosKeys, mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "@/sr
 
 export const FirstSection = (props: any) => {
   const mazeLaunching = createRef<HTMLButtonElement>();
+  const mazeBuildingInspector = createRef<HTMLButtonElement>();
 
 
   const { tooltipDelayRef } = props;
@@ -48,11 +49,13 @@ export const FirstSection = (props: any) => {
 
     globals.startAlgo = true;
     setDisableLaunch(true);
-    globals.setDisableLaunch = setDisableLaunch;
 
+    globals.depthFilterOn = false;
+    globals.setDisableDepthFilter(true)
     console.log("algorithmValue => ", Array.from(algorithmValue)[0]);
   }
 
+  globals.setDisableLaunch = setDisableLaunch;
   globals.handleAlgoLaunch = handleAlgoLaunch;
 
   return (
@@ -60,6 +63,20 @@ export const FirstSection = (props: any) => {
       <div className=" flex flex-row items-center flex-grow justify-between">
         <MyAvatar />
         <div className=" flex flex-row gap-2 items-center">
+          <Tooltip content="algorithms discription" showArrow={true} color={"primary"} delay={tooltipDelay} closeDelay={200}>
+            <div>
+              <Popover placement="bottom" showArrow={true} color="default" backdrop="opaque">
+                <PopoverTrigger>
+                  <Button ref={mazeBuildingInspector} color="primary" isIconOnly size="sm" isDisabled={false}>
+                    <FontAwesomeIcon icon={faInfoCircle} size="xl" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <AlgorithmDescription algo={algorithmValue} />
+                </PopoverContent>
+              </Popover>
+            </div>
+          </Tooltip>
           <Select
             label="algorithms"
             className="fixed-width-select"
@@ -94,7 +111,7 @@ export const FirstSection = (props: any) => {
             </Button>
           </Tooltip>
         </div>
-      </div>
+      </div >
     </>
   );
 };

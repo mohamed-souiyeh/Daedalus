@@ -20,7 +20,7 @@ export class Frame {
     this.x = x;
     this.y = y;
 
-    console.log(algo);
+    // console.log(algo);
     if (algo === algosKeys.RandomWalkDFS)
       this.moves = shuffleCellDirections(shuffleCellDirections([Directions.NORTH, Directions.EAST, Directions.SOUTH, Directions.WEST]));
     else if (algo === algosKeys.BFS)

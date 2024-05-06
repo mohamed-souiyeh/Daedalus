@@ -35,12 +35,26 @@ export const globals = {
   animatePath: false as boolean,
   needclear: false as boolean,
 
+  depthFilterOn: false as boolean,
+  depthFilterPos: { x: 0, y: 0, oldx: 0, oldy: 0 } as Pos,
+  replaceDepthFilterPos: false as boolean,
+  updateDepthFilter: false as boolean,
+  gridRedraw: false as boolean,
+  colorComposition: {
+    r: false,
+    g: false,
+    b: true,
+  },
+
+
   reset: false as boolean,
 
   // HACK: this is weird i know
   setDisableLaunch: null as any,
+  setDisableDepthFilter: null as any,
   handleResetButton: null as any,
   handleAlgoLaunch: null as any,
+  maxDepth: -1 as number,
 
   // NOTE: i will put them here untill further notice (aka maybe until next refactor XD)
   skipAlgoAnimaiton: false as boolean,
@@ -56,4 +70,5 @@ export const globals = {
   replaceFinish: false,
   homePath: svgPath,
   finishPath: svgPath,
+  depthFilterPath: svgPath,
 }
