@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 export const AlgorithmDescription = (props: { algo: any }) => {
 
   const [algorithmDescription, setAlgorithmDescription] = useState<string | undefined>("chouse an algorithm first");
-  const [algorithmName, setAlgorithmName] = useState<string | undefined>("chouse first");
+  const [algorithmName, setAlgorithmName] = useState<string | undefined>("");
 
   useEffect(() => {
     console.log("algorithm description is mounted: ", Array.from(props.algo)[0]);
@@ -17,14 +17,14 @@ export const AlgorithmDescription = (props: { algo: any }) => {
     }
     else if (mazeGenerationAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)) {
       setAlgorithmDescription(mazeGenerationAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.description);
-      setAlgorithmName(mazeGenerationAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.name);
+      setAlgorithmName(`Name: ${mazeGenerationAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.name}`);
     }
 
     console.log("algo discreption: ", algorithmDescription);
     if (algorithmDescription === undefined)
       setAlgorithmDescription("chouse an algorithm first");
     if (algorithmName === undefined)
-      setAlgorithmName("chouse first");
+      setAlgorithmName("");
   }, [props.algo])
 
   console.log("outside algorithn discreption useEffect");
@@ -38,7 +38,7 @@ export const AlgorithmDescription = (props: { algo: any }) => {
         <Divider />
         <CardBody>
           <p>
-            {`Name: ${algorithmName}`}
+            {algorithmName}
           </p>
           <p>
             {algorithmDescription}
