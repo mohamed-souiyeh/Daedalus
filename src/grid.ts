@@ -235,6 +235,7 @@ export class Grid {
     if (this.path.length === 0) {
       globals.animatePath = false;
       globals.skipAlgoAnimaiton = false;
+      globals.setDisableDepthFilter(false);
       this.gridState = gridState.IDLE;
       return;
     }

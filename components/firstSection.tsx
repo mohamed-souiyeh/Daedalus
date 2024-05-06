@@ -64,18 +64,16 @@ export const FirstSection = (props: any) => {
         <MyAvatar />
         <div className=" flex flex-row gap-2 items-center">
           <Tooltip content="algorithms discription" showArrow={true} color={"primary"} delay={tooltipDelay} closeDelay={200}>
-            <div>
-              <Popover placement="bottom" showArrow={true} color="default" backdrop="opaque">
-                <PopoverTrigger>
-                  <Button ref={mazeBuildingInspector} color="primary" isIconOnly size="sm" isDisabled={false}>
-                    <FontAwesomeIcon icon={faInfoCircle} size="xl" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <AlgorithmDescription algo={algorithmValue} />
-                </PopoverContent>
-              </Popover>
-            </div>
+            <Popover placement="bottom" showArrow={true} color="default" backdrop="opaque">
+              <PopoverTrigger>
+                <Button ref={mazeBuildingInspector} color="primary" isIconOnly size="sm" isDisabled={false}>
+                  <FontAwesomeIcon icon={faInfoCircle} size="xl" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="p-0">
+                <AlgorithmDescription algo={algorithmValue} />
+              </PopoverContent>
+            </Popover>
           </Tooltip>
           <Select
             label="algorithms"

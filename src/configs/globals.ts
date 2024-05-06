@@ -36,6 +36,7 @@ export const globals = {
   needclear: false as boolean,
 
   depthFilterOn: false as boolean,
+  depthNumbers: inputDefaults.DEPTHNUMBERS as unknown as boolean,
   depthFilterPos: { x: 0, y: 0, oldx: 0, oldy: 0 } as Pos,
   replaceDepthFilterPos: false as boolean,
   updateDepthFilter: false as boolean,

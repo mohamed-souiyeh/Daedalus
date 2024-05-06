@@ -25,6 +25,7 @@ export enum inputDefaults {
   DEBUGMODEON = false as unknown as number,
   DEBUGBOOKLETISON = false as unknown as number,
   MOUSECELLPOSISLOCKED = false as unknown as number,
+  DEPTHNUMBERS = false as unknown as number,
 
   DEFAULTDEBUGPAGEINDEX = pageIndexs.cell,
 

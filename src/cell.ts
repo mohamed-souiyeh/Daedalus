@@ -644,7 +644,7 @@ export class Cell {
     if (this.animation === CellAnimation.STOPPED)
       this.#redraw = false;
 
-    if (globals.depthFilterOn && this.depth !== Infinity && !(this.gridx === globals.depthFilterPos.x && this.gridy === globals.depthFilterPos.y)) {
+    if (globals.depthFilterOn && globals.depthNumbers && this.depth !== Infinity && !(this.gridx === globals.depthFilterPos.x && this.gridy === globals.depthFilterPos.y)) {
       //FIXME - replace this with the set style method
       setTextStyle(ctx, {
         textAlign: "center",
