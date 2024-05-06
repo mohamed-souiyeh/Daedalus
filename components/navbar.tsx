@@ -218,7 +218,7 @@ export const Navbar = () => {
             <Dropdown>
               <DropdownTrigger>
                 <Button color="primary" variant="light" size="lg">
-                  <h1 className={title({ color: "blue", size: "md", fullWidth: true })}>
+                  <h1 className={`${title({ color: "blue", size: "md", fullWidth: true })} bold-font`}>
                     Daedalus
                   </h1>
                 </Button>

@@ -39,6 +39,10 @@ header {
   gap: 0.5rem !important;
 }
 
+.bold-font {
+  font-weight: 750;
+}
+
 #nav {
   display: flex;
   flex-direction: row;
