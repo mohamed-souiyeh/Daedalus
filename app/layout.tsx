@@ -33,9 +33,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body>
+    <html lang="en" suppressHydrationWarning={true}>
+      <head suppressHydrationWarning={true} />
+      <body suppressHydrationWarning={true}>
         <Providers>
           <div id="body">
             <ToastContainer />

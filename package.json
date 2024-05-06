@@ -17,6 +17,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@nextui-org/avatar": "^2.0.24",
     "@nextui-org/button": "2.0.26",
+    "@nextui-org/checkbox": "^2.0.29",
     "@nextui-org/code": "2.0.24",
     "@nextui-org/divider": "^2.0.25",
     "@nextui-org/dropdown": "^2.1.16",
