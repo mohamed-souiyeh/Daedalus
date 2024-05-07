@@ -31,7 +31,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
     // globals.canvas!.width = this.#length * CELLSIZE;
     // globals.canvas!.height = this.#width * CELLSIZE;
     // console.log("mouse down event: ", event);
-    if (globals.depthFilterOn) {
+    if (globals.depthFilterOn && globals.updateDepthFilter === false) {
       if (globals.depthFilterOn && event.button === 0) {
         globals.depthFilterPos.oldx = globals.depthFilterPos.x;
         globals.depthFilterPos.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
