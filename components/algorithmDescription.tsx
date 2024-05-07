@@ -25,7 +25,7 @@ export const AlgorithmDescription = (props: { algo: any }) => {
       setAlgorithmDescription("chouse an algorithm first");
     if (algorithmName === undefined)
       setAlgorithmName("");
-  }, [props.algo])
+  })
 
   console.log("outside algorithn discreption useEffect");
 
