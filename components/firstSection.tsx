@@ -64,16 +64,18 @@ export const FirstSection = (props: any) => {
         <MyAvatar />
         <div className=" flex flex-row gap-2 items-center">
           <Tooltip content="algorithms discription" showArrow={true} color={"primary"} delay={tooltipDelay} closeDelay={200}>
-            <Popover placement="bottom" showArrow={true} color="default" backdrop="opaque">
-              <PopoverTrigger>
-                <Button id="maze-description" ref={mazeBuildingInspector} color="primary" isIconOnly size="sm" isDisabled={false}>
-                  <FontAwesomeIcon icon={faInfoCircle} size="xl" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="p-0">
-                <AlgorithmDescription algo={algorithmValue} />
-              </PopoverContent>
-            </Popover>
+            <div>
+              <Popover placement="bottom" showArrow={true} color="default" backdrop="opaque">
+                <PopoverTrigger>
+                  <Button id="maze-description" ref={mazeBuildingInspector} color="primary" isIconOnly size="sm" isDisabled={false}>
+                    <FontAwesomeIcon icon={faInfoCircle} size="xl" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0">
+                  <AlgorithmDescription algo={algorithmValue} />
+                </PopoverContent>
+              </Popover>
+            </div>
           </Tooltip>
           <Select
             id="algo-selector"
@@ -84,7 +86,7 @@ export const FirstSection = (props: any) => {
             variant="underlined"
             placeholder="Select an Algorithm"
             // startContent={<FontAwesomeIcon icon={faTrowelBricks} size="sm" />}
-            selectorIcon={<FontAwesomeIcon icon={faTrowelBricks} size="sm" />}
+            // selectorIcon={<FontAwesomeIcon icon={faTrowelBricks} size="sm" />}
             disableSelectorIconRotation
             selectedKeys={algorithmValue}
             onSelectionChange={setAlgorithmValue}

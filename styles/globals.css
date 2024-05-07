@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+
+.min-w-h-tuto-project-menu {
+    min-width: 300px;
+    min-height: 200px;
+}
+
 .fixed-width-select {
   width: 160px; /* or any fixed width you want */
 }
