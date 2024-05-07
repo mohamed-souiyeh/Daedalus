@@ -66,7 +66,7 @@ export const FirstSection = (props: any) => {
           <Tooltip content="algorithms discription" showArrow={true} color={"primary"} delay={tooltipDelay} closeDelay={200}>
             <Popover placement="bottom" showArrow={true} color="default" backdrop="opaque">
               <PopoverTrigger>
-                <Button ref={mazeBuildingInspector} color="primary" isIconOnly size="sm" isDisabled={false}>
+                <Button id="maze-description" ref={mazeBuildingInspector} color="primary" isIconOnly size="sm" isDisabled={false}>
                   <FontAwesomeIcon icon={faInfoCircle} size="xl" />
                 </Button>
               </PopoverTrigger>
@@ -76,6 +76,7 @@ export const FirstSection = (props: any) => {
             </Popover>
           </Tooltip>
           <Select
+            id="algo-selector"
             label="algorithms"
             className="fixed-width-select"
             size="sm"
@@ -104,7 +105,7 @@ export const FirstSection = (props: any) => {
             </SelectSection>
           </Select>
           <Tooltip content="algorithms launching" showArrow={true} color={"primary"} delay={tooltipDelay} closeDelay={200}>
-            <Button ref={mazeLaunching} isIconOnly size="sm" color="primary" isDisabled={disableLaunch} onClick={handleAlgoLaunch}>
+            <Button id="algo-launch" ref={mazeLaunching} isIconOnly size="sm" color="primary" isDisabled={disableLaunch} onClick={handleAlgoLaunch}>
               <FontAwesomeIcon icon={faRocket} size="lg" />
             </Button>
           </Tooltip>

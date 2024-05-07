@@ -26,7 +26,7 @@ export const MyAvatar = () => {
   }
   return (
     <>
-      <div className="avatar">
+      <div id="avatar" className="avatar">
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Avatar

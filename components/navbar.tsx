@@ -6,12 +6,12 @@ import { Key, createRef, use, useEffect, useRef, useState } from "react";
 import { title } from "./primitives";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookBookmark, faBookOpen, faBug, faBugSlash, faCircleInfo, faCircleQuestion, faCodeBranch, faForward, faGear, faGraduationCap, faLink, faMagnifyingGlassLocation, faMinus, faPause, faPlay, faPlus, faRepeat, faRoute, faStreetView, faTextSlash, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
+import { faBookBookmark, faBookOpen, faBug, faBugSlash, faCaretLeft, faCaretRight, faCircleInfo, faCircleQuestion, faCodeBranch, faForward, faGear, faGraduationCap, faLink, faMagnifyingGlassLocation, faMinus, faPause, faPlay, faPlus, faRepeat, faRoute, faStreetView, faTextSlash, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
 import { inputDefaults } from "@/src/configs/defaults";
 import { DELAYSTEP, updateDelay } from "@/src/Events/Delay.EventListeners";
 import { reset } from "@/src";
 import { globals } from "@/src/configs/globals";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Select, SelectItem, Selection, Popover, PopoverTrigger, PopoverContent, DropdownSection, Checkbox } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Select, SelectItem, Selection, Popover, PopoverTrigger, PopoverContent, DropdownSection, Checkbox, Tabs, Tab, Card, CardBody } from "@nextui-org/react";
 import { FirstSection } from "./firstSection";
 import { color } from "@/types";
 
@@ -194,9 +194,6 @@ export const Navbar = () => {
 
   const handleProjectMenu = (e: Key) => {
     console.log("e => ", e);
-    if (e === "Tuto") {
-      console.log("Tuto");
-    }
     if (e === "Tooltips") {
       setTooltipDelay(tooltipDelayRef.current === inputDefaults.TOOLTIPDELAY ? inputDefaults.DISABLETOOLTIP : inputDefaults.TOOLTIPDELAY);
     }
@@ -205,6 +202,29 @@ export const Navbar = () => {
 
   globals.handleResetButton = handleResetButton;
   globals.setDisableDepthFilter = setDisableDepthFilter;
+
+  // NOTE: tutorial
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [tutorialPages, setTutorialPages] = useState<number>(0);
+  const tutorialPagesRef = useRef(tutorialPages);
+
+  useEffect(() => {
+    tutorialPagesRef.current = tutorialPages;
+  }, [tutorialPages]);
+
+  const nextPage = () => {
+    setTutorialPages(tutorialPagesRef.current++);
+    console.log("current page: ", tutorialPagesRef.current);
+  };
+  const prevPage = () => {
+    setTutorialPages(tutorialPagesRef.current--);
+    console.log("current page: ", tutorialPagesRef.current);
+  };
+
+  useEffect(() => {
+    onOpenChange();
+  }, []);
 
   return (
     <NextUINavbar maxWidth="full" position="sticky" isBordered id="nav">
@@ -233,6 +253,7 @@ export const Navbar = () => {
                   key="Tuto"
                   description="Take a Tour"
                   endContent={<FontAwesomeIcon icon={faGraduationCap} size="lg" />}
+                  onPress={onOpen}
                 >
                   Tutorial</DropdownItem>
                 <DropdownItem
@@ -252,6 +273,102 @@ export const Navbar = () => {
                   Toggel Tooltips</DropdownItem>
               </DropdownMenu>
             </Dropdown>
+            <Modal
+              isOpen={isOpen}
+              onOpenChange={onOpenChange}
+              placement="bottom-center"
+              isDismissable={false}
+              size="4xl"
+              radius="md"
+              motionProps={{
+                variants: {
+                  enter: {
+                    y: 0,
+                    opacity: 1,
+                    transition: {
+                      duration: 0.4,
+                      ease: "easeOut",
+                    },
+                  },
+                  exit: {
+                    y: -20,
+                    opacity: 0,
+                    transition: {
+                      duration: 0.3,
+                      ease: "easeIn",
+                    },
+                  },
+                }
+              }}
+            >
+              <ModalContent>
+                {(onClose) => (
+                  <>
+                    <ModalHeader className="flex flex-row justify-center items-end gap-1">
+                      <h1 className={`${title({ color: "blue", size: "md", fullWidth: false })} bold-font`}>
+                        Daedalus
+                      </h1>
+                      <h3 >
+                        Tutorial
+                      </h3>
+                    </ModalHeader>
+                    <ModalBody className="flex flex-col items-center gap-1">
+                      <Tabs
+                        size="sm"
+                        color="primary"
+                        variant="underlined"
+                        fullWidth={true}
+                      >
+                        <Tab key="photos" title="Photos">
+                          <Card>
+                            <CardBody>
+                              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            </CardBody>
+                          </Card>
+                        </Tab>
+                        <Tab key="music" title="Music">
+                          <Card>
+                            <CardBody>
+                              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            </CardBody>
+                          </Card>
+                        </Tab>
+                        <Tab key="videos" title="Videos">
+                          <Card>
+                            <CardBody>
+                              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </CardBody>
+                          </Card>
+                        </Tab>
+                      </Tabs>
+                    </ModalBody>
+                    <ModalFooter className="flex flex-row justify-between gap-2">
+                      <div>
+                        <Button color="danger" variant="light" onPress={onClose}>
+                          Close
+                        </Button>
+                      </div>
+                      <div className="flex flex-row gap-1" >
+                        <Button
+                          color="primary"
+                          startContent={<FontAwesomeIcon icon={faCaretLeft} size="lg" />}
+                          onPress={prevPage}
+                        >
+                          Prev
+                        </Button>
+                        <Button
+                          color="primary"
+                          endContent={<FontAwesomeIcon icon={faCaretRight} size="lg" />}
+                          onPress={nextPage}
+                        >
+                          Next
+                        </Button>
+                      </div>
+                    </ModalFooter>
+                  </>
+                )}
+              </ModalContent>
+            </Modal>
           </div>
         </Tooltip>
       </NavbarContent>
@@ -277,10 +394,10 @@ export const Navbar = () => {
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
-        <Tooltip content="Reset" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+        <Tooltip id="reset" content="Reset" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
           <Button ref={resetButton} color="primary" isIconOnly size="sm" onClick={handleResetButton}>
             <FontAwesomeIcon icon={faRepeat} size="lg" />
-          </Button>DropdownMen
+          </Button>
         </Tooltip>
         <Tooltip content="skip" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
           <Button ref={skipButton} color="primary" isIconOnly size="sm" onClick={handleSkipButton}>
@@ -317,7 +434,7 @@ export const Navbar = () => {
           </Tooltip>
         }
 
-        <ButtonGroup>
+        <ButtonGroup id="delay">
           <Tooltip content="Decrement Delay" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
             <Button ref={decrement} color="primary" isIconOnly size="sm" onClick={decrementDelay}>
               <FontAwesomeIcon icon={faMinus} size="lg" />
