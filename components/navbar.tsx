@@ -325,7 +325,7 @@ export const Navbar = () => {
                         It creates, solves and colours mazes in interesting and beautiful ways.
                       </p>
                       <Tabs
-                        size="sm"
+                        size="md"
                         color="primary"
                         variant="underlined"
                         fullWidth={true}
