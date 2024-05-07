@@ -70,29 +70,29 @@ export const Navbar = () => {
     setPauseButtonIcon(globals.isPaused ? faPlay : faPause);
   };
 
-  const [debugButtonIcon, setDebugButtonIcon] = useState(inputDefaults.DEBUGMODEON ? faBug : faBugSlash);
-  const [debugButtonColor, setDebugButtonColor] = useState((inputDefaults.DEBUGMODEON ? "primary" : "default") as "primary" | "default" | "secondary" | "success" | "warning" | "danger" | undefined);
-
-  const handleDebugButton = () => {
-    globals.debugModeOn = !globals.debugModeOn;
-    setDebugButtonIcon(globals.debugModeOn ? faBug : faBugSlash);
-    setDebugButtonColor(globals.debugModeOn ? "primary" : "default");
-    if (globals.debugModeOn !== globals.debugBookletIsOn) {
-      handleDebugBooklet();
-      console.log("debugBooklet is toggled");
-    }
-  };
-
-  const [debugBookletColor, setDebugBookletColor] = useState(inputDefaults.DEBUGBOOKLETISON ? "primary" as typeof color : "default" as typeof color);
-
-  const handleDebugBooklet = () => {
-    globals.debugBookletIsOn = !globals.debugBookletIsOn;
-    setDebugBookletColor(globals.debugBookletIsOn ? "primary" : "default");
-  };
-
-  const handleSettingsMenue = () => {
-
-  }
+  // const [debugButtonIcon, setDebugButtonIcon] = useState(inputDefaults.DEBUGMODEON ? faBug : faBugSlash);
+  // const [debugButtonColor, setDebugButtonColor] = useState((inputDefaults.DEBUGMODEON ? "primary" : "default") as "primary" | "default" | "secondary" | "success" | "warning" | "danger" | undefined);
+  //
+  // const handleDebugButton = () => {
+  //   globals.debugModeOn = !globals.debugModeOn;
+  //   setDebugButtonIcon(globals.debugModeOn ? faBug : faBugSlash);
+  //   setDebugButtonColor(globals.debugModeOn ? "primary" : "default");
+  //   if (globals.debugModeOn !== globals.debugBookletIsOn) {
+  //     handleDebugBooklet();
+  //     console.log("debugBooklet is toggled");
+  //   }
+  // };
+  //
+  // const [debugBookletColor, setDebugBookletColor] = useState(inputDefaults.DEBUGBOOKLETISON ? "primary" as typeof color : "default" as typeof color);
+  //
+  // const handleDebugBooklet = () => {
+  //   globals.debugBookletIsOn = !globals.debugBookletIsOn;
+  //   setDebugBookletColor(globals.debugBookletIsOn ? "primary" : "default");
+  // };
+  //
+  // const handleSettingsMenue = () => {
+  //
+  // }
 
   const handleResetButton = () => {
     reset();
@@ -153,10 +153,10 @@ export const Navbar = () => {
         handlePauseButton();
       }
       if (event.code === 'KeyD') {
-        handleDebugButton();
+        // handleDebugButton();
       }
       if (event.code === 'KeyB' && globals.debugModeOn) {
-        handleDebugBooklet();
+        // handleDebugBooklet();
       }
       if (event.key === '-') {
         decrementDelay();
