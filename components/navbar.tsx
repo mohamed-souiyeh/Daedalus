@@ -384,7 +384,7 @@ export const Navbar = () => {
                                 <p>
                                   <br />
                                   <br />
-                                  This is the project "Logo" and Project menu.<br />
+                                  This is the project \"Logo\" and Project menu.<br />
                                   <br />
                                   If you click on it, multiple options with a small explanation will appear.<br />
                                 </p>
