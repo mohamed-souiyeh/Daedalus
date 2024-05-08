@@ -11,6 +11,8 @@ import { Wall } from "./wall.ts";
 import { globals } from "./configs/globals.ts";
 import { setTextStyle } from "./canvas_ctx_style_manipulation/text.ts";
 import svgPath from "svgpath";
+import { inputDefaults } from "./configs/defaults.ts";
+import { algosKeys } from "./configs/algos.config.ts";
 
 
 
@@ -221,6 +223,9 @@ export class Cell {
     return this.#xOutwardSteps;
   }
 
+  get cellType() {
+    return this.#cellType;
+  }
 
   //SECTION - initialization methods
   public init(gridx: number, gridy: number, x: number, y: number, length: number, wallState: wallState, type: CellType) {
@@ -230,13 +235,12 @@ export class Cell {
     this.parrent = null;
     this.distenceFromStart = Infinity;
 
-    this.weight = 1;
     this.depth = Infinity;
 
 
 
     this.#state = CellStates.unvisited;
-    this.#cellType = type;
+    this.setCellType(type);
     this.#links.clear();
 
     this.#redraw = false;
@@ -307,14 +311,27 @@ export class Cell {
 
   setCellType(type: CellType) {
     this.#cellType = type;
+    if (type === CellType.weighted)
+      this.weight = inputDefaults.NODEWEIGHT;
     this.#redraw = true;
   }
 
-  resetWallAndLinks(state: wallState) {
+  resetWallAndLinks(state: wallState, currentAlgo: algosKeys) {
     for (let i = 0; i < 4; i++) {
       this.walls[i].setWallState(state);
     }
     this.#links.clear();
+
+    let link: link = {
+      state: true,
+    };
+
+    if (currentAlgo === algosKeys.recursiveDivider) {
+      for (let cell of this.neighbors()) {
+        if (cell === null) continue;
+        this.#links.set(cell, link);
+      }
+    }
   }
 
   setState(state: CellStates) {
@@ -637,6 +654,11 @@ export class Cell {
     }
     else if (this.gridx === globals.depthFilterPos.x && this.gridy === globals.depthFilterPos.y && globals.depthFilterOn) {
       const path = new Path2D(svgPath.from(globals.depthFilterPath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.4), this.#y + this.#length * (WALL_PERSENTAGE * 1.4)).toString());
+      ctx.fillStyle = "#0072F5";
+      ctx.fill(path)
+    }
+    else if (this.#cellType === CellType.weighted) {
+      const path = new Path2D(svgPath.from(globals.weightedNodePath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.4), this.#y + this.#length * (WALL_PERSENTAGE * 1.4)).toString());
       ctx.fillStyle = "#0072F5";
       ctx.fill(path)
     }

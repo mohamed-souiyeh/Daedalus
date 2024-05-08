@@ -13,7 +13,7 @@ export const AlgorithmDescription = (props: { algo: any }) => {
     console.log("algorithm description is mounted: ", Array.from(props.algo)[0]);
     if (mazeSolvingAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)) {
       setAlgorithmDescription(mazeSolvingAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.description);
-      setAlgorithmName(mazeSolvingAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.name);
+      setAlgorithmName(`Name: ${mazeSolvingAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.name}`);
     }
     else if (mazeGenerationAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)) {
       setAlgorithmDescription(mazeGenerationAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.description);
@@ -44,13 +44,12 @@ export const AlgorithmDescription = (props: { algo: any }) => {
             {algorithmDescription}
           </p>
         </CardBody>
-        {
-          //   <Divider />
-          // <CardFooter>
-          //   <p>
-          //   </p>
-          // </CardFooter> 
-        }
+        <Divider />
+        <CardFooter>
+          <p>
+            Skills Needed for implementing the algo.
+          </p>
+        </CardFooter>
       </Card >
     </>
   );

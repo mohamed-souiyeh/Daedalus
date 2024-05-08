@@ -1,13 +1,16 @@
 import { bfs } from "./algos/bfs.algo.ts";
 import { randomWalkDFS } from "./algos/randomWalkDFS.algo.ts";
+import { recursiveDivider } from "./algos/recursiveDivider.algo.ts";
 import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.ts";
 import { Cell } from "./cell.ts";
 import { algosKeys } from "./configs/algos.config.ts";
 import { CELLSIZE, CellAnimation, CellStates, CellType, Directions } from "./configs/cell.config.ts";
+import { inputDefaults } from "./configs/defaults.ts";
 import { globals } from "./configs/globals.ts";
 import { mouse } from "./configs/input.config.ts";
 import { wallState } from "./configs/wall.config.ts";
 import { Debuger } from "./debugger.ts";
+import { Queue } from "./types/DataStructures/queue.type.ts";
 import { Stack } from "./types/DataStructures/stack.type.ts";
 import { Frame, algoState } from "./types/algos.types.ts";
 import { gridState } from "./types/grid.types.ts";
@@ -101,18 +104,22 @@ export class Grid {
 
     this.#offsetLeft = this.#startX;
     this.#offsetTop = this.#startY;
+    this.gridState = gridState.IDLE;
 
     this.path = [];
     for (let y = 0; y < this.#width; y++) {
       for (let x = 0; x < this.#length; x++) {
         let cellx = this.startX + x * CELLSIZE;
         let celly = this.startY + y * CELLSIZE;
-        let type: CellType = CellType.air;
+        let type: CellType = this.grid[y][x].cellType === CellType.weighted ? CellType.weighted : CellType.air;
         if (x === globals.start.x && y === globals.start.y) {
           type = CellType.start;
         }
         else if (x === globals.finish.x && y === globals.finish.y) {
           type = CellType.finish;
+        }
+        else if (globals.addWeightedNodes && Math.random() < inputDefaults.WIEGHTEDCHANCE) {
+          type = CellType.weighted;
         }
 
         this.grid[y][x].init(x, y, cellx, celly, CELLSIZE, wallState, type);
@@ -150,6 +157,7 @@ export class Grid {
 
   #initAlgos() {
     this.#algos.set(algosKeys.RandomWalkDFS, randomWalkDFS);
+    this.#algos.set(algosKeys.recursiveDivider, recursiveDivider);
     this.#algos.set(algosKeys.BFS, bfs);
   }
   //!SECTION
@@ -191,6 +199,23 @@ export class Grid {
   // NOTE: algos section
   path: Cell[] = [];
 
+  public removeWeightedNOdes() {
+    for (let cell of this.eachCell()) {
+      if (cell.cellType === CellType.weighted) {
+        cell.setCellType(CellType.air);
+      }
+    }
+
+  }
+
+  public addWeightedNodes() {
+    for (let cell of this.eachCell()) {
+      if (Math.random() < inputDefaults.WIEGHTEDCHANCE && cell.cellType !== CellType.start && cell.cellType !== CellType.finish) {
+        cell.setCellType(CellType.weighted);
+      }
+    }
+  }
+
   public depthFilter() {
     const gridcp = Array<CellStates[]>(this.width);
 
@@ -201,15 +226,15 @@ export class Grid {
       }
     }
 
-    const stack: Stack<Frame> = new Stack<Frame>();
+    const queue: Queue<Frame> = new Queue<Frame>();
 
-    stack.push(new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, algosKeys.BFS));
+    queue.enqueue(new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, algosKeys.BFS));
 
-    this.grid[stack.peek()!.y][stack.peek()!.x].depth = 0;
-    gridcp[stack.peek()!.y][stack.peek()!.x] = CellStates.inqueue;
+    this.grid[queue.peek()!.y][queue.peek()!.x].depth = 0;
+    gridcp[queue.peek()!.y][queue.peek()!.x] = CellStates.inqueue;
 
-    while (stack.size()) {
-      const currentFrame = stack.pop();
+    while (queue.size()) {
+      const currentFrame = queue.dequeue();
       const currentCell = this.at(currentFrame!.x, currentFrame!.y);
 
       if (currentCell!.depth > globals.maxDepth)
@@ -220,7 +245,7 @@ export class Grid {
         if (gridcp[cell!.gridy][cell!.gridx] === CellStates.unvisited && currentCell?.islinked(cell)) {
           cell!.depth = currentCell!.depth + 1;
           gridcp[cell!.gridy][cell!.gridx] = CellStates.inqueue;
-          stack.push(new Frame(cell!.gridx, cell!.gridy, algosKeys.BFS));
+          queue.enqueue(new Frame(cell!.gridx, cell!.gridy, algosKeys.BFS));
         }
       }
 
@@ -295,31 +320,26 @@ export class Grid {
 
   public resetPatternMKI() {
     if (this.#currentResetColumn < 0) {
-      this.#currentResetColumn = 0;
-      this.#resetPatternDirection = this.#resetPatternDirection * -1;
-      globals.reset = false;
+      if (this.at(this.#currentResetColumn + 1, this.width - 1)!.animationPercentage === 0) {
+        this.#currentResetColumn = 0;
+        this.#resetPatternDirection = this.#resetPatternDirection * -1;
+        globals.reset = false;
+      }
       return;
     }
     else if (this.#currentResetColumn >= this.length) {
-      this.#currentResetColumn = this.length - 1;
-      this.#resetPatternDirection = this.#resetPatternDirection * -1;
-      globals.reset = false;
+      if (this.at(this.#currentResetColumn - 1, this.width - 1)!.animationPercentage === 0) {
+        this.#currentResetColumn = this.length - 1;
+        this.#resetPatternDirection = this.#resetPatternDirection * -1;
+        globals.reset = false;
+      }
       return;
     }
-    // if (this.#currentResetColumn + -this.#resetPatternDirection >= 0 && this.#currentResetColumn + -this.#resetPatternDirection <= this.length) {
-    // }
 
-    this.#resetPatternDirection = this.#resetPatternDirection * -1;
-    // console.log("  animationPercentage: ", this.at(this.#currentResetColumn, 0)!.animationPercentage)
-    // console.log("currentResetColumn: ", this.#currentResetColumn);
-    // if (this.at(this.#currentResetColumn, 0)!.animationPercentage <= 20) {
     let x = this.#currentResetColumn;
     for (let y = 0; y < this.width; y++) {
-      // console.log("x: ", x);
-      // console.log("y: ", y);
       this.at(x, y)!.setState(CellStates.unvisited);
     }
-    // }
 
     if (this.at(this.#currentResetColumn, 0)!.animationPercentage >= 10.0)
       this.#currentResetColumn += this.#resetPatternDirection;
@@ -334,11 +354,17 @@ export class Grid {
 
   public resetForBuildAlgo() {
     let wallsState: wallState = wallState.PRESENT;
+
+    if (this.currentAlgo === algosKeys.recursiveDivider) {
+      wallsState = wallState.ABSENT;
+      globals.reset = true;
+      console.log("reseting for wall adder");
+    }
     for (let cell of this.eachCell()) {
       const neighbors = cell.neighbors();
       for (let neighbor of neighbors) {
         if (neighbor === null) continue;
-        cell.resetWallAndLinks(wallsState);
+        cell.resetWallAndLinks(wallsState, this.currentAlgo);
       }
     }
   }
@@ -348,8 +374,8 @@ export class Grid {
       this.gridState = gridState.BUILDING;
       this.currentAlgo = globals.mazeBuildingAlgorithm;
       globals.mazeBuildingAlgorithm = null;
+      globals.BuildStack.clear();
       if (globals.needclear) {
-        globals.BuildStack.clear();
         globals.reset = true;
       }
       this.resetForBuildAlgo();
@@ -424,6 +450,14 @@ export class Grid {
 
     if (globals.reset) {
       this.resetPatternMKI();
+    }
+    else if (globals.addWeightedNodes) {
+      this.addWeightedNodes();
+      globals.addWeightedNodes = false;
+    }
+    else if (globals.removeWeightedNodes) {
+      this.removeWeightedNOdes();
+      globals.removeWeightedNodes = false;
     }
 
     for (let cell of this.eachCell()) {

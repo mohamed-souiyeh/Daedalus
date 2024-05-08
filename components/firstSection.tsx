@@ -48,6 +48,7 @@ export const FirstSection = (props: any) => {
       return;
 
     globals.startAlgo = true;
+    globals.animatePath = false;
     setDisableLaunch(true);
 
     globals.depthFilterOn = false;

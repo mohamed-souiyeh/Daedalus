@@ -41,8 +41,10 @@ export function randomWalkDFS(grid: Grid): algoState {
       }
     }
 
-    if (nextDirection === undefined)
+    if (nextDirection === undefined) {
+      // currentCell?.setState(CellStates.visited);
       globals.BuildStack.pop();
+    }
     if (nextCell)
       break;
   }

@@ -6,7 +6,7 @@ import { Key, createRef, use, useEffect, useRef, useState } from "react";
 import { subtitle, title } from "./primitives";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAddressCard, faBookBookmark, faBookOpen, faBug, faBugSlash, faCaretLeft, faCaretRight, faCircleInfo, faCircleQuestion, faCodeBranch, faForward, faGear, faGraduationCap, faInfoCircle, faLink, faMagnifyingGlassLocation, faMinus, faPause, faPlay, faPlus, faRepeat, faRocket, faRoute, faStreetView, faTextSlash, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
+import { faAddressCard, faBookBookmark, faBookOpen, faBug, faBugSlash, faCaretLeft, faCaretRight, faCircleInfo, faCircleQuestion, faCodeBranch, faForward, faGear, faGraduationCap, faInfoCircle, faLink, faMagnifyingGlassLocation, faMinus, faPause, faPlay, faPlus, faRepeat, faRocket, faRoute, faStreetView, faTextSlash, faTrowelBricks, faWeightHanging } from "@fortawesome/free-solid-svg-icons";
 import { inputDefaults } from "@/src/configs/defaults";
 import { DELAYSTEP, updateDelay } from "@/src/Events/Delay.EventListeners";
 import { reset } from "@/src";
@@ -17,7 +17,7 @@ import { color } from "@/types";
 import { mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "@/src/configs/algos.config";
 import { AlgorithmDescription } from "./algorithmDescription";
 import { MyAvatar } from "./avatar";
-
+import Cookies from 'js-cookie'
 
 export const Navbar = () => {
 
@@ -194,6 +194,19 @@ export const Navbar = () => {
       globals.gridRedraw = true;
   }
 
+  const [weightedNodes, setWeightedNodes] = useState(globals.addWeightedNodes);
+
+  const addWhieghtedNodes = (state: boolean) => {
+    if (state === true) {
+      globals.removeWeightedNodes = !state;
+      globals.addWeightedNodes = state;
+    }
+    else if (state === false) {
+      globals.removeWeightedNodes = !state;
+      globals.addWeightedNodes = state;
+    }
+    setWeightedNodes(state);
+  }
 
   const handleProjectMenu = (e: Key) => {
     console.log("e => ", e);
@@ -225,12 +238,15 @@ export const Navbar = () => {
     console.log("current page: ", tutorialPagesRef.current);
   };
 
+
   useEffect(() => {
-    onOpenChange();
+    if (Cookies.get("TutorialDone") === undefined)
+      onOpenChange();
   }, []);
 
 
   const [algorithmValue, setAlgorithmValue] = useState<Selection>(new Set([]));
+
 
 
   return (
@@ -287,6 +303,8 @@ export const Navbar = () => {
               isDismissable={false}
               size="4xl"
               radius="md"
+              hideCloseButton={true}
+              isKeyboardDismissDisabled={true}
               motionProps={{
                 variants: {
                   enter: {
@@ -387,6 +405,8 @@ export const Navbar = () => {
                                   This is the project Logo and Project menu.<br />
                                   <br />
                                   If you click on it, multiple options with a small explanation will appear.<br />
+                                  <br />
+                                  This tutorial will show you arround and it wont bother you again unless u request it from the project menu.
                                 </p>
                               </div>
                             </CardBody>
@@ -594,12 +614,19 @@ export const Navbar = () => {
                       </Tabs>
                     </ModalBody>
                     {
-                      // <ModalFooter className="flex flex-row justify-between gap-2">
-                      //   <div>
-                      //     <Button color="danger" variant="light" onPress={onClose}>
-                      //       Close
-                      //     </Button>
-                      //   </div>
+                      <ModalFooter className="flex flex-row justify-between gap-2">
+                        <div>
+                          <Button
+                            color="danger"
+                            variant="light"
+                            onPress={() => {
+                              Cookies.set("TutorialDone", "");
+                              onClose();
+                            }}>
+                            Skip
+                          </Button>
+                        </div>
+                      </ModalFooter>
                       //   <div className="flex flex-row gap-1" >
                       //     <Button
                       //       color="primary"
@@ -616,7 +643,6 @@ export const Navbar = () => {
                       //       Next
                       //     </Button>
                       //   </div>
-                      // </ModalFooter>
                     }
                   </>
                 )}
@@ -644,6 +670,15 @@ export const Navbar = () => {
               description="toggle numbers for exact distances"
               endContent={<FontAwesomeIcon icon={faStreetView} size="lg" />}>
               <Checkbox aria-label="depth value" isSelected={depthNumbers} onValueChange={addDepthNumbers} size="sm">Depth Value</Checkbox>
+            </DropdownItem>
+            <DropdownItem
+              isReadOnly
+              textValue="add whieghted Nodes to the grid"
+              aria-label="add whieghted Nodes to the grid"
+              key="addWhieghtedNodes"
+              description="Add whieghted Nodes to the grid"
+              endContent={<FontAwesomeIcon icon={faWeightHanging} size="lg" />}>
+              <Checkbox aria-label="addWhieghtedNodes" isSelected={weightedNodes} onValueChange={addWhieghtedNodes} size="sm">add weighted nodes</Checkbox>
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
