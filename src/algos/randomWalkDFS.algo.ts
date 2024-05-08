@@ -19,7 +19,7 @@ export function randomWalkDFS(grid: Grid): algoState {
       break;
 
     currentCell = grid.at(currentFrame.x, currentFrame.y)
-    currentCell!.setState(CellStates.inqueue);
+    currentCell!.setState(CellStates.visited);
 
     let nextDirection: Directions | undefined = undefined;
 
@@ -42,7 +42,7 @@ export function randomWalkDFS(grid: Grid): algoState {
     }
 
     if (nextDirection === undefined) {
-      currentCell?.setState(CellStates.visited);
+      // currentCell?.setState(CellStates.visited);
       globals.BuildStack.pop();
     }
     if (nextCell)

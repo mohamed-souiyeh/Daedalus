@@ -104,6 +104,7 @@ export class Grid {
 
     this.#offsetLeft = this.#startX;
     this.#offsetTop = this.#startY;
+    this.gridState = gridState.IDLE;
 
     this.path = [];
     for (let y = 0; y < this.#width; y++) {
@@ -319,31 +320,26 @@ export class Grid {
 
   public resetPatternMKI() {
     if (this.#currentResetColumn < 0) {
-      this.#currentResetColumn = 0;
-      this.#resetPatternDirection = this.#resetPatternDirection * -1;
-      globals.reset = false;
+      if (this.at(this.#currentResetColumn + 1, this.width - 1)!.animationPercentage === 0) {
+        this.#currentResetColumn = 0;
+        this.#resetPatternDirection = this.#resetPatternDirection * -1;
+        globals.reset = false;
+      }
       return;
     }
     else if (this.#currentResetColumn >= this.length) {
-      this.#currentResetColumn = this.length - 1;
-      this.#resetPatternDirection = this.#resetPatternDirection * -1;
-      globals.reset = false;
+      if (this.at(this.#currentResetColumn - 1, this.width - 1)!.animationPercentage === 0) {
+        this.#currentResetColumn = this.length - 1;
+        this.#resetPatternDirection = this.#resetPatternDirection * -1;
+        globals.reset = false;
+      }
       return;
     }
-    // if (this.#currentResetColumn + -this.#resetPatternDirection >= 0 && this.#currentResetColumn + -this.#resetPatternDirection <= this.length) {
-    // }
 
-    this.#resetPatternDirection = this.#resetPatternDirection * -1;
-    // console.log("  animationPercentage: ", this.at(this.#currentResetColumn, 0)!.animationPercentage)
-    // console.log("currentResetColumn: ", this.#currentResetColumn);
-    // if (this.at(this.#currentResetColumn, 0)!.animationPercentage <= 20) {
     let x = this.#currentResetColumn;
     for (let y = 0; y < this.width; y++) {
-      // console.log("x: ", x);
-      // console.log("y: ", y);
       this.at(x, y)!.setState(CellStates.unvisited);
     }
-    // }
 
     if (this.at(this.#currentResetColumn, 0)!.animationPercentage >= 10.0)
       this.#currentResetColumn += this.#resetPatternDirection;
@@ -362,6 +358,7 @@ export class Grid {
     if (this.currentAlgo === algosKeys.recursiveDivider) {
       wallsState = wallState.ABSENT;
       globals.reset = true;
+      console.log("reseting for wall adder");
     }
     for (let cell of this.eachCell()) {
       const neighbors = cell.neighbors();

@@ -27,6 +27,7 @@
     "@nextui-org/modal": "^2.0.28",
     "@nextui-org/navbar": "2.0.27",
     "@nextui-org/react": "^2.2.9",
+    "@nextui-org/slider": "^2.2.9",
     "@nextui-org/snippet": "2.0.30",
     "@nextui-org/switch": "^2.0.25",
     "@nextui-org/system": "2.0.15",

@@ -8,24 +8,37 @@ export const CELLSIZE = 30;
 // unvisited
 // current
 
+// rgba(147, 83, 211, 1)
+// rgba(174, 126, 222, 1)
+// rgba(69, 212, 131, 1)
+// rgba(0, 111, 238, 1)
+// rgba(247, 183, 80, 1)
+// rgba(243, 18, 96, 1)
+// rgba(201, 169, 233, 1)
+// rgba(234, 227, 36, 1)
 export const PATH_CELLCOLOR = {
-  r: 200,
-  g: 0,
-  b: 250,
+  r: 234,
+  g: 227,
+  b: 36,
   a: 1,
 }
 
+// rgba(161, 161, 170, 1)
+// rgba(251, 219, 167, 1)
+// rgba(82, 82, 91, 1)
 export const INQUEUE = {
-  r: 200,
-  g: 200,
-  b: 0,
+  r: 102,
+  g: 102,
+  b: 111,
   a: 1,
 }
 
+//rgba(0, 68, 147, 1)
+//rgba(0, 111, 238, 1)
 export const CURRENT_CELLCOLOR = {
   r: 0,
-  g: 150,
-  b: 0,
+  g: 111,
+  b: 238,
   a: 1,
 }
 
