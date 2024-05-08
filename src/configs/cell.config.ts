@@ -64,7 +64,7 @@ export enum CellType {
   start,
   finish,
   air,
-  whater,
+  weighted,
 }
 
 export enum CellStates {

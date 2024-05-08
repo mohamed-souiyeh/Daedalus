@@ -9,6 +9,8 @@ export enum algosKeys {
   Dijkstra = "Dijkstra",
 }
 
+
+// NOTE: add a highlight of the skills needed in the footer of the algorithm description card.
 export const mazeGenerationAlgorithms = [
   // {
   //   key: algosKeys.Random,
@@ -17,13 +19,15 @@ export const mazeGenerationAlgorithms = [
   {
     key: algosKeys.RandomWalkDFS,
     name: "Random Walk DFS",
-    description: "Random Walk DFS is a maze generation algorithm that uses a randomized version of the depth-first search algorithm to generate a maze.\
+    description: "It is a maze generation algorithm that uses a randomized version of the depth-first search algorithm to generate a maze.\
     It is also known as the recursive backtracker algorithm.",
   },
-  // {
-  //   key: algosKeys.recursiveDivider,
-  //   name: "recursive devider (wall adder)",
-  // },
+  {
+    key: algosKeys.recursiveDivider,
+    name: "Recursive Divider (wall adder)",
+    description: "It is an algorithm that generates mazes through adding walls to an impety space, it is unconvetional compared to all the other algorithms\
+    since they take the oposit approuach and carve the walls in the space",
+  },
 ];
 
 export const mazeSolvingAlgorithms = [
