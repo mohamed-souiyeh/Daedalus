@@ -301,7 +301,7 @@ export class Grid {
       globals.skipAlgoAnimaiton = false;
       globals.startAlgo = false;
       globals.updateDepthFilter = true;
-      globals.needclear = true;
+      globals.needclear = this.currentAlgo === algosKeys.recursiveDivider ? false : true;
       globals.setDisableLaunch(false);
       globals.setDisableDepthFilter(false);
       this.gridState = gridState.IDLE;
@@ -380,8 +380,11 @@ export class Grid {
       }
       this.resetForBuildAlgo();
 
-      console.log("current algo: ", this.currentAlgo);
-      const frame = new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, this.currentAlgo);
+      let frame: Frame;
+      if (this.currentAlgo === algosKeys.recursiveDivider)
+        frame = new Frame(0, 0, this.currentAlgo, this.length, this.width);
+      else
+        frame = new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, this.currentAlgo);
 
       globals.BuildStack.push(frame);
     }
