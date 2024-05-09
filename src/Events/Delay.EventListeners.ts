@@ -10,18 +10,15 @@ export function updateDelay(newValue: number, setInputValue: React.Dispatch<Reac
   if (newValue < inputDefaults.MINDELAY) {
     globals.delay = inputDefaults.MINDELAY;
     setInputValue(String(globals.delay));
-    console.log("globals.delay => ", globals.delay);
     return;
   }
   else if (newValue > inputDefaults.MAXDELAY) {
     globals.delay = inputDefaults.MAXDELAY;
     setInputValue(String(globals.delay));
-    console.log("globals.delay => ", globals.delay);
     return;
   }
-  else{
+  else {
     globals.delay = newValue;
     setInputValue(String(globals.delay));
-    console.log("globals.delay => ", globals.delay);
   }
 }

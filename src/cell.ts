@@ -318,7 +318,8 @@ export class Cell {
 
   resetWallAndLinks(state: wallState, currentAlgo: algosKeys) {
     for (let i = 0; i < 4; i++) {
-      this.walls[i].setWallState(state);
+      if (this.neighbor(i))
+        this.walls[i].setWallState(state);
     }
     this.#links.clear();
 
@@ -666,6 +667,18 @@ export class Cell {
     if (this.animation === CellAnimation.STOPPED)
       this.#redraw = false;
 
+    // setTextStyle(ctx, {
+    //   textAlign: "center",
+    //   textBaseline: "middle",
+    //   font: "11px Arial",
+    //   fillStyle: "black"
+    // })
+    //
+    // ctx.fillText(
+    //   `${this.gridx},${this.gridy}`,
+    //   this.#cellVector.currentx + (this.#cellVector.currentlength / 2),
+    //   this.#cellVector.currenty + (this.#cellVector.currentlength / 2)
+    // );
     if (globals.depthFilterOn && globals.depthNumbers && this.depth !== Infinity && !(this.gridx === globals.depthFilterPos.x && this.gridy === globals.depthFilterPos.y)) {
       //FIXME - replace this with the set style method
       setTextStyle(ctx, {

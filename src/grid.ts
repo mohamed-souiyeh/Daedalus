@@ -301,7 +301,7 @@ export class Grid {
       globals.skipAlgoAnimaiton = false;
       globals.startAlgo = false;
       globals.updateDepthFilter = true;
-      globals.needclear = true;
+      globals.needclear = this.currentAlgo === algosKeys.recursiveDivider ? false : true;
       globals.setDisableLaunch(false);
       globals.setDisableDepthFilter(false);
       this.gridState = gridState.IDLE;
@@ -361,11 +361,7 @@ export class Grid {
       console.log("reseting for wall adder");
     }
     for (let cell of this.eachCell()) {
-      const neighbors = cell.neighbors();
-      for (let neighbor of neighbors) {
-        if (neighbor === null) continue;
-        cell.resetWallAndLinks(wallsState, this.currentAlgo);
-      }
+      cell.resetWallAndLinks(wallsState, this.currentAlgo);
     }
   }
 
@@ -375,13 +371,16 @@ export class Grid {
       this.currentAlgo = globals.mazeBuildingAlgorithm;
       globals.mazeBuildingAlgorithm = null;
       globals.BuildStack.clear();
-      if (globals.needclear) {
-        globals.reset = true;
-      }
+      // if (globals.needclear) {
+      globals.reset = true;
+      // }
       this.resetForBuildAlgo();
 
-      console.log("current algo: ", this.currentAlgo);
-      const frame = new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, this.currentAlgo);
+      let frame: Frame;
+      if (this.currentAlgo === algosKeys.recursiveDivider)
+        frame = new Frame(0, 0, this.currentAlgo, this.length, this.width);
+      else
+        frame = new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, this.currentAlgo);
 
       globals.BuildStack.push(frame);
     }
