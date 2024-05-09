@@ -361,11 +361,7 @@ export class Grid {
       console.log("reseting for wall adder");
     }
     for (let cell of this.eachCell()) {
-      const neighbors = cell.neighbors();
-      for (let neighbor of neighbors) {
-        if (neighbor === null) continue;
-        cell.resetWallAndLinks(wallsState, this.currentAlgo);
-      }
+      cell.resetWallAndLinks(wallsState, this.currentAlgo);
     }
   }
 
@@ -375,9 +371,9 @@ export class Grid {
       this.currentAlgo = globals.mazeBuildingAlgorithm;
       globals.mazeBuildingAlgorithm = null;
       globals.BuildStack.clear();
-      if (globals.needclear) {
-        globals.reset = true;
-      }
+      // if (globals.needclear) {
+      globals.reset = true;
+      // }
       this.resetForBuildAlgo();
 
       let frame: Frame;

@@ -1,3 +1,4 @@
+import { split } from "postcss/lib/list";
 import { algosKeys } from "../configs/algos.config";
 import { Directions } from "../configs/cell.config";
 import { globals } from "../configs/globals";
@@ -18,19 +19,18 @@ function reversePolarity(direction: Directions): Directions {
 
 function skipDoor(frame: Frame) {
   if (frame.buildingWall.dx)
-    return (frame.buildingWall.x === frame.buildingWall.doorIndex);
+    return (frame.buildingWall.x - frame.x === frame.buildingWall.doorIndex);
   else
-    return (frame.buildingWall.y === frame.buildingWall.doorIndex);
+    return (frame.buildingWall.y - frame.y === frame.buildingWall.doorIndex);
 }
 
 // NOTE: this function is a tribute to Elcy my dear friend. 😂reverse polarity
 function bobaTheBuilder(grid: Grid, frame: Frame) {
 
-  console.log("building");
   let x = frame.buildingWall.x;
   let y = frame.buildingWall.y;
 
-  if (x - frame.x >= frame.length - 1 || y - frame.y >= frame.width - 1) {
+  if (x - frame.x >= frame.length || y - frame.y >= frame.width) {
     frame.buildingWall.state = algoState.done;
     console.log("the x: ", x);
     console.log("the y: ", y);
@@ -38,28 +38,27 @@ function bobaTheBuilder(grid: Grid, frame: Frame) {
     return;
   }
 
-  if (grid.at(x, y)!.animationPercentage >= 10.0 || skipDoor(frame)) {
+  if (skipDoor(frame)) {
+    console.log("skipping door: ", skipDoor(frame));
     frame.buildingWall.x += frame.buildingWall.dx;
     frame.buildingWall.y += frame.buildingWall.dy;
     x = frame.buildingWall.x;
     y = frame.buildingWall.y;
-    if (skipDoor(frame))
-      return;
+    return;
   }
 
   // console.log("in boba the builder");
   const currentCell = grid.at(x, y);
   let neighbor = currentCell!.neighbor(frame.buildingWall.direction);
 
-  if (neighbor === null)
-    frame.buildingWall.direction = reversePolarity(frame.buildingWall.direction);
-
-  neighbor = currentCell!.neighbor(frame.buildingWall.direction);
 
   if (currentCell!.islinked(neighbor) === false)
     return;
 
+  console.log("building at x: ", x, ", y: ", y);
   currentCell!.unlink(neighbor);
+  frame.buildingWall.x += frame.buildingWall.dx;
+  frame.buildingWall.y += frame.buildingWall.dy;
 }
 
 export function recursiveDivider(grid: Grid) {
@@ -72,6 +71,7 @@ export function recursiveDivider(grid: Grid) {
     return algoState.done;
 
   while (currentFrame.width <= 1 || currentFrame.length <= 1) {
+    console.log("small frame: ", currentFrame);
     globals.BuildStack.pop();
     currentFrame = globals.BuildStack.peek();
     if (currentFrame === undefined)
@@ -107,14 +107,17 @@ export function recursiveDivider(grid: Grid) {
     return algoState.building;
   }
 
-  const splitDirection: SplitDirection = currentFrame.length >= currentFrame.width ? SplitDirection.V : SplitDirection.H;
+  let splitDirection: SplitDirection = currentFrame.length > currentFrame.width ? SplitDirection.V : SplitDirection.H;
 
-  let wallDirection: Directions = splitDirection === SplitDirection.H ? Math.random() >= 0.5 ? Directions.NORTH : Directions.SOUTH
-    : Math.random() >= 0.5 ? Directions.EAST : Directions.WEST;
+  if (currentFrame.length === currentFrame.width)
+    splitDirection = Math.random() >= 0.5 ? SplitDirection.H : SplitDirection.V;
 
-  const doorPos: number = splitDirection === SplitDirection.H ? Math.floor(Math.random() * (currentFrame.length - 1)) : Math.floor(Math.random() * (currentFrame.width - 1));
+  let wallDirection: Directions = splitDirection === SplitDirection.H ? Directions.SOUTH : Directions.EAST;
+
+  const doorPos: number = splitDirection === SplitDirection.H ? Math.round(Math.random() * (currentFrame.length - 1)) : Math.round(Math.random() * (currentFrame.width - 1));
 
   const splitPos: number = splitDirection === SplitDirection.H ? Math.floor(Math.random() * (currentFrame.width - 1)) : Math.floor(Math.random() * (currentFrame.length - 1));
+  // const splitPos: number = splitDirection === SplitDirection.H ? Math.floor(0.5 * (currentFrame.width - 1)) : Math.floor(0.5 * (currentFrame.length - 1));
 
   const x: number = splitDirection === SplitDirection.V ? currentFrame.x + splitPos : currentFrame.x;
   const y: number = splitDirection === SplitDirection.V ? currentFrame.y : currentFrame.y + splitPos;
