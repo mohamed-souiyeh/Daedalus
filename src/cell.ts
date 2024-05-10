@@ -1,6 +1,6 @@
 import { CellType, UNVISITED_CELLCOLOR, cellDefaults, stateColors } from "./configs/cell.config.ts";
 import { CORNERCOLOR } from "./configs/corner.config.ts";
-import { WALLCOLOR, WALL_PERSENTAGE, WallAnimation, wallState } from "./configs/wall.config.ts";
+import { WALLCOLOR, WALL_PERSENTAGE, WallAnimation, WallState } from "./configs/wall.config.ts";
 import { Corner } from "./corner.ts";
 import { Debuger } from "./debugger.ts";
 import { CellAnimation, CellStates, CornerDirections, Directions } from "./configs/cell.config.ts";
@@ -109,7 +109,7 @@ export class Cell {
     let neighbors = this.neighbors();
     for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
       if (neighbors[i] === cell) {
-        this.setWallState(i, wallState.ABSENT);
+        this.setWallState(i, WallState.ABSENT);
         break;
       }
     }
@@ -127,7 +127,7 @@ export class Cell {
     let neighbors = this.neighbors();
     for (let i = Directions.NORTH; i <= Directions.WEST; i++) {
       if (neighbors[i] === cell) {
-        this.setWallState(i, wallState.PRESENT);
+        this.setWallState(i, WallState.PRESENT);
         break;
       }
     }
@@ -228,7 +228,7 @@ export class Cell {
   }
 
   //SECTION - initialization methods
-  public init(gridx: number, gridy: number, x: number, y: number, length: number, wallState: wallState, type: CellType) {
+  public init(gridx: number, gridy: number, x: number, y: number, length: number, wallState: WallState, type: CellType) {
     this.gridx = gridx;
     this.gridy = gridy;
 
@@ -297,7 +297,8 @@ export class Cell {
         this.#y,
         this.#cellVector.currentlength,
         color,
-        wallState
+        // FIX: for now we will use fixed present state until we emplement the borders readonly state and better corner state management
+        WallState.PRESENT
       );
     }
   }
@@ -316,7 +317,7 @@ export class Cell {
     this.#redraw = true;
   }
 
-  resetWallAndLinks(state: wallState, currentAlgo: algosKeys) {
+  resetWallAndLinks(state: WallState, currentAlgo: algosKeys) {
     for (let i = 0; i < 4; i++) {
       if (this.neighbor(i))
         this.walls[i].setWallState(state);
@@ -437,7 +438,7 @@ export class Cell {
     }
   }
 
-  public setWallState(wallpos: Directions, state: wallState) {
+  public setWallState(wallpos: Directions, state: WallState) {
     if (wallpos < Directions.NORTH || wallpos > Directions.WEST) return;
 
     if (this.walls[wallpos].setWallState(state)) {
@@ -455,17 +456,17 @@ export class Cell {
 
   //SECTION - animation methods
 
-  #decideCornerState(cornerPos: CornerDirections, state: wallState): boolean {
+  #decideCornerState(cornerPos: CornerDirections, state: WallState): boolean {
     const firstWallState = this.walls[cornerRelations[cornerPos].first].getState();
     const secondWallState = this.walls[cornerRelations[cornerPos].second].getState();
 
-    if (state === wallState.PRESENT) {
+    if (state === WallState.PRESENT) {
       return (
         firstWallState === state ||
         secondWallState === state
       );
     }
-    else if (state === wallState.ABSENT) {
+    else if (state === WallState.ABSENT) {
       return (
         firstWallState === state &&
         secondWallState === state

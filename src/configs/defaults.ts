@@ -1,4 +1,4 @@
-import { wallState } from "./wall.config";
+import { WallState } from "./wall.config";
 
 export enum pageIndexs {
   summary, //NOTE - this is the index of the first page summary page
@@ -44,5 +44,5 @@ export enum inputDefaults {
   SUMMARYDEBUGPAGELENGTH = 250,
   SUMMARYDEBUGPAGEWIDTH = 250,
 
-  DEFAULTWALLSTATE = wallState.PRESENT,
+  DEFAULTWALLSTATE = WallState.ABSENT,
 }

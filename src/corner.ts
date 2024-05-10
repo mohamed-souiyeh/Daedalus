@@ -1,5 +1,5 @@
 import { CORNERCOLOR } from "./configs/corner.config.ts";
-import { WALL_PERSENTAGE, WallAnimation, wallState } from "./configs/wall.config.ts";
+import { WALL_PERSENTAGE, WallAnimation, WallState } from "./configs/wall.config.ts";
 import { Debuger } from "./debugger.ts";
 import { color } from "./types/color.type.ts";
 
@@ -52,7 +52,7 @@ export class Corner {
   #length: number;
   #width: number;
 
-  #state: wallState = wallState.PRESENT;
+  #state: WallState = WallState.PRESENT;
   #animation: number = WallAnimation.FADEIN;
   #targetedAlpha: number = CELLTARGETEDALPHA;
   #color: color = CORNERCOLOR;
@@ -61,9 +61,9 @@ export class Corner {
   //SECTION - initialization methods
   constructor() { }
 
-  #initState = (state: wallState) => {
+  #initState = (state: WallState) => {
     this.#state = state;
-    this.#targetedAlpha = state === wallState.PRESENT ? 0 : 1;
+    this.#targetedAlpha = state === WallState.PRESENT ? 0 : 1;
 
     this.#setAnimationAndTAlpha(state);
   }
@@ -74,7 +74,7 @@ export class Corner {
     celly: number,
     currentCellLength: number,
     color: color,
-    state: wallState
+    state: WallState
   ) {
     this.#posInCell = pos;
     this.#length = calculateWidth(currentCellLength);
@@ -105,16 +105,16 @@ export class Corner {
     return this.#targetedAlpha;
   }
 
-  #setAnimationAndTAlpha = (state: wallState) => {
-    this.#targetedAlpha = state === wallState.PRESENT ? CELLTARGETEDALPHA : 0;
+  #setAnimationAndTAlpha = (state: WallState) => {
+    this.#targetedAlpha = state === WallState.PRESENT ? CELLTARGETEDALPHA : 0;
 
     this.#animation =
-      state === wallState.PRESENT
+      state === WallState.PRESENT
         ? WallAnimation.FADEIN
         : WallAnimation.FADEOUT;
   };
 
-  public setcornerState(state: wallState) {
+  public setcornerState(state: WallState) {
     if (this.#state === state) return;
 
     this.#state = state;

@@ -5,6 +5,7 @@ import { algosKeys } from "./algos.config";
 import { inputDefaults } from "./defaults";
 import { Pos } from "../types/pos.type";
 import { Queue } from "../types/DataStructures/queue.type";
+import { WallState } from "./wall.config";
 
 export const globals = {
   canvas: null as HTMLCanvasElement | null,
@@ -22,6 +23,8 @@ export const globals = {
   debugModeOn: inputDefaults.DEBUGMODEON as unknown as boolean,
 
   debugBookletIsOn: inputDefaults.DEBUGBOOKLETISON as unknown as boolean,
+
+  WallsOn: inputDefaults.DEFAULTWALLSTATE as unknown as WallState,
 
   mouseCellPosIsLocked: inputDefaults.MOUSECELLPOSISLOCKED as unknown as boolean,
   BookletMouseCellPosIsLocked: inputDefaults.MOUSECELLPOSISLOCKED as unknown as boolean,

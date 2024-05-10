@@ -8,7 +8,7 @@ import { CELLSIZE, CellAnimation, CellStates, CellType, Directions } from "./con
 import { inputDefaults } from "./configs/defaults.ts";
 import { globals } from "./configs/globals.ts";
 import { mouse } from "./configs/input.config.ts";
-import { wallState } from "./configs/wall.config.ts";
+import { WallState } from "./configs/wall.config.ts";
 import { Debuger } from "./debugger.ts";
 import { Queue } from "./types/DataStructures/queue.type.ts";
 import { Stack } from "./types/DataStructures/stack.type.ts";
@@ -34,7 +34,7 @@ export class Grid {
   gridState: gridState = gridState.IDLE;
   currentAlgo: algosKeys;
 
-  #initialWallState: wallState = wallState.PRESENT;
+  #initialWallState: WallState = WallState.PRESENT;
 
   grid: Cell[][] = [];
 
@@ -70,7 +70,7 @@ export class Grid {
 
 
   //SECTION - initialization methods
-  constructor(canvasLength: number, canvasWidth: number, initialWallState: wallState = wallState.PRESENT) {
+  constructor(canvasLength: number, canvasWidth: number, initialWallState: WallState = WallState.PRESENT) {
     //FIXME - this is just for testing
     this.#length = Math.floor(canvasLength / CELLSIZE);
     this.#width = Math.floor(canvasWidth / CELLSIZE);
@@ -91,7 +91,7 @@ export class Grid {
     }
   }
 
-  public initialize(canvasLength: number, canvasWidth: number, wallState: wallState) {
+  public initialize(canvasLength: number, canvasWidth: number, wallState: WallState) {
 
     this.#startX = Math.floor((canvasLength - (this.#length * CELLSIZE)) / 2);
     this.#startY = Math.floor((canvasWidth - (this.#width * CELLSIZE)) * 0.5);
@@ -105,6 +105,7 @@ export class Grid {
     this.#offsetLeft = this.#startX;
     this.#offsetTop = this.#startY;
     this.gridState = gridState.IDLE;
+
 
     this.path = [];
     for (let y = 0; y < this.#width; y++) {
@@ -140,17 +141,24 @@ export class Grid {
       cell.east = this.at(x + 1, y);
       cell.west = this.at(x - 1, y);
 
+      if (globals.WallsOn === WallState.ABSENT) {
+        cell.link(cell.north);
+        cell.link(cell.south);
+        cell.link(cell.east);
+        cell.link(cell.west);
+      }
+
       if (cell.north === null) {
-        cell.walls[Directions.NORTH].setWallState(wallState.PRESENT);
+        cell.walls[Directions.NORTH].setWallState(WallState.PRESENT);
       }
       if (cell.south === null) {
-        cell.walls[Directions.SOUTH].setWallState(wallState.PRESENT);
+        cell.walls[Directions.SOUTH].setWallState(WallState.PRESENT);
       }
       if (cell.east === null) {
-        cell.walls[Directions.EAST].setWallState(wallState.PRESENT);
+        cell.walls[Directions.EAST].setWallState(WallState.PRESENT);
       }
       if (cell.west === null) {
-        cell.walls[Directions.WEST].setWallState(wallState.PRESENT);
+        cell.walls[Directions.WEST].setWallState(WallState.PRESENT);
       }
     }
   }
@@ -353,10 +361,10 @@ export class Grid {
   }
 
   public resetForBuildAlgo() {
-    let wallsState: wallState = wallState.PRESENT;
+    let wallsState: WallState = WallState.PRESENT;
 
     if (this.currentAlgo === algosKeys.recursiveDivider) {
-      wallsState = wallState.ABSENT;
+      wallsState = WallState.ABSENT;
       globals.reset = true;
       console.log("reseting for wall adder");
     }

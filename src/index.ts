@@ -1,6 +1,6 @@
 import { Grid } from "./grid.ts";
 import { DeltaTime } from "./deltaTime.ts";
-import { wallState } from "./configs/wall.config.ts";
+import { WallState } from "./configs/wall.config.ts";
 import { CELLSIZE, CellAnimation, CellStates } from "./configs/cell.config.ts";
 import { inputDefaults } from "./configs/defaults.ts";
 import { globals } from "./configs/globals.ts";
@@ -36,7 +36,7 @@ export function reset() {
     oldy: Math.floor(Math.random() * grid.width),
   }
 
-  grid.initialize(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
+  grid.initialize(canvas.width, canvas.height, globals.WallsOn);
   globals.reset = true;
   globals.needclear = false;
 
@@ -65,7 +65,7 @@ export function setup() {
   canvas.height = canvas.offsetHeight;
 
 
-  grid = new Grid(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
+  grid = new Grid(canvas.width, canvas.height, globals.WallsOn);
 
   globals.start = {
     x: 0,
@@ -88,7 +88,7 @@ export function setup() {
     oldy: Math.floor(Math.random() * grid.width),
   }
 
-  grid.initialize(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
+  grid.initialize(canvas.width, canvas.height, globals.WallsOn);
   globals.reset = true;
   globals.animatePath = false;
   globals.startAlgo = false;
