@@ -69,30 +69,30 @@ export function setup() {
 
   grid = new Grid(canvas.width, canvas.height, globals.WallsOn);
 
-  let _length: number = grid.length;
-  let _width: number = grid.width;
+  let _lengthPos: number = 0.25;
+  let _widthPos: number = 0.5;
 
   if (grid.length < grid.width) {
-    _length = grid.width;
-    _width = grid.length
+    _lengthPos = 0.5;
+    _widthPos = 0.25;
   }
 
   globals.start = {
-    x: Math.floor(_length * 0.25),
-    y: Math.floor(_width * 0.5),
+    x: Math.floor(grid.length * _lengthPos),
+    y: Math.floor(grid.width * _widthPos),
     oldx: globals.start.x,
     oldy: globals.start.y,
   }
 
   globals.finish = {
-    x: Math.floor(_length * 0.75),
-    y: Math.floor(_width * 0.5),
+    x: Math.floor(grid.length * (1 - _lengthPos)),
+    y: Math.floor(grid.width * (1 - _widthPos)),
     oldx: globals.finish.x,
     oldy: globals.finish.y,
   }
 
-  // console.log(_length, _width);
-  // console.log(globals.start, globals.finish);
+  console.log(_lengthPos, _widthPos);
+  console.log(globals.start, globals.finish);
   globals.depthFilterPos = {
     x: Math.floor(Math.random() * grid.length),
     y: Math.floor(Math.random() * grid.width),
