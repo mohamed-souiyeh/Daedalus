@@ -46,8 +46,9 @@ export const mazeSolvingAlgorithms = [
   //   key: algosKeys.Astar,
   //   name: "A* Algorithm",
   // },
-  // {
-  //   key: algosKeys.Dijkstra,
-  //   name: "Dijkstra's Algorithm",
-  // },
+  {
+    key: algosKeys.Dijkstra,
+    name: "Dijkstra's Algorithm",
+    description: "well it is dijkstra",
+  },
 ];

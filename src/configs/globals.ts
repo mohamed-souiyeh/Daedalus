@@ -6,6 +6,7 @@ import { inputDefaults } from "./defaults";
 import { Pos } from "../types/pos.type";
 import { Queue } from "../types/DataStructures/queue.type";
 import { WallState } from "./wall.config";
+import { PriorityQueue } from "../types/DataStructures/maxPriorityQueue.types";
 
 export const globals = {
   canvas: null as HTMLCanvasElement | null,
@@ -42,7 +43,7 @@ export const globals = {
   depthNumbers: inputDefaults.DEPTHNUMBERS as unknown as boolean,
   depthFilterPos: { x: 0, y: 0, oldx: 0, oldy: 0 } as Pos,
   replaceDepthFilterPos: false as boolean,
-  updateDepthFilter: false as boolean,
+  updateDepthFilter: true as boolean,
   gridRedraw: false as boolean,
   colorComposition: {
     r: false,
@@ -68,6 +69,7 @@ export const globals = {
   skipAlgoAnimaiton: false as boolean,
   BuildStack: new Stack<Frame>(),
   searchQueue: new Queue<Frame>(),
+  minQueue: new PriorityQueue<Frame>((rhs: Frame, lhs: Frame) => rhs.weight < lhs.weight),
 
   // NOTE: SVGs
   gridOffsetLeft: 0,
@@ -80,4 +82,5 @@ export const globals = {
   finishPath: svgPath,
   depthFilterPath: svgPath,
   weightedNodePath: svgPath,
+  mouseUpdating: false,
 }

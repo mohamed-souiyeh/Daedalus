@@ -111,7 +111,7 @@ export const Navbar = () => {
   }
 
   const [depthFilterColor, setDepthFilterColor] = useState("primary");
-  const [disableDepthFilter, setDisableDepthFilter] = useState(!globals.depthFilterOn);
+  const [disableDepthFilter, setDisableDepthFilter] = useState(globals.depthFilterOn);
 
   const addDepthFilter = () => {
     if (globals.startAlgo) {
