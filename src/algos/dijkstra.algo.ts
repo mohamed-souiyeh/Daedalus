@@ -5,6 +5,17 @@ import { globals } from "../configs/globals";
 import { Grid } from "../grid";
 import { Frame, algoState } from "../types/algos.types";
 
+function preparePath(grid: Grid, currentCell: Cell) {
+  globals.skipAlgoAnimaiton = false;
+  console.log("yeeep there is a path");
+  globals.animatePath = true;
+  let cell = currentCell;
+  while (!(cell.gridx === globals.start.x && cell.gridy === globals.start.y)) {
+    grid.path.push(cell);
+    cell = cell.parrent as unknown as Cell;
+  }
+  grid.path.push(cell);
+}
 
 export function dijkstra(grid: Grid) {
 
@@ -36,15 +47,7 @@ export function dijkstra(grid: Grid) {
   }
 
   if (currentCell.gridx === globals.finish.x && currentCell.gridy === globals.finish.y) {
-    globals.skipAlgoAnimaiton = false;
-    console.log("yeeep there is a path");
-    globals.animatePath = true;
-    let cell = currentCell;
-    while (!(cell.gridx === globals.start.x && cell.gridy === globals.start.y)) {
-      grid.path.push(cell);
-      cell = cell.parrent as unknown as Cell;
-    }
-    grid.path.push(cell);
+    preparePath(grid, currentCell);
     return algoState.foundPath;
   }
 
@@ -64,6 +67,10 @@ export function dijkstra(grid: Grid) {
 
       let frame: Frame = new Frame(nextCell!.gridx, nextCell!.gridy, grid.currentAlgo, nextCell!.weight);
       globals.minQueue.enqueue(frame);
+      if (nextCell.gridx === globals.finish.x && nextCell!.gridy === globals.finish.y) {
+        preparePath(grid, nextCell);
+        return algoState.foundPath;
+      }
     }
   }
   currentCell.setState(CellStates.visited);

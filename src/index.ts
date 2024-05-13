@@ -69,20 +69,30 @@ export function setup() {
 
   grid = new Grid(canvas.width, canvas.height, globals.WallsOn);
 
+  let _length: number = grid.length;
+  let _width: number = grid.width;
+
+  if (grid.length < grid.width) {
+    _length = grid.width;
+    _width = grid.length
+  }
+
   globals.start = {
-    x: 0,
-    y: 0,
+    x: Math.floor(_length * 0.25),
+    y: Math.floor(_width * 0.5),
     oldx: globals.start.x,
     oldy: globals.start.y,
   }
 
   globals.finish = {
-    x: grid.length - 1,
-    y: grid.width - 1,
+    x: Math.floor(_length * 0.75),
+    y: Math.floor(_width * 0.5),
     oldx: globals.finish.x,
     oldy: globals.finish.y,
   }
 
+  // console.log(_length, _width);
+  // console.log(globals.start, globals.finish);
   globals.depthFilterPos = {
     x: Math.floor(Math.random() * grid.length),
     y: Math.floor(Math.random() * grid.width),
@@ -116,35 +126,6 @@ export function setup() {
 
   globals.setup = true;
   globals.currentAnimation = requestAnimationFrame(animation);
-
-
-
-  let array: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  const PQueue: PriorityQueue<number> = new PriorityQueue((lhs, rhs) => lhs < rhs);
-
-
-  PQueue.enqueue(1);
-  PQueue.print();
-  PQueue.enqueue(2);
-  PQueue.print();
-  PQueue.enqueue(3);
-  PQueue.print();
-  PQueue.enqueue(4);
-  PQueue.print();
-  PQueue.enqueue(5);
-  PQueue.print();
-  PQueue.enqueue(6);
-  PQueue.print();
-  PQueue.dequeue();
-  PQueue.print();
-  PQueue.dequeue();
-  PQueue.print();
-  PQueue.dequeue();
-  PQueue.print();
-  PQueue.dequeue();
-  PQueue.print();
-  PQueue.dequeue();
-  PQueue.print();
 }
 
 export function animation(dt: number) {
