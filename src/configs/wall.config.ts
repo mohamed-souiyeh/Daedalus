@@ -15,7 +15,7 @@ export enum WallAnimation {
   STOPPED,
 }
 
-export enum wallState {
+export enum WallState {
   ABSENT,
   PRESENT,
 }

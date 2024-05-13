@@ -6,9 +6,9 @@ import { Grid } from "../grid";
 import { Frame, algoState } from "../types/algos.types";
 
 
-export function bfs(grid: Grid) {
+export function dijkstra(grid: Grid) {
 
-  if (globals.searchQueue.size() === 0) {
+  if (globals.minQueue.size() === 0) {
     globals.skipAlgoAnimaiton = false;
     console.log("there is no Path");
     toast.error("there is no path", {
@@ -25,7 +25,7 @@ export function bfs(grid: Grid) {
     return algoState.noPath;
   }
 
-  const current = globals.searchQueue.dequeue();
+  const current = globals.minQueue.dequeue();
   const currentCell = grid.at(current!.x, current!.y);
 
   if (currentCell === null) {
@@ -63,12 +63,14 @@ export function bfs(grid: Grid) {
       nextCell!.distenceFromStart = nextCell!.parrent!.distenceFromStart + 1;
 
       let frame: Frame = new Frame(nextCell!.gridx, nextCell!.gridy, grid.currentAlgo, nextCell!.weight);
-      globals.searchQueue.enqueue(frame);
+      globals.minQueue.enqueue(frame);
     }
   }
   currentCell.setState(CellStates.visited);
-  if (globals.searchQueue.size())
-    grid.at(globals.searchQueue.peek()!.x, globals.searchQueue.peek()!.y)?.setState(CellStates.current);
+  if (globals.minQueue.size())
+    grid.at(globals.minQueue.peek()!.x, globals.minQueue.peek()!.y)?.setState(CellStates.current);
 
   return algoState.searching;
 }
+
+

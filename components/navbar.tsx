@@ -111,7 +111,7 @@ export const Navbar = () => {
   }
 
   const [depthFilterColor, setDepthFilterColor] = useState("primary");
-  const [disableDepthFilter, setDisableDepthFilter] = useState(!globals.depthFilterOn);
+  const [disableDepthFilter, setDisableDepthFilter] = useState(globals.depthFilterOn);
 
   const addDepthFilter = () => {
     if (globals.startAlgo) {
@@ -334,7 +334,7 @@ export const Navbar = () => {
                         Daedalus
                       </h1>
                       <h3 >
-                        Tutorial
+                        Tutorial (deprecated and needs an update)
                       </h3>
                     </ModalHeader>
                     <ModalBody className="flex flex-col items-center gap-1">

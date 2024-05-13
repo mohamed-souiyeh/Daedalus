@@ -31,6 +31,7 @@ interface BuildWall {
 export class Frame {
   x: number;
   y: number;
+  weight: number;
   moves: Directions[];
 
 
@@ -39,14 +40,15 @@ export class Frame {
   width: number;
   buildingWall: BuildWall;
 
-  constructor(x: number, y: number, algo: algosKeys, length: number = 0, width: number = 0) {
+  constructor(x: number, y: number, algo: algosKeys, weight: number, length: number = 0, width: number = 0) {
     this.x = x;
     this.y = y;
+    this.weight = weight;
 
     // console.log(algo);
     if (algo === algosKeys.RandomWalkDFS)
       this.moves = shuffleCellDirections(shuffleCellDirections([Directions.NORTH, Directions.EAST, Directions.SOUTH, Directions.WEST]));
-    else if (algo === algosKeys.BFS)
+    else if (algo === algosKeys.BFS || algo === algosKeys.Dijkstra)
       this.moves = [Directions.EAST, Directions.SOUTH, Directions.WEST, Directions.NORTH];
 
     this.length = length;

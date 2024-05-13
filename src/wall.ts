@@ -1,4 +1,4 @@
-import { WALLCOLOR, WALL_PERSENTAGE, WALL_TARGETEDALPHA, WallAnimation, wallState } from "./configs/wall.config.ts";
+import { WALLCOLOR, WALL_PERSENTAGE, WALL_TARGETEDALPHA, WallAnimation, WallState } from "./configs/wall.config.ts";
 import { Debuger } from "./debugger.ts";
 import { color } from "./types/color.type.ts";
 
@@ -72,7 +72,7 @@ export class Wall {
   #length: number;
   #width: number;
 
-  #state: wallState = wallState.PRESENT;
+  #state: WallState = WallState.PRESENT;
   #animation: WallAnimation = WallAnimation.FADEIN;
   #targetedAlpha: number = WALL_TARGETEDALPHA;
   #color: color = Object.create(WALLCOLOR);
@@ -83,9 +83,9 @@ export class Wall {
   //SECTION - initialization methods
   constructor() { }
 
-  #initState = (state: wallState) => {
+  #initState = (state: WallState) => {
     this.#state = state;
-    this.#color.a = state === wallState.PRESENT ? 0 : WALL_TARGETEDALPHA;
+    this.#color.a = state === WallState.PRESENT ? 0 : WALL_TARGETEDALPHA;
 
     this.#setAnimationAndTAlpha(state);
   };
@@ -96,7 +96,7 @@ export class Wall {
     celly: number,
     currentCellLength: number,
     color: color,
-    state: wallState
+    state: WallState
   ) {
     this.#posInCell = pos;
     this.#calculateLength = wallMoves[pos].cl;
@@ -135,15 +135,15 @@ export class Wall {
     return this.#targetedAlpha;
   }
 
-  #setAnimationAndTAlpha = (state: wallState) => {
-    this.#targetedAlpha = state === wallState.PRESENT ? WALL_TARGETEDALPHA : 0;
+  #setAnimationAndTAlpha = (state: WallState) => {
+    this.#targetedAlpha = state === WallState.PRESENT ? WALL_TARGETEDALPHA : 0;
     this.#animation =
-      state === wallState.PRESENT
+      state === WallState.PRESENT
         ? WallAnimation.FADEIN
         : WallAnimation.FADEOUT;
   };
 
-  public setWallState(state: wallState) {
+  public setWallState(state: WallState) {
     if (state === this.#state) return false;
 
     this.#state = state;

@@ -1,4 +1,5 @@
 import { bfs } from "./algos/bfs.algo.ts";
+import { dijkstra } from "./algos/dijkstra.algo.ts";
 import { randomWalkDFS } from "./algos/randomWalkDFS.algo.ts";
 import { recursiveDivider } from "./algos/recursiveDivider.algo.ts";
 import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.ts";
@@ -8,7 +9,7 @@ import { CELLSIZE, CellAnimation, CellStates, CellType, Directions } from "./con
 import { inputDefaults } from "./configs/defaults.ts";
 import { globals } from "./configs/globals.ts";
 import { mouse } from "./configs/input.config.ts";
-import { wallState } from "./configs/wall.config.ts";
+import { WallState } from "./configs/wall.config.ts";
 import { Debuger } from "./debugger.ts";
 import { Queue } from "./types/DataStructures/queue.type.ts";
 import { Stack } from "./types/DataStructures/stack.type.ts";
@@ -34,7 +35,7 @@ export class Grid {
   gridState: gridState = gridState.IDLE;
   currentAlgo: algosKeys;
 
-  #initialWallState: wallState = wallState.PRESENT;
+  #initialWallState: WallState = WallState.PRESENT;
 
   grid: Cell[][] = [];
 
@@ -70,7 +71,7 @@ export class Grid {
 
 
   //SECTION - initialization methods
-  constructor(canvasLength: number, canvasWidth: number, initialWallState: wallState = wallState.PRESENT) {
+  constructor(canvasLength: number, canvasWidth: number, initialWallState: WallState = WallState.PRESENT) {
     //FIXME - this is just for testing
     this.#length = Math.floor(canvasLength / CELLSIZE);
     this.#width = Math.floor(canvasWidth / CELLSIZE);
@@ -91,7 +92,7 @@ export class Grid {
     }
   }
 
-  public initialize(canvasLength: number, canvasWidth: number, wallState: wallState) {
+  public initialize(canvasLength: number, canvasWidth: number, wallState: WallState) {
 
     this.#startX = Math.floor((canvasLength - (this.#length * CELLSIZE)) / 2);
     this.#startY = Math.floor((canvasWidth - (this.#width * CELLSIZE)) * 0.5);
@@ -105,6 +106,7 @@ export class Grid {
     this.#offsetLeft = this.#startX;
     this.#offsetTop = this.#startY;
     this.gridState = gridState.IDLE;
+
 
     this.path = [];
     for (let y = 0; y < this.#width; y++) {
@@ -140,17 +142,24 @@ export class Grid {
       cell.east = this.at(x + 1, y);
       cell.west = this.at(x - 1, y);
 
+      if (globals.WallsOn === WallState.ABSENT) {
+        cell.link(cell.north);
+        cell.link(cell.south);
+        cell.link(cell.east);
+        cell.link(cell.west);
+      }
+
       if (cell.north === null) {
-        cell.walls[Directions.NORTH].setWallState(wallState.PRESENT);
+        cell.walls[Directions.NORTH].setWallState(WallState.PRESENT);
       }
       if (cell.south === null) {
-        cell.walls[Directions.SOUTH].setWallState(wallState.PRESENT);
+        cell.walls[Directions.SOUTH].setWallState(WallState.PRESENT);
       }
       if (cell.east === null) {
-        cell.walls[Directions.EAST].setWallState(wallState.PRESENT);
+        cell.walls[Directions.EAST].setWallState(WallState.PRESENT);
       }
       if (cell.west === null) {
-        cell.walls[Directions.WEST].setWallState(wallState.PRESENT);
+        cell.walls[Directions.WEST].setWallState(WallState.PRESENT);
       }
     }
   }
@@ -159,6 +168,7 @@ export class Grid {
     this.#algos.set(algosKeys.RandomWalkDFS, randomWalkDFS);
     this.#algos.set(algosKeys.recursiveDivider, recursiveDivider);
     this.#algos.set(algosKeys.BFS, bfs);
+    this.#algos.set(algosKeys.Dijkstra, dijkstra);
   }
   //!SECTION
 
@@ -217,6 +227,7 @@ export class Grid {
   }
 
   public depthFilter() {
+    console.log("updating depth filter");
     const gridcp = Array<CellStates[]>(this.width);
 
     for (let y = 0; y < this.#width; y++) {
@@ -228,7 +239,7 @@ export class Grid {
 
     const queue: Queue<Frame> = new Queue<Frame>();
 
-    queue.enqueue(new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, algosKeys.BFS));
+    queue.enqueue(new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, algosKeys.BFS, 0));
 
     this.grid[queue.peek()!.y][queue.peek()!.x].depth = 0;
     gridcp[queue.peek()!.y][queue.peek()!.x] = CellStates.inqueue;
@@ -245,7 +256,7 @@ export class Grid {
         if (gridcp[cell!.gridy][cell!.gridx] === CellStates.unvisited && currentCell?.islinked(cell)) {
           cell!.depth = currentCell!.depth + 1;
           gridcp[cell!.gridy][cell!.gridx] = CellStates.inqueue;
-          queue.enqueue(new Frame(cell!.gridx, cell!.gridy, algosKeys.BFS));
+          queue.enqueue(new Frame(cell!.gridx, cell!.gridy, algosKeys.BFS, 0));
         }
       }
 
@@ -301,7 +312,7 @@ export class Grid {
       globals.skipAlgoAnimaiton = false;
       globals.startAlgo = false;
       globals.updateDepthFilter = true;
-      globals.needclear = this.currentAlgo === algosKeys.recursiveDivider ? false : true;
+      globals.needclear = true;
       globals.setDisableLaunch(false);
       globals.setDisableDepthFilter(false);
       this.gridState = gridState.IDLE;
@@ -310,7 +321,9 @@ export class Grid {
       globals.skipAlgoAnimaiton = false;
       globals.needclear = true;
       globals.startAlgo = false;
+      globals.updateDepthFilter = true;
       globals.setDisableLaunch(false);
+      globals.setDisableDepthFilter(false);
       this.gridState = gridState.IDLE;
     }
   }
@@ -353,10 +366,10 @@ export class Grid {
   }
 
   public resetForBuildAlgo() {
-    let wallsState: wallState = wallState.PRESENT;
+    let wallsState: WallState = WallState.PRESENT;
 
     if (this.currentAlgo === algosKeys.recursiveDivider) {
-      wallsState = wallState.ABSENT;
+      wallsState = WallState.ABSENT;
       globals.reset = true;
       console.log("reseting for wall adder");
     }
@@ -378,9 +391,9 @@ export class Grid {
 
       let frame: Frame;
       if (this.currentAlgo === algosKeys.recursiveDivider)
-        frame = new Frame(0, 0, this.currentAlgo, this.length, this.width);
+        frame = new Frame(0, 0, this.currentAlgo, this.at(0, 0)!.weight, this.length, this.width);
       else
-        frame = new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, this.currentAlgo);
+        frame = new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, this.currentAlgo, this.at(globals.depthFilterPos.x, globals.depthFilterPos.y)!.weight);
 
       globals.BuildStack.push(frame);
     }
@@ -389,17 +402,19 @@ export class Grid {
       this.currentAlgo = globals.mazeSolvingAlgorithm;
       globals.mazeSolvingAlgorithm = null;
       globals.searchQueue.clear();
+      globals.minQueue.clear();
       this.path = [];
       if (globals.needclear) {
         globals.reset = true;
         this.resetForSearchAlgo();
       }
-      const frame = new Frame(globals.start.x, globals.start.y, this.currentAlgo);
+      const frame = new Frame(globals.start.x, globals.start.y, this.currentAlgo, this.at(globals.start.x, globals.start.y)!.weight);
 
 
       this.at(frame.x, frame.y)!.parrent = null;
       this.at(frame.x, frame.y)!.distenceFromStart = 0;
       globals.searchQueue.enqueue(frame);
+      globals.minQueue.enqueue(frame);
     }
     else {
       globals.skipAlgoAnimaiton = false;
@@ -421,8 +436,13 @@ export class Grid {
     if (globals.replaceDepthFilterPos &&
       (globals.depthFilterPos.oldx >= 0 && globals.depthFilterPos.oldx < this.length && globals.depthFilterPos.oldy >= 0 && globals.depthFilterPos.oldy < this.width)) {
       this.grid[globals.depthFilterPos.oldy][globals.depthFilterPos.oldx].setCellType(CellType.air);
-      globals.replaceDepthFilterPos = false;
     }
+
+    if (globals.replaceDepthFilterPos &&
+      (globals.depthFilterPos.oldx >= 0 && globals.depthFilterPos.oldx < this.length && globals.depthFilterPos.oldy >= 0 && globals.depthFilterPos.oldy < this.width)) {
+      this.grid[globals.depthFilterPos.oldy][globals.depthFilterPos.oldx].setCellType(CellType.filter);
+    }
+
 
     if (globals.replaceStart &&
       (globals.start.oldx >= 0 && globals.start.oldx < this.length && globals.start.oldy >= 0 && globals.start.oldy < this.width)) {
@@ -432,7 +452,6 @@ export class Grid {
     if (globals.replaceStart &&
       (globals.start.x >= 0 && globals.start.x < this.length && globals.start.y >= 0 && globals.start.y < this.width)) {
       this.grid[globals.start.y][globals.start.x].setCellType(CellType.start);
-      globals.replaceStart = false;
     }
 
     if (globals.replaceFinish &&
@@ -443,9 +462,9 @@ export class Grid {
     if (globals.replaceFinish &&
       (globals.finish.x >= 0 && globals.finish.x < this.length && globals.finish.y >= 0 && globals.finish.y < this.width)) {
       this.grid[globals.finish.y][globals.finish.x].setCellType(CellType.finish);
-      globals.replaceFinish = false;
     }
 
+    globals.mouseUpdating = false;
 
     if (globals.reset) {
       this.resetPatternMKI();

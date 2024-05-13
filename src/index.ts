@@ -1,10 +1,12 @@
 import { Grid } from "./grid.ts";
 import { DeltaTime } from "./deltaTime.ts";
-import { wallState } from "./configs/wall.config.ts";
+import { WallState } from "./configs/wall.config.ts";
 import { CELLSIZE, CellAnimation, CellStates } from "./configs/cell.config.ts";
 import { inputDefaults } from "./configs/defaults.ts";
 import { globals } from "./configs/globals.ts";
 import svgPath from "svgpath";
+import { PriorityQueue } from "./types/DataStructures/maxPriorityQueue.types.ts";
+import { shuffleCellDirections } from "./algos/randomWalkDFS.utils.ts";
 
 let deltaTime: DeltaTime;
 let grid: Grid;
@@ -36,7 +38,7 @@ export function reset() {
     oldy: Math.floor(Math.random() * grid.width),
   }
 
-  grid.initialize(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
+  grid.initialize(canvas.width, canvas.height, globals.WallsOn);
   globals.reset = true;
   globals.needclear = false;
 
@@ -65,7 +67,7 @@ export function setup() {
   canvas.height = canvas.offsetHeight;
 
 
-  grid = new Grid(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
+  grid = new Grid(canvas.width, canvas.height, globals.WallsOn);
 
   globals.start = {
     x: 0,
@@ -88,7 +90,7 @@ export function setup() {
     oldy: Math.floor(Math.random() * grid.width),
   }
 
-  grid.initialize(canvas.width, canvas.height, inputDefaults.DEFAULTWALLSTATE as unknown as wallState);
+  grid.initialize(canvas.width, canvas.height, globals.WallsOn);
   globals.reset = true;
   globals.animatePath = false;
   globals.startAlgo = false;
@@ -114,6 +116,35 @@ export function setup() {
 
   globals.setup = true;
   globals.currentAnimation = requestAnimationFrame(animation);
+
+
+
+  let array: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const PQueue: PriorityQueue<number> = new PriorityQueue((lhs, rhs) => lhs < rhs);
+
+
+  PQueue.enqueue(1);
+  PQueue.print();
+  PQueue.enqueue(2);
+  PQueue.print();
+  PQueue.enqueue(3);
+  PQueue.print();
+  PQueue.enqueue(4);
+  PQueue.print();
+  PQueue.enqueue(5);
+  PQueue.print();
+  PQueue.enqueue(6);
+  PQueue.print();
+  PQueue.dequeue();
+  PQueue.print();
+  PQueue.dequeue();
+  PQueue.print();
+  PQueue.dequeue();
+  PQueue.print();
+  PQueue.dequeue();
+  PQueue.print();
+  PQueue.dequeue();
+  PQueue.print();
 }
 
 export function animation(dt: number) {

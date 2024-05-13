@@ -78,6 +78,7 @@ export enum CellType {
   finish,
   air,
   weighted,
+  filter,
 }
 
 export enum CellStates {
