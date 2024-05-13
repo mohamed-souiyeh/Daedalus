@@ -9,7 +9,6 @@ import { PriorityQueue } from "./types/DataStructures/maxPriorityQueue.types.ts"
 import { shuffleCellDirections } from "./algos/randomWalkDFS.utils.ts";
 
 let deltaTime: DeltaTime;
-let grid: Grid;
 let counter: number;
 
 
@@ -32,13 +31,13 @@ export function reset() {
   globals.mazeBuildingAlgorithm = null;
 
   globals.depthFilterPos = {
-    x: Math.floor(Math.random() * grid.length),
-    y: Math.floor(Math.random() * grid.width),
-    oldx: Math.floor(Math.random() * grid.length),
-    oldy: Math.floor(Math.random() * grid.width),
+    x: Math.floor(Math.random() * globals.grid.length),
+    y: Math.floor(Math.random() * globals.grid.width),
+    oldx: Math.floor(Math.random() * globals.grid.length),
+    oldy: Math.floor(Math.random() * globals.grid.width),
   }
 
-  grid.initialize(canvas.width, canvas.height, globals.WallsOn);
+  globals.grid.initialize(canvas.width, canvas.height, globals.WallsOn);
   globals.reset = true;
   globals.needclear = false;
 
@@ -67,26 +66,26 @@ export function setup() {
   canvas.height = canvas.offsetHeight;
 
 
-  grid = new Grid(canvas.width, canvas.height, globals.WallsOn);
+  globals.grid = new Grid(canvas.width, canvas.height, globals.WallsOn);
 
   let _lengthPos: number = 0.25;
   let _widthPos: number = 0.5;
 
-  if (grid.length < grid.width) {
+  if (globals.grid.length < globals.grid.width) {
     _lengthPos = 0.5;
     _widthPos = 0.25;
   }
 
   globals.start = {
-    x: Math.floor(grid.length * _lengthPos),
-    y: Math.floor(grid.width * _widthPos),
+    x: Math.floor(globals.grid.length * _lengthPos),
+    y: Math.floor(globals.grid.width * _widthPos),
     oldx: globals.start.x,
     oldy: globals.start.y,
   }
 
   globals.finish = {
-    x: Math.floor(grid.length * (1 - _lengthPos)),
-    y: Math.floor(grid.width * (1 - _widthPos)),
+    x: Math.floor(globals.grid.length * (1 - _lengthPos)),
+    y: Math.floor(globals.grid.width * (1 - _widthPos)),
     oldx: globals.finish.x,
     oldy: globals.finish.y,
   }
@@ -94,20 +93,20 @@ export function setup() {
   console.log(_lengthPos, _widthPos);
   console.log(globals.start, globals.finish);
   globals.depthFilterPos = {
-    x: Math.floor(Math.random() * grid.length),
-    y: Math.floor(Math.random() * grid.width),
-    oldx: Math.floor(Math.random() * grid.length),
-    oldy: Math.floor(Math.random() * grid.width),
+    x: Math.floor(Math.random() * globals.grid.length),
+    y: Math.floor(Math.random() * globals.grid.width),
+    oldx: Math.floor(Math.random() * globals.grid.length),
+    oldy: Math.floor(Math.random() * globals.grid.width),
   }
 
-  grid.initialize(canvas.width, canvas.height, globals.WallsOn);
+  globals.grid.initialize(canvas.width, canvas.height, globals.WallsOn);
   globals.reset = true;
   globals.animatePath = false;
   globals.startAlgo = false;
   globals.needclear = false;
 
-  globals.gridOffsetLeft = Math.floor((canvas.width - (grid.length * CELLSIZE)) / 2);
-  globals.gridOffsetTop = Math.floor((canvas.height - (grid.width * CELLSIZE)) * 0.5);
+  globals.gridOffsetLeft = Math.floor((canvas.width - (globals.grid.length * CELLSIZE)) / 2);
+  globals.gridOffsetTop = Math.floor((canvas.height - (globals.grid.width * CELLSIZE)) * 0.5);
 
   globals.homePath = new svgPath("M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z");
   globals.homePath.scale(0.038).round(1).rel();
@@ -149,7 +148,7 @@ export function animation(dt: number) {
 
   if (deltaTime.oneStepIsDone()) {
     startTime = performance.now();
-    grid.update(ctx);
+    globals.grid.update(ctx);
     elapsedTime = performance.now() - startTime;
     // console.debug("grid.update time => ", elapsedTime);
 
@@ -158,14 +157,14 @@ export function animation(dt: number) {
 
     if (globals.updateDepthFilter) {
       console.log("depth filter updated");
-      grid.depthFilter();
+      globals.grid.depthFilter();
       globals.updateDepthFilter = false;
     }
     if (counter % inputDefaults.ALGOSPEED === 0 && globals.reset === false) {
       if (globals.startAlgo)
-        grid.launchAlgo();
+        globals.grid.launchAlgo();
       if (globals.animatePath)
-        grid.animatePath();
+        globals.grid.animatePath();
     }
     counter++;
     elapsedTime = performance.now() - startTime;
@@ -185,12 +184,12 @@ export function animation(dt: number) {
   //   ctx.fillStyle = "gold";
   //   ctx.fill(p);
   // }
-  grid.draw(ctx);
+  globals.grid.draw(ctx);
   elapsedTime = performance.now() - startTime;
   // console.debug("grid.draw time => ", elapsedTime);
 
   if (deltaTime.oneDebugStepIsDone()) {
-    grid.updateDebuger(globals.ctx as CanvasRenderingContext2D);
-    grid.drawDebuger(globals.ctx as CanvasRenderingContext2D);
+    globals.grid.updateDebuger(globals.ctx as CanvasRenderingContext2D);
+    globals.grid.drawDebuger(globals.ctx as CanvasRenderingContext2D);
   }
 }

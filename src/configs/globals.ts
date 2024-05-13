@@ -7,8 +7,11 @@ import { Pos } from "../types/pos.type";
 import { Queue } from "../types/DataStructures/queue.type";
 import { WallState } from "./wall.config";
 import { PriorityQueue } from "../types/DataStructures/maxPriorityQueue.types";
+import { Grid } from "../grid";
 
 export const globals = {
+  grid: new Grid(0, 0),
+
   canvas: null as HTMLCanvasElement | null,
 
   ctx: null as CanvasRenderingContext2D | null,
