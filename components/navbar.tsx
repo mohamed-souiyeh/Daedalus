@@ -334,7 +334,7 @@ export const Navbar = () => {
                         Daedalus
                       </h1>
                       <h3 >
-                        Tutorial
+                        Tutorial (deprecated and needs an update)
                       </h3>
                     </ModalHeader>
                     <ModalBody className="flex flex-col items-center gap-1">
