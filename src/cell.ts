@@ -312,7 +312,7 @@ export class Cell {
 
   setCellType(type: CellType) {
     this.#cellType = type;
-    this.weight = 0;
+    this.weight = 1;
     if (type === CellType.weighted)
       this.weight = inputDefaults.NODEWEIGHT;
     this.#redraw = true;

@@ -50,13 +50,31 @@ export class PriorityQueue<T> implements IQueue<T>{
 
       this.storage[largest] = this.storage[index];
       this.storage[index] = tmp;
+
       this.heapfy(largest);
     }
   }
 
   private buildHeap() {
-    for (let i = this.size() / 2; i >= 0; i--)
+    for (let i = Math.floor(this.size() / 2); i >= 0; i--)
       this.heapfy(i);
+  }
+
+  updatePriority(item: T, updateKey: (item: T) => void): void {
+    let index = 0;
+    for (; this.storage[index] !== item; index++)
+      ;
+
+    updateKey(item);
+    while (index > 0 && this.operator(this.storage[index], this.storage[Math.floor(this.parrent(index + 1) - 1)])) {
+      let tmp = this.storage[Math.floor(this.parrent(index + 1) - 1)];
+
+      this.storage[Math.floor(this.parrent(index + 1) - 1)] = this.storage[index];
+      this.storage[index] = tmp;
+
+      index = Math.floor(this.parrent(index + 1) - 1);
+      console.log("index: ", index);
+    }
   }
 
   enqueue(item: T): void {
@@ -85,6 +103,6 @@ export class PriorityQueue<T> implements IQueue<T>{
   }
 
   print() {
-    console.log("max queue elements: ", this.storage.join(", "));
+    console.log("max queue elements: ", this.storage);
   }
 }

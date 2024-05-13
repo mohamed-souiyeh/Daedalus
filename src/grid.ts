@@ -239,7 +239,7 @@ export class Grid {
 
     const queue: Queue<Frame> = new Queue<Frame>();
 
-    queue.enqueue(new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, algosKeys.BFS, 0));
+    queue.enqueue(new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, algosKeys.BFS, null));
 
     this.grid[queue.peek()!.y][queue.peek()!.x].depth = 0;
     gridcp[queue.peek()!.y][queue.peek()!.x] = CellStates.inqueue;
@@ -256,7 +256,7 @@ export class Grid {
         if (gridcp[cell!.gridy][cell!.gridx] === CellStates.unvisited && currentCell?.islinked(cell)) {
           cell!.depth = currentCell!.depth + 1;
           gridcp[cell!.gridy][cell!.gridx] = CellStates.inqueue;
-          queue.enqueue(new Frame(cell!.gridx, cell!.gridy, algosKeys.BFS, 0));
+          queue.enqueue(new Frame(cell!.gridx, cell!.gridy, algosKeys.BFS, null));
         }
       }
 
@@ -337,6 +337,7 @@ export class Grid {
         this.#currentResetColumn = 0;
         this.#resetPatternDirection = this.#resetPatternDirection * -1;
         globals.reset = false;
+        globals.updateDepthFilter = true;
       }
       return;
     }
@@ -345,6 +346,7 @@ export class Grid {
         this.#currentResetColumn = this.length - 1;
         this.#resetPatternDirection = this.#resetPatternDirection * -1;
         globals.reset = false;
+        globals.updateDepthFilter = true;
       }
       return;
     }
@@ -391,9 +393,9 @@ export class Grid {
 
       let frame: Frame;
       if (this.currentAlgo === algosKeys.recursiveDivider)
-        frame = new Frame(0, 0, this.currentAlgo, this.at(0, 0)!.weight, this.length, this.width);
+        frame = new Frame(0, 0, this.currentAlgo, this.at(0, 0), this.length, this.width);
       else
-        frame = new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, this.currentAlgo, this.at(globals.depthFilterPos.x, globals.depthFilterPos.y)!.weight);
+        frame = new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, this.currentAlgo, this.at(globals.depthFilterPos.x, globals.depthFilterPos.y));
 
       globals.BuildStack.push(frame);
     }
@@ -408,13 +410,17 @@ export class Grid {
         globals.reset = true;
         this.resetForSearchAlgo();
       }
-      const frame = new Frame(globals.start.x, globals.start.y, this.currentAlgo, this.at(globals.start.x, globals.start.y)!.weight);
-
+      const frame = new Frame(globals.start.x, globals.start.y, this.currentAlgo, this.at(globals.start.x, globals.start.y));
 
       this.at(frame.x, frame.y)!.parrent = null;
       this.at(frame.x, frame.y)!.distenceFromStart = 0;
       globals.searchQueue.enqueue(frame);
-      globals.minQueue.enqueue(frame);
+
+      if (this.currentAlgo === algosKeys.Dijkstra) {
+        for (let cell of this.eachCell()) {
+          globals.minQueue.enqueue(cell);
+        }
+      }
     }
     else {
       globals.skipAlgoAnimaiton = false;

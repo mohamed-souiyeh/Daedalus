@@ -1,4 +1,5 @@
 import { shuffleCellDirections } from "../algos/randomWalkDFS.utils";
+import { Cell } from "../cell";
 import { algosKeys } from "../configs/algos.config";
 import { Directions } from "../configs/cell.config";
 
@@ -31,7 +32,8 @@ interface BuildWall {
 export class Frame {
   x: number;
   y: number;
-  weight: number;
+  cell: Cell | null;
+  indexInQueue: number;
   moves: Directions[];
 
 
@@ -40,10 +42,11 @@ export class Frame {
   width: number;
   buildingWall: BuildWall;
 
-  constructor(x: number, y: number, algo: algosKeys, weight: number, length: number = 0, width: number = 0) {
+  constructor(x: number, y: number, algo: algosKeys, cell: Cell | null = null, length: number = 0, width: number = 0, index: number = 0) {
     this.x = x;
     this.y = y;
-    this.weight = weight;
+    this.cell = cell;
+    this.indexInQueue = index;
 
     // console.log(algo);
     if (algo === algosKeys.RandomWalkDFS)

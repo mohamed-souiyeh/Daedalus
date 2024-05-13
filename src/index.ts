@@ -5,8 +5,7 @@ import { CELLSIZE, CellAnimation, CellStates } from "./configs/cell.config.ts";
 import { inputDefaults } from "./configs/defaults.ts";
 import { globals } from "./configs/globals.ts";
 import svgPath from "svgpath";
-import { PriorityQueue } from "./types/DataStructures/maxPriorityQueue.types.ts";
-import { shuffleCellDirections } from "./algos/randomWalkDFS.utils.ts";
+import { PriorityQueue } from "./types/DataStructures/priorityQueue.types.ts";
 
 let deltaTime: DeltaTime;
 let counter: number;
@@ -56,12 +55,6 @@ export function setup() {
     return;
   }
 
-  // console.log("canvas => ", canvas);
-  // console.log("canvas offset width => ", canvas.offsetWidth);
-  // console.log("canvas offset height => ", canvas.offsetHeight);
-  // console.log("canvas width => ", canvas.width);
-  // console.log("canvas height => ", canvas.height);
-
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
 
@@ -104,6 +97,7 @@ export function setup() {
   globals.animatePath = false;
   globals.startAlgo = false;
   globals.needclear = false;
+  globals.updateDepthFilter = false;
 
   globals.gridOffsetLeft = Math.floor((canvas.width - (globals.grid.length * CELLSIZE)) / 2);
   globals.gridOffsetTop = Math.floor((canvas.height - (globals.grid.width * CELLSIZE)) * 0.5);
@@ -125,6 +119,28 @@ export function setup() {
 
   globals.setup = true;
   globals.currentAnimation = requestAnimationFrame(animation);
+
+  // interface test {
+  //   i: number,
+  //   index: number,
+  // }
+  // let array: test[] = [{ i: 6, index: 0 }, { i: 5, index: 0 }, { i: 4, index: 0 }, { i: 3, index: 0 }, { i: 2, index: 0 }, { i: 1, index: 0 },];
+  // const queue: PriorityQueue<test> = new PriorityQueue<test>((lhs: test, rhs: test) => lhs.i < rhs.i);
+  //
+  // queue.enqueue(array[5]);
+  // queue.print();
+  // queue.enqueue(array[4]);
+  // queue.print();
+  // queue.enqueue(array[3]);
+  // queue.print();
+  // queue.enqueue(array[2]);
+  // queue.print();
+  // queue.enqueue(array[1]);
+  // queue.print();
+  // queue.enqueue(array[0]);
+  // queue.print();
+  // queue.updatePriority(array[2], (item: test) => item.i = 0);
+  // queue.print();
 }
 
 export function animation(dt: number) {
