@@ -55,7 +55,7 @@ export function randomWalkDFS(grid: Grid): algoState {
   }
 
 
-  const toPush = new Frame(nextCell!.gridx, nextCell!.gridy, grid.currentAlgo, nextCell!.weight);
+  const toPush = new Frame(nextCell!.gridx, nextCell!.gridy, grid.currentAlgo, nextCell);
 
   currentCell!.link(nextCell, true);
 
