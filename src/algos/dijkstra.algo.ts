@@ -1,6 +1,6 @@
 import { Bounce, toast } from "react-toastify";
 import { Cell } from "../cell";
-import { CellStates, Directions } from "../configs/cell.config";
+import { CellStates, CellType, Directions } from "../configs/cell.config";
 import { globals } from "../configs/globals";
 import { Grid } from "../grid";
 import { Frame, algoState } from "../types/algos.types";
@@ -17,11 +17,23 @@ function preparePath(grid: Grid, currentCell: Cell) {
   grid.path.push(cell);
 }
 
-export function dijkstra(grid: Grid) {
+function relax(current: Cell, next: Cell) {
+  if (next.distenceFromStart > current.distenceFromStart + next.weight) {
+    next.distenceFromStart = current.distenceFromStart + next.weight;
+    next.parrent = current;
+    return true;
+  }
+  return false;
+}
 
-  if (globals.minQueue.size() === 0) {
+export function dijkstra(grid: Grid) {
+  // console.log("queue before operation: ", globals.minQueue);
+
+  const currentCell = globals.minQueue.dequeue();
+
+  if (currentCell === undefined || typeof currentCell === "number") {
     globals.skipAlgoAnimaiton = false;
-    console.log("there is no Path");
+    console.log("there is no cell here bro");
     toast.error("there is no path", {
       position: "top-center",
       autoClose: false,
@@ -36,47 +48,32 @@ export function dijkstra(grid: Grid) {
     return algoState.noPath;
   }
 
-  const current = globals.minQueue.dequeue();
-  const currentCell = grid.at(current!.x, current!.y);
+  let neighbors: (Cell | null)[] = currentCell.neighbors();
 
-  if (currentCell === null) {
-    globals.skipAlgoAnimaiton = false;
-    console.log("there is no cell here bro");
-    // globals.handletoast();
-    return algoState.noPath;
-  }
+  while (neighbors.length) {
+    const neighbor = neighbors.pop();
 
-  if (currentCell.gridx === globals.finish.x && currentCell.gridy === globals.finish.y) {
-    preparePath(grid, currentCell);
-    return algoState.foundPath;
-  }
-
-  let nextDirection: Directions | undefined = undefined;
-
-  while (current!.moves.length) {
-    nextDirection = current!.moves.pop();
-
-    if (nextDirection === undefined)
+    if (neighbor === null)
       continue;
 
-    let nextCell = grid.at(current!.x, current!.y)!.neighbor(nextDirection);
-    if (nextCell && nextCell!.state === CellStates.unvisited && currentCell.islinked(nextCell)) {
-      nextCell!.setState(CellStates.inqueue);
-      nextCell!.parrent = currentCell;
-      nextCell!.distenceFromStart = nextCell!.parrent!.distenceFromStart + 1;
-
-      let frame: Frame = new Frame(nextCell!.gridx, nextCell!.gridy, grid.currentAlgo, nextCell!.weight);
-      globals.minQueue.enqueue(frame);
-      if (nextCell.gridx === globals.finish.x && nextCell!.gridy === globals.finish.y) {
-        preparePath(grid, nextCell);
+    if (neighbor && currentCell.islinked(neighbor) && relax(currentCell, neighbor)) {
+      globals.minQueue.updatePriority(neighbor);
+      neighbor.setState(CellStates.inqueue);
+      if (neighbor.cellType === CellType.finish) {
+        preparePath(grid, neighbor);
         return algoState.foundPath;
       }
     }
   }
   currentCell.setState(CellStates.visited);
-  if (globals.minQueue.size())
-    grid.at(globals.minQueue.peek()!.x, globals.minQueue.peek()!.y)?.setState(CellStates.current);
+  if (globals.minQueue.size() - 1) {
+    const nextCurrent = globals.minQueue.peek();
+    if (nextCurrent instanceof Cell)
+      nextCurrent.setState(CellStates.current);
+  }
 
+  console.log("queue after operation: ", globals.minQueue);
+  // globals.isPaused = true;
   return algoState.searching;
 }
 

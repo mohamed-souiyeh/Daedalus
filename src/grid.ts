@@ -120,9 +120,6 @@ export class Grid {
         else if (x === globals.finish.x && y === globals.finish.y) {
           type = CellType.finish;
         }
-        else if (globals.addWeightedNodes && Math.random() < inputDefaults.WIEGHTEDCHANCE) {
-          type = CellType.weighted;
-        }
 
         this.grid[y][x].init(x, y, cellx, celly, CELLSIZE, wallState, type);
       }
@@ -209,22 +206,6 @@ export class Grid {
   // NOTE: algos section
   path: Cell[] = [];
 
-  public removeWeightedNOdes() {
-    for (let cell of this.eachCell()) {
-      if (cell.cellType === CellType.weighted) {
-        cell.setCellType(CellType.air);
-      }
-    }
-
-  }
-
-  public addWeightedNodes() {
-    for (let cell of this.eachCell()) {
-      if (Math.random() < inputDefaults.WIEGHTEDCHANCE && cell.cellType !== CellType.start && cell.cellType !== CellType.finish) {
-        cell.setCellType(CellType.weighted);
-      }
-    }
-  }
 
   public depthFilter() {
     console.log("updating depth filter");
@@ -239,7 +220,7 @@ export class Grid {
 
     const queue: Queue<Frame> = new Queue<Frame>();
 
-    queue.enqueue(new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, algosKeys.BFS, 0));
+    queue.enqueue(new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, algosKeys.BFS, null));
 
     this.grid[queue.peek()!.y][queue.peek()!.x].depth = 0;
     gridcp[queue.peek()!.y][queue.peek()!.x] = CellStates.inqueue;
@@ -256,7 +237,7 @@ export class Grid {
         if (gridcp[cell!.gridy][cell!.gridx] === CellStates.unvisited && currentCell?.islinked(cell)) {
           cell!.depth = currentCell!.depth + 1;
           gridcp[cell!.gridy][cell!.gridx] = CellStates.inqueue;
-          queue.enqueue(new Frame(cell!.gridx, cell!.gridy, algosKeys.BFS, 0));
+          queue.enqueue(new Frame(cell!.gridx, cell!.gridy, algosKeys.BFS, null));
         }
       }
 
@@ -337,6 +318,7 @@ export class Grid {
         this.#currentResetColumn = 0;
         this.#resetPatternDirection = this.#resetPatternDirection * -1;
         globals.reset = false;
+        globals.updateDepthFilter = true;
       }
       return;
     }
@@ -345,12 +327,16 @@ export class Grid {
         this.#currentResetColumn = this.length - 1;
         this.#resetPatternDirection = this.#resetPatternDirection * -1;
         globals.reset = false;
+        globals.updateDepthFilter = true;
       }
       return;
     }
 
     let x = this.#currentResetColumn;
     for (let y = 0; y < this.width; y++) {
+      // if (this.currentAlgo === algosKeys.Dijkstra)
+      //   this.at(x, y)!.setState(CellStates.inqueue);
+      // else
       this.at(x, y)!.setState(CellStates.unvisited);
     }
 
@@ -391,9 +377,9 @@ export class Grid {
 
       let frame: Frame;
       if (this.currentAlgo === algosKeys.recursiveDivider)
-        frame = new Frame(0, 0, this.currentAlgo, this.at(0, 0)!.weight, this.length, this.width);
+        frame = new Frame(0, 0, this.currentAlgo, this.at(0, 0), this.length, this.width);
       else
-        frame = new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, this.currentAlgo, this.at(globals.depthFilterPos.x, globals.depthFilterPos.y)!.weight);
+        frame = new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, this.currentAlgo, this.at(globals.depthFilterPos.x, globals.depthFilterPos.y));
 
       globals.BuildStack.push(frame);
     }
@@ -404,17 +390,21 @@ export class Grid {
       globals.searchQueue.clear();
       globals.minQueue.clear();
       this.path = [];
-      if (globals.needclear) {
-        globals.reset = true;
-        this.resetForSearchAlgo();
-      }
-      const frame = new Frame(globals.start.x, globals.start.y, this.currentAlgo, this.at(globals.start.x, globals.start.y)!.weight);
-
+      // if (globals.needclear) {
+      globals.reset = true;
+      this.resetForSearchAlgo();
+      // }
+      const frame = new Frame(globals.start.x, globals.start.y, this.currentAlgo, this.at(globals.start.x, globals.start.y));
 
       this.at(frame.x, frame.y)!.parrent = null;
       this.at(frame.x, frame.y)!.distenceFromStart = 0;
       globals.searchQueue.enqueue(frame);
-      globals.minQueue.enqueue(frame);
+
+      if (this.currentAlgo === algosKeys.Dijkstra) {
+        for (let cell of this.eachCell()) {
+          globals.minQueue.enqueue(cell);
+        }
+      }
     }
     else {
       globals.skipAlgoAnimaiton = false;
@@ -468,14 +458,6 @@ export class Grid {
 
     if (globals.reset) {
       this.resetPatternMKI();
-    }
-    else if (globals.addWeightedNodes) {
-      this.addWeightedNodes();
-      globals.addWeightedNodes = false;
-    }
-    else if (globals.removeWeightedNodes) {
-      this.removeWeightedNOdes();
-      globals.removeWeightedNodes = false;
     }
 
     for (let cell of this.eachCell()) {

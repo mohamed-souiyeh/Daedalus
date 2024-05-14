@@ -312,7 +312,7 @@ export class Cell {
 
   setCellType(type: CellType) {
     this.#cellType = type;
-    this.weight = 0;
+    this.weight = 1;
     if (type === CellType.weighted)
       this.weight = inputDefaults.NODEWEIGHT;
     this.#redraw = true;
@@ -669,13 +669,23 @@ export class Cell {
     if (this.animation === CellAnimation.STOPPED)
       this.#redraw = false;
 
-    // setTextStyle(ctx, {
-    //   textAlign: "center",
-    //   textBaseline: "middle",
-    //   font: "11px Arial",
-    //   fillStyle: "black"
-    // })
-    //
+    setTextStyle(ctx, {
+      textAlign: "center",
+      textBaseline: "middle",
+      font: "11px Arial",
+      fillStyle: "black"
+    })
+
+    if (this.distenceFromStart !== Infinity && (this.state === CellStates.visited || this.state === CellStates.path)) {
+      let dist: string;
+      dist = `${this.distenceFromStart}`
+      ctx.fillText(
+        `${dist}`,
+        this.#cellVector.currentx + (this.#cellVector.currentlength / 2),
+        this.#cellVector.currenty + (this.#cellVector.currentlength / 2)
+      );
+    }
+
     // ctx.fillText(
     //   `${this.gridx},${this.gridy}`,
     //   this.#cellVector.currentx + (this.#cellVector.currentlength / 2),

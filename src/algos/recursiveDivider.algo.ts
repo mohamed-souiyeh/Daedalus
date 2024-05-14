@@ -91,7 +91,7 @@ export function recursiveDivider(grid: Grid) {
     let _length: number = currentFrame.buildingWall.splitDirection === SplitDirection.V ? currentFrame.buildingWall.splitPos + ((currentFrame.buildingWall.direction === Directions.EAST) as unknown as number) : currentFrame.length;
     let _width: number = currentFrame.buildingWall.splitDirection === SplitDirection.V ? currentFrame.width : currentFrame.buildingWall.splitPos + ((currentFrame.buildingWall.direction === Directions.SOUTH) as unknown as number);
 
-    globals.BuildStack.push(new Frame(currentFrame.x, currentFrame.y, algosKeys.recursiveDivider, grid.at(currentFrame.x, currentFrame.y)!.weight, _length, _width));
+    globals.BuildStack.push(new Frame(currentFrame.x, currentFrame.y, algosKeys.recursiveDivider, grid.at(currentFrame.x, currentFrame.y), _length, _width));
 
     console.log("the first push: ", globals.BuildStack.peek());
 
@@ -102,7 +102,7 @@ export function recursiveDivider(grid: Grid) {
     let y: number = currentFrame.buildingWall.splitDirection === SplitDirection.V ? currentFrame.y : currentFrame.y + currentFrame.buildingWall.splitPos + ((currentFrame.buildingWall.direction === Directions.SOUTH) as unknown as number);
 
 
-    globals.BuildStack.push(new Frame(x, y, algosKeys.recursiveDivider, grid.at(x, y)!.weight, _length, _width));
+    globals.BuildStack.push(new Frame(x, y, algosKeys.recursiveDivider, grid.at(x, y), _length, _width));
     console.log("the second push: ", globals.BuildStack.peek());
     return algoState.building;
   }

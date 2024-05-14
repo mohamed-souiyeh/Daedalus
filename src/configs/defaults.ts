@@ -14,7 +14,6 @@ export enum pageIndexs {
 }
 
 export enum inputDefaults {
-  WIEGHTEDCHANCE = 0.10,
   NODEWEIGHT = 10,
   TOOLTIPDELAY = 300,
   DISABLETOOLTIP = 1000 * 60 * 60,

@@ -6,8 +6,9 @@ import { inputDefaults } from "./defaults";
 import { Pos } from "../types/pos.type";
 import { Queue } from "../types/DataStructures/queue.type";
 import { WallState } from "./wall.config";
-import { PriorityQueue } from "../types/DataStructures/maxPriorityQueue.types";
 import { Grid } from "../grid";
+import { PriorityQueue } from "../types/DataStructures/priorityQueue.types";
+import { Cell } from "../cell";
 
 export const globals = {
   grid: new Grid(0, 0),
@@ -55,9 +56,6 @@ export const globals = {
   },
 
 
-  addWeightedNodes: false as boolean,
-  removeWeightedNodes: false as boolean,
-
 
   reset: false as boolean,
 
@@ -72,7 +70,11 @@ export const globals = {
   skipAlgoAnimaiton: false as boolean,
   BuildStack: new Stack<Frame>(),
   searchQueue: new Queue<Frame>(),
-  minQueue: new PriorityQueue<Frame>((rhs: Frame, lhs: Frame) => rhs.weight < lhs.weight),
+  minQueue: new PriorityQueue<Cell>((rhs: Cell | number, lhs: Cell | number) => {
+    if (typeof rhs === "number" || typeof lhs === "number")
+      return false;
+    return rhs.distenceFromStart <= lhs.distenceFromStart;
+  }),
 
   // NOTE: SVGs
   gridOffsetLeft: 0,
