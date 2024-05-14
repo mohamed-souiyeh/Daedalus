@@ -1,6 +1,6 @@
 import { Bounce, toast } from "react-toastify";
 import { Cell } from "../cell";
-import { CellStates, Directions } from "../configs/cell.config";
+import { CellStates, CellType, Directions } from "../configs/cell.config";
 import { globals } from "../configs/globals";
 import { Grid } from "../grid";
 import { Frame, algoState } from "../types/algos.types";
@@ -19,6 +19,7 @@ function preparePath(grid: Grid, currentCell: Cell) {
 
 function relax(current: Cell, next: Cell) {
   if (next.distenceFromStart > current.distenceFromStart + next.weight) {
+    next.distenceFromStart = current.distenceFromStart + next.weight;
     next.parrent = current;
     return true;
   }
@@ -26,10 +27,11 @@ function relax(current: Cell, next: Cell) {
 }
 
 export function dijkstra(grid: Grid) {
+  // console.log("queue before operation: ", globals.minQueue);
 
   const currentCell = globals.minQueue.dequeue();
 
-  if (currentCell === undefined) {
+  if (currentCell === undefined || typeof currentCell === "number") {
     globals.skipAlgoAnimaiton = false;
     console.log("there is no cell here bro");
     toast.error("there is no path", {
@@ -55,13 +57,22 @@ export function dijkstra(grid: Grid) {
       continue;
 
     if (neighbor && currentCell.islinked(neighbor) && relax(currentCell, neighbor)) {
-      globals.minQueue.updatePriority(neighbor, (cell) => cell.distenceFromStart = currentCell.distenceFromStart + cell.weight);
+      globals.minQueue.updatePriority(neighbor);
+      if (neighbor.cellType === CellType.finish) {
+        preparePath(grid, neighbor);
+        return algoState.foundPath;
+      }
     }
   }
   currentCell.setState(CellStates.visited);
-  if (globals.minQueue.size())
-    globals.minQueue.peek()?.setState(CellStates.current);
+  if (globals.minQueue.size()) {
+    const nextCurrent = globals.minQueue.peek();
+    if (nextCurrent instanceof Cell)
+      nextCurrent.setState(CellStates.current);
+  }
 
+  console.log("queue after operation: ", globals.minQueue);
+  // globals.isPaused = true;
   return algoState.searching;
 }
 

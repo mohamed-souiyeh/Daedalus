@@ -353,7 +353,10 @@ export class Grid {
 
     let x = this.#currentResetColumn;
     for (let y = 0; y < this.width; y++) {
-      this.at(x, y)!.setState(CellStates.unvisited);
+      if (this.currentAlgo === algosKeys.Dijkstra)
+        this.at(x, y)!.setState(CellStates.inqueue);
+      else
+        this.at(x, y)!.setState(CellStates.unvisited);
     }
 
     if (this.at(this.#currentResetColumn, 0)!.animationPercentage >= 10.0)
@@ -406,10 +409,10 @@ export class Grid {
       globals.searchQueue.clear();
       globals.minQueue.clear();
       this.path = [];
-      if (globals.needclear) {
-        globals.reset = true;
-        this.resetForSearchAlgo();
-      }
+      // if (globals.needclear) {
+      globals.reset = true;
+      this.resetForSearchAlgo();
+      // }
       const frame = new Frame(globals.start.x, globals.start.y, this.currentAlgo, this.at(globals.start.x, globals.start.y));
 
       this.at(frame.x, frame.y)!.parrent = null;

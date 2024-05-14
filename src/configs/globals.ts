@@ -73,7 +73,11 @@ export const globals = {
   skipAlgoAnimaiton: false as boolean,
   BuildStack: new Stack<Frame>(),
   searchQueue: new Queue<Frame>(),
-  minQueue: new PriorityQueue<Cell>((rhs: Cell, lhs: Cell) => rhs.distenceFromStart < lhs.distenceFromStart),
+  minQueue: new PriorityQueue<Cell>((rhs: Cell | number, lhs: Cell | number) => {
+    if (typeof rhs === "number" || typeof lhs === "number")
+      return false;
+    return rhs.distenceFromStart <= lhs.distenceFromStart;
+  }),
 
   // NOTE: SVGs
   gridOffsetLeft: 0,

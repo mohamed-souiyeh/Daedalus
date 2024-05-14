@@ -2,22 +2,24 @@ import { IQueue } from "./queue.type";
 
 
 
-export class PriorityQueue<T> implements IQueue<T>{
+export class PriorityQueue<T> {
 
-  private storage: T[] = [];
+  private storage: (T | number)[] = [Infinity,];
   private capacity: number;
-  private operator: (rhs: T, lhs: T) => boolean;
+  private operator: (rhs: T | number, lhs: T | number) => boolean;
 
 
-  constructor(operator: (rhs: T, lhs: T) => boolean, capacity: number = Infinity) {
+  constructor(operator: (rhs: T | number, lhs: T | number) => boolean, capacity: number = Infinity) {
     // this.storage = storage;
     this.capacity = capacity;
     this.operator = operator;
+    // console.log("storage: ", this.storage);
+    // console.log("storage size: ", this.storage.length);
     this.buildHeap();
   }
 
   private parrent(index: number) {
-    return index / 2;
+    return Math.floor(index / 2);
   }
 
   private left(index: number) {
@@ -30,76 +32,81 @@ export class PriorityQueue<T> implements IQueue<T>{
 
 
   private heapfy(index: number) {
-    let left: number = this.left(index + 1) - 1;
-    let right: number = this.right(index + 1) - 1;
-    let largest: number;
+    let left: number = this.left(index);
+    let right: number = this.right(index);
+    let toCompare: number;
 
     if (left < this.size() && this.operator(this.storage[left], this.storage[index])) {
-      largest = left;
+      toCompare = left;
     }
     else {
-      largest = index;
+      toCompare = index;
     }
 
-    if (right < this.size() && this.operator(this.storage[right], this.storage[largest])) {
-      largest = right;
+    if (right < this.size() && this.operator(this.storage[right], this.storage[toCompare])) {
+      toCompare = right;
     }
 
-    if (largest !== index) {
-      let tmp = this.storage[largest];
+    if (toCompare !== index) {
+      let tmp = this.storage[toCompare];
 
-      this.storage[largest] = this.storage[index];
+      this.storage[toCompare] = this.storage[index];
       this.storage[index] = tmp;
 
-      this.heapfy(largest);
+      this.heapfy(toCompare);
     }
   }
 
   private buildHeap() {
-    for (let i = Math.floor(this.size() / 2); i >= 0; i--)
+    for (let i = Math.floor(this.size() / 2); i > 0; i--)
       this.heapfy(i);
   }
 
-  updatePriority(item: T, updateKey: (item: T) => void): void {
-    let index = 0;
-    for (; this.storage[index] !== item; index++)
+  updatePriority(item: T): void {
+    // console.log("the item: ", item);
+    // console.log("the queue: ", this.storage);
+    let index = 1;
+    for (; this.storage[index] !== item && index < this.size(); index++)
       ;
 
-    updateKey(item);
-    while (index > 0 && this.operator(this.storage[index], this.storage[Math.floor(this.parrent(index + 1) - 1)])) {
-      let tmp = this.storage[Math.floor(this.parrent(index + 1) - 1)];
+    if (index === this.size() && this.storage[index] !== item)
+      return;
+    // console.log("shit ended");
+    while (index > 1 && this.operator(this.storage[index], this.storage[this.parrent(index)])) {
+      let tmp = this.storage[this.parrent(index)];
 
-      this.storage[Math.floor(this.parrent(index + 1) - 1)] = this.storage[index];
+      this.storage[this.parrent(index)] = this.storage[index];
       this.storage[index] = tmp;
 
-      index = Math.floor(this.parrent(index + 1) - 1);
-      console.log("index: ", index);
+      index = this.parrent(index);
+      // console.log("index: ", index);
     }
   }
 
   enqueue(item: T): void {
     if (this.size() === this.capacity)
       throw Error("you have reached the max capacity, you cannot add more items");
-    this.storage.unshift(item);
-    this.heapfy(0);
+    this.storage.push(item);
+    this.updatePriority(item);
   }
 
-  peek(): T | undefined {
-    return this.storage[0];
+  peek(): (T | number) | undefined {
+    return this.storage[1];
   }
 
-  dequeue(): T | undefined {
-    let head: T | undefined = this.storage.shift();
-    this.heapfy(0);
+  dequeue(): (T | number) | undefined {
+    let head: (T | number) | undefined = this.peek();
+    this.storage.splice(1, 1);
+    this.heapfy(1);
     return head;
   }
 
   size(): number {
-    return this.storage.length;
+    return this.storage.length - 1;
   }
 
   clear(): void {
-    this.storage = [];
+    this.storage = [Infinity,];
   }
 
   print() {

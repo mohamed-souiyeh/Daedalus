@@ -666,16 +666,27 @@ export class Cell {
       ctx.fill(path)
     }
 
-    if (this.animation === CellAnimation.STOPPED)
-      this.#redraw = false;
+    // if (this.animation === CellAnimation.STOPPED)
+    //   this.#redraw = false;
 
-    // setTextStyle(ctx, {
-    //   textAlign: "center",
-    //   textBaseline: "middle",
-    //   font: "11px Arial",
-    //   fillStyle: "black"
-    // })
-    //
+    setTextStyle(ctx, {
+      textAlign: "center",
+      textBaseline: "middle",
+      font: "11px Arial",
+      fillStyle: "black"
+    })
+
+    let dist: string;
+    if (this.distenceFromStart === Infinity)
+      dist = "Inf";
+    else
+      dist = `${this.distenceFromStart}`
+    ctx.fillText(
+      `${dist}`,
+      this.#cellVector.currentx + (this.#cellVector.currentlength / 2),
+      this.#cellVector.currenty + (this.#cellVector.currentlength / 2)
+    );
+
     // ctx.fillText(
     //   `${this.gridx},${this.gridy}`,
     //   this.#cellVector.currentx + (this.#cellVector.currentlength / 2),
