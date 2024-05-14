@@ -1,6 +1,6 @@
 import { mouse } from "../configs/input.config.ts";
 import { globals } from "../configs/globals.ts";
-import { CELLSIZE } from "../configs/cell.config.ts";
+import { CELLSIZE, CellType } from "../configs/cell.config.ts";
 
 
 
@@ -11,19 +11,22 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
     mouse.x = event.x - canvas.offsetLeft;
     mouse.y = event.y - canvas.offsetTop;
 
+    const x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
+    const y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
+
     if (mouseDown && globals.mouseUpdating === false) {
 
       if (globals.depthFilterOn && globals.updateDepthFilter === false) {
         if (globals.depthFilterOn && event.button === 0 &&
-          !(Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.depthFilterPos.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.depthFilterPos.y) &&
-          (Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) >= 0 && Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) < globals.grid.length && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) >= 0 && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) < globals.grid.width)) {
+          !(x === globals.depthFilterPos.x && y === globals.depthFilterPos.y) &&
+          (x >= 0 && x < globals.grid.length && y >= 0 && y < globals.grid.width)) {
 
           console.log("updating depth filter pos and all");
           globals.depthFilterPos.oldx = globals.depthFilterPos.x;
-          globals.depthFilterPos.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
+          globals.depthFilterPos.x = x;
 
           globals.depthFilterPos.oldy = globals.depthFilterPos.y;
-          globals.depthFilterPos.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
+          globals.depthFilterPos.y = y;
 
           globals.replaceDepthFilterPos = true;
           globals.updateDepthFilter = true;
@@ -36,10 +39,11 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
         // console.log(globals.animatePath === false)
         // console.log(globals.reset === false)
         // console.log(!(Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.finish.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.finish.y))
-        console.log(!(Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.finish.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.finish.y))
+        console.log(!(x === globals.finish.x && y === globals.finish.y))
+
         if (globals.replaceStart && globals.startAlgo === false && globals.animatePath === false && globals.reset === false &&
-          !(Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.finish.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.finish.y) && !(Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.start.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.start.y) &&
-          (Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) >= 0 && Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) < globals.grid.length && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) >= 0 && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) < globals.grid.width)) {
+          !(x === globals.finish.x && y === globals.finish.y) && !(x === globals.start.x && y === globals.start.y) &&
+          (x >= 0 && x < globals.grid.length && y >= 0 && y < globals.grid.width)) {
           console.log("updating start pos");
           globals.start.oldx = globals.start.x;
           globals.start.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
@@ -50,8 +54,8 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
           globals.mouseUpdating = true;
         }
         if (globals.replaceFinish && globals.startAlgo === false && globals.animatePath === false && globals.reset === false &&
-          !(Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.start.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.start.y) && !(Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.finish.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.finish.y) &&
-          (Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) >= 0 && Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) < globals.grid.length && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) >= 0 && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) < globals.grid.width)) {
+          !(x === globals.start.x && y === globals.start.y) && !(x === globals.finish.x && y === globals.finish.y) &&
+          (x >= 0 && x < globals.grid.length && y >= 0 && y < globals.grid.width)) {
           console.log("updating finish pos");
           globals.finish.oldx = globals.finish.x;
           globals.finish.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
@@ -121,13 +125,17 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
     // globals.canvas!.width = this.#length * CELLSIZE;
     // globals.canvas!.height = this.#width * CELLSIZE;
 
+    const x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
+    const y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
+
     if (globals.depthFilterOn && globals.updateDepthFilter === false) {
-      if (globals.depthFilterOn && event.button === 0 && (Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.depthFilterPos.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.depthFilterPos.y)) {
+      if (globals.depthFilterOn && event.button === 0 &&
+        (x === globals.depthFilterPos.x && y === globals.depthFilterPos.y)) {
         globals.depthFilterPos.oldx = globals.depthFilterPos.x;
-        globals.depthFilterPos.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
+        globals.depthFilterPos.x = x;
 
         globals.depthFilterPos.oldy = globals.depthFilterPos.y;
-        globals.depthFilterPos.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
+        globals.depthFilterPos.y = y;
 
         globals.replaceDepthFilterPos = true;
         globals.updateDepthFilter = true;
@@ -135,23 +143,27 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
       }
     }
     else {
-      if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 0 && (Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.start.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.start.y)) {
+      if (globals.startAlgo === false && globals.animatePath === false &&
+        globals.reset === false && event.button === 0 &&
+        (x === globals.start.x && y === globals.start.y)) {
         console.log("mouse down event: ", event);
         globals.start.oldx = globals.start.x;
-        globals.start.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
+        globals.start.x = x;
 
         globals.start.oldy = globals.start.y;
-        globals.start.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
+        globals.start.y = y;
 
         globals.replaceStart = true;
         mouseDown = true;
       }
-      else if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 0 && (Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.finish.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.finish.y)) {
+      else if (globals.startAlgo === false && globals.animatePath === false &&
+        globals.reset === false && event.button === 0 &&
+        (x === globals.finish.x && y === globals.finish.y)) {
         globals.finish.oldx = globals.finish.x;
-        globals.finish.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
+        globals.finish.x = x;
 
         globals.finish.oldy = globals.finish.y;
-        globals.finish.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
+        globals.finish.y = y;
 
         globals.replaceFinish = true;
         mouseDown = true;

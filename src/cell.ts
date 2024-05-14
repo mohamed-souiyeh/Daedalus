@@ -666,8 +666,8 @@ export class Cell {
       ctx.fill(path)
     }
 
-    // if (this.animation === CellAnimation.STOPPED)
-    //   this.#redraw = false;
+    if (this.animation === CellAnimation.STOPPED)
+      this.#redraw = false;
 
     setTextStyle(ctx, {
       textAlign: "center",
@@ -676,16 +676,15 @@ export class Cell {
       fillStyle: "black"
     })
 
-    let dist: string;
-    if (this.distenceFromStart === Infinity)
-      dist = "Inf";
-    else
+    if (this.distenceFromStart !== Infinity && (this.state === CellStates.visited || this.state === CellStates.path)) {
+      let dist: string;
       dist = `${this.distenceFromStart}`
-    ctx.fillText(
-      `${dist}`,
-      this.#cellVector.currentx + (this.#cellVector.currentlength / 2),
-      this.#cellVector.currenty + (this.#cellVector.currentlength / 2)
-    );
+      ctx.fillText(
+        `${dist}`,
+        this.#cellVector.currentx + (this.#cellVector.currentlength / 2),
+        this.#cellVector.currenty + (this.#cellVector.currentlength / 2)
+      );
+    }
 
     // ctx.fillText(
     //   `${this.gridx},${this.gridy}`,

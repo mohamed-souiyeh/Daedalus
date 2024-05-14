@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -13,7 +15,6 @@ import { reset } from "@/src";
 import { globals } from "@/src/configs/globals";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Select, SelectItem, Selection, Popover, PopoverTrigger, PopoverContent, DropdownSection, Checkbox, Tabs, Tab, Card, CardBody, SelectSection, Avatar } from "@nextui-org/react";
 import { FirstSection } from "./firstSection";
-import { color } from "@/types";
 import { mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "@/src/configs/algos.config";
 import { AlgorithmDescription } from "./algorithmDescription";
 import { MyAvatar } from "./avatar";
@@ -194,19 +195,20 @@ export const Navbar = () => {
       globals.gridRedraw = true;
   }
 
-  const [weightedNodes, setWeightedNodes] = useState(globals.addWeightedNodes);
-
-  const addWhieghtedNodes = (state: boolean) => {
-    if (state === true) {
-      globals.removeWeightedNodes = !state;
-      globals.addWeightedNodes = state;
-    }
-    else if (state === false) {
-      globals.removeWeightedNodes = !state;
-      globals.addWeightedNodes = state;
-    }
-    setWeightedNodes(state);
-  }
+  // NOTE:to be used in the next implementation of weighted nodes
+  // const [weightedNodes, setWeightedNodes] = useState(globals.addWeightedNodes);
+  //
+  // const addWhieghtedNodes = (state: boolean) => {
+  //   if (state === true) {
+  //     globals.removeWeightedNodes = !state;
+  //     globals.addWeightedNodes = state;
+  //   }
+  //   else if (state === false) {
+  //     globals.removeWeightedNodes = !state;
+  //     globals.addWeightedNodes = state;
+  //   }
+  //   setWeightedNodes(state);
+  // }
 
   const handleProjectMenu = (e: Key) => {
     console.log("e => ", e);
@@ -671,15 +673,17 @@ export const Navbar = () => {
               endContent={<FontAwesomeIcon icon={faStreetView} size="lg" />}>
               <Checkbox aria-label="depth value" isSelected={depthNumbers} onValueChange={addDepthNumbers} size="sm">Depth Value</Checkbox>
             </DropdownItem>
-            <DropdownItem
-              isReadOnly
-              textValue="add whieghted Nodes to the grid"
-              aria-label="add whieghted Nodes to the grid"
-              key="addWhieghtedNodes"
-              description="Add whieghted Nodes to the grid"
-              endContent={<FontAwesomeIcon icon={faWeightHanging} size="lg" />}>
-              <Checkbox aria-label="addWhieghtedNodes" isSelected={weightedNodes} onValueChange={addWhieghtedNodes} size="sm">add weighted nodes</Checkbox>
-            </DropdownItem>
+            {
+              // <DropdownItem
+              //   isReadOnly
+              //   textValue="add whieghted Nodes to the grid"
+              //   aria-label="add whieghted Nodes to the grid"
+              //   key="addWhieghtedNodes"
+              //   description="Add whieghted Nodes to the grid"
+              //   endContent={<FontAwesomeIcon icon={faWeightHanging} size="lg" />}>
+              //   <Checkbox aria-label="addWhieghtedNodes" isSelected={weightedNodes} onValueChange={addWhieghtedNodes} size="sm">add weighted nodes</Checkbox>
+              // </DropdownItem>
+            }
           </DropdownMenu>
         </Dropdown>
         <Tooltip id="reset" content="Reset" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>

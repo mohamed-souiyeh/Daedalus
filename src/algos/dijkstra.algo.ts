@@ -58,6 +58,7 @@ export function dijkstra(grid: Grid) {
 
     if (neighbor && currentCell.islinked(neighbor) && relax(currentCell, neighbor)) {
       globals.minQueue.updatePriority(neighbor);
+      neighbor.setState(CellStates.inqueue);
       if (neighbor.cellType === CellType.finish) {
         preparePath(grid, neighbor);
         return algoState.foundPath;
@@ -65,7 +66,7 @@ export function dijkstra(grid: Grid) {
     }
   }
   currentCell.setState(CellStates.visited);
-  if (globals.minQueue.size()) {
+  if (globals.minQueue.size() - 1) {
     const nextCurrent = globals.minQueue.peek();
     if (nextCurrent instanceof Cell)
       nextCurrent.setState(CellStates.current);

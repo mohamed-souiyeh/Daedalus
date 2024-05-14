@@ -19,7 +19,7 @@ const roboto = Roboto({
 })
 
 export const title = tv({
-  base: `${roboto.variable} tracking-tight inline font-semibold`,
+  base: `tracking-tight inline font-semibold`,
   variants: {
     color: {
       violet: "from-[#FF1CF7] to-[#b249f8]",

@@ -120,9 +120,6 @@ export class Grid {
         else if (x === globals.finish.x && y === globals.finish.y) {
           type = CellType.finish;
         }
-        else if (globals.addWeightedNodes && Math.random() < inputDefaults.WIEGHTEDCHANCE) {
-          type = CellType.weighted;
-        }
 
         this.grid[y][x].init(x, y, cellx, celly, CELLSIZE, wallState, type);
       }
@@ -209,22 +206,6 @@ export class Grid {
   // NOTE: algos section
   path: Cell[] = [];
 
-  public removeWeightedNOdes() {
-    for (let cell of this.eachCell()) {
-      if (cell.cellType === CellType.weighted) {
-        cell.setCellType(CellType.air);
-      }
-    }
-
-  }
-
-  public addWeightedNodes() {
-    for (let cell of this.eachCell()) {
-      if (Math.random() < inputDefaults.WIEGHTEDCHANCE && cell.cellType !== CellType.start && cell.cellType !== CellType.finish) {
-        cell.setCellType(CellType.weighted);
-      }
-    }
-  }
 
   public depthFilter() {
     console.log("updating depth filter");
@@ -353,10 +334,10 @@ export class Grid {
 
     let x = this.#currentResetColumn;
     for (let y = 0; y < this.width; y++) {
-      if (this.currentAlgo === algosKeys.Dijkstra)
-        this.at(x, y)!.setState(CellStates.inqueue);
-      else
-        this.at(x, y)!.setState(CellStates.unvisited);
+      // if (this.currentAlgo === algosKeys.Dijkstra)
+      //   this.at(x, y)!.setState(CellStates.inqueue);
+      // else
+      this.at(x, y)!.setState(CellStates.unvisited);
     }
 
     if (this.at(this.#currentResetColumn, 0)!.animationPercentage >= 10.0)
@@ -477,14 +458,6 @@ export class Grid {
 
     if (globals.reset) {
       this.resetPatternMKI();
-    }
-    else if (globals.addWeightedNodes) {
-      this.addWeightedNodes();
-      globals.addWeightedNodes = false;
-    }
-    else if (globals.removeWeightedNodes) {
-      this.removeWeightedNOdes();
-      globals.removeWeightedNodes = false;
     }
 
     for (let cell of this.eachCell()) {

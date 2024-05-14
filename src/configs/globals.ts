@@ -56,9 +56,6 @@ export const globals = {
   },
 
 
-  addWeightedNodes: false as boolean,
-  removeWeightedNodes: false as boolean,
-
 
   reset: false as boolean,
 

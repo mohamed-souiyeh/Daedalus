@@ -96,13 +96,14 @@ export class PriorityQueue<T> {
 
   dequeue(): (T | number) | undefined {
     let head: (T | number) | undefined = this.peek();
-    this.storage.splice(1, 1);
+    this.storage[1] = this.storage[this.size() - 1]
+    this.storage.pop();
     this.heapfy(1);
     return head;
   }
 
   size(): number {
-    return this.storage.length - 1;
+    return this.storage.length;
   }
 
   clear(): void {
