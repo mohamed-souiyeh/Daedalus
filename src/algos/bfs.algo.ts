@@ -62,7 +62,7 @@ export function bfs(grid: Grid) {
       nextCell!.parrent = currentCell;
       nextCell!.distenceFromStart = nextCell!.parrent!.distenceFromStart + 1;
 
-      let frame: Frame = new Frame(nextCell!.gridx, nextCell!.gridy, grid.currentAlgo, nextCell!.weight);
+      let frame: Frame = new Frame(nextCell!.gridx, nextCell!.gridy, grid.currentAlgo, nextCell);
       globals.searchQueue.enqueue(frame);
     }
   }
