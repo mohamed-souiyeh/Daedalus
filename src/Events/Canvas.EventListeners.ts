@@ -36,7 +36,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
       }
       else {
         if (globals.addWeights && globals.startAlgo === false && globals.animatePath === false &&
-          globals.reset === false && event.button === 0 &&
+          globals.reset === false && event.button === 0 && !globals.replaceStart && !globals.replaceFinish &&
           !(x === globals.finish.x && y === globals.finish.y) &&
           !(x === globals.start.x && y === globals.start.y) &&
           !(x === mouse.currentx && y === mouse.currenty)) {
@@ -87,6 +87,10 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
           globals.start.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
 
           globals.mouseUpdating = true;
+          if (globals.hotReload) {
+            globals.startAlgo = true;
+            globals.gridRedraw = true;
+          }
         }
         if (globals.replaceFinish && globals.startAlgo === false && globals.animatePath === false && globals.reset === false &&
           !(x === globals.start.x && y === globals.start.y) && !(x === globals.finish.x && y === globals.finish.y) &&
@@ -99,6 +103,10 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
           globals.finish.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
 
           globals.mouseUpdating = true;
+          if (globals.hotReload) {
+            globals.startAlgo = true;
+            globals.gridRedraw = true;
+          }
         }
       }
     }

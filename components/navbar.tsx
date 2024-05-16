@@ -125,6 +125,8 @@ export const Navbar = () => {
       globals.gridRedraw = true;
       return;
     }
+    if (globals.reset)
+      return;
     globals.depthFilterOn = !globals.depthFilterOn;
     // setDepthFilterColor(globals.depthFilterOn ? "primary" : "default");
     console.log("addDepthFilter: ", globals.depthFilterOn);
@@ -238,6 +240,7 @@ export const Navbar = () => {
   }
 
   // NOTE:to be used in the next implementation of weighted nodes
+  //
   // const [weightedNodes, setWeightedNodes] = useState(globals.addWeightedNodes);
   //
   // const addWhieghtedNodes = (state: boolean) => {

@@ -253,12 +253,12 @@ export class Grid {
       globals.animatePath = false;
       globals.setDisableDepthFilter(false);
       this.gridState = gridState.IDLE;
+      globals.hotReload = true;
       return;
     }
-    console.log("this is the skiping: ", globals.skipAlgoAnimation);
     let howMany: number = globals.skipAlgoAnimation ? 7 : 1;
 
-    while (howMany && this.path.length) {
+    while ((howMany || globals.hotReload) && this.path.length) {
       const cell = this.path.shift();
       cell!.setState(CellStates.path);
       howMany--;
@@ -271,7 +271,8 @@ export class Grid {
       console.log("finished preparing for search");
       // if (this.gridState === gridState.SEARCHING)
       // globals.startAlgo = false;
-      return;
+      if (globals.hotReload === false)
+        return;
     }
     if (!this.#algos.has(this.currentAlgo)) {
       console.log("ma guy we aint have an algo for what u chose");
@@ -282,8 +283,9 @@ export class Grid {
 
     let howMany: number = globals.skipAlgoAnimation ? 13 : 1;
     let state: algoState = algoState.noState;
+    console.log("sarting the algo");
 
-    while (howMany && (state === algoState.noState || state === algoState.building || state === algoState.searching)) {
+    while ((howMany || globals.hotReload) && (state === algoState.noState || state === algoState.building || state === algoState.searching)) {
       state = this.#algos.get(this.currentAlgo)!(this);
       howMany--;
     }
@@ -297,9 +299,9 @@ export class Grid {
       this.gridState = gridState.IDLE;
     }
     else if (state === algoState.foundPath || state === algoState.noPath) {
+      console.log("done searching for a path");
       globals.needclear = true;
       globals.startAlgo = false;
-      globals.updateDepthFilter = true;
       globals.setDisableLaunch(false);
       globals.setDisableDepthFilter(false);
       this.gridState = gridState.IDLE;
@@ -345,7 +347,11 @@ export class Grid {
     for (let cell of this.eachCell()) {
       cell.parrent = null;
       cell.distenceFromStart = Infinity;
+      if (globals.hotReload)
+        cell.setState(CellStates.unvisited);
     }
+    if (globals.hotReload)
+      globals.reset = false;
   }
 
   public resetForBuildAlgo() {
@@ -386,7 +392,6 @@ export class Grid {
     else if (globals.mazeSolvingAlgorithm && this.gridState === gridState.IDLE) {
       this.gridState = gridState.SEARCHING;
       this.currentAlgo = globals.mazeSolvingAlgorithm;
-      globals.mazeSolvingAlgorithm = null;
       globals.searchQueue.clear();
       globals.minQueue.clear();
       this.path = [];
@@ -408,7 +413,6 @@ export class Grid {
     }
     else {
       globals.startAlgo = false;
-      globals.updateDepthFilter = true;
       this.gridState = gridState.IDLE;
       globals.setDisableLaunch(false);
       globals.setDisableDepthFilter(false);
@@ -420,42 +424,65 @@ export class Grid {
 
   public update(ctx: CanvasRenderingContext2D) {
 
-    // console.log("start: ", globals.start);
-    // console.log("finish: ", globals.finish);
-    if (globals.replaceDepthFilterPos &&
-      (globals.depthFilterPos.oldx >= 0 && globals.depthFilterPos.oldx < this.length && globals.depthFilterPos.oldy >= 0 && globals.depthFilterPos.oldy < this.width)) {
-      this.grid[globals.depthFilterPos.oldy][globals.depthFilterPos.oldx].setCellType(CellType.air);
-    }
-
-    if (globals.replaceDepthFilterPos &&
-      (globals.depthFilterPos.oldx >= 0 && globals.depthFilterPos.oldx < this.length && globals.depthFilterPos.oldy >= 0 && globals.depthFilterPos.oldy < this.width)) {
-      this.grid[globals.depthFilterPos.oldy][globals.depthFilterPos.oldx].setCellType(CellType.filter);
-    }
+    // if (globals.replaceDepthFilterPos &&
+    //   (globals.depthFilterPos.oldx >= 0 && globals.depthFilterPos.oldx < this.length && globals.depthFilterPos.oldy >= 0 && globals.depthFilterPos.oldy < this.width)) {
+    //   if (globals.depthFilterPos.oldx === globals.placeholders.filterx && globals.depthFilterPos.oldy === globals.placeholders.filtery)
+    //     this.grid[globals.depthFilterPos.oldy][globals.depthFilterPos.oldx].setCellType(CellType.weighted);
+    //   else
+    //     this.grid[globals.depthFilterPos.oldy][globals.depthFilterPos.oldx].setCellType(CellType.air);
+    // }
+    //
+    // if (globals.replaceDepthFilterPos &&
+    //   (globals.depthFilterPos.x >= 0 && globals.depthFilterPos.x < this.length && globals.depthFilterPos.y >= 0 && globals.depthFilterPos.y < this.width)) {
+    //   if (this.at(globals.depthFilterPos.x, globals.depthFilterPos.y)?.cellType === CellType.weighted) {
+    //     globals.placeholders.filterx = globals.depthFilterPos.x;
+    //     globals.placeholders.filtery = globals.depthFilterPos.y;
+    //   }
+    //   this.grid[globals.depthFilterPos.y][globals.depthFilterPos.x].setCellType(CellType.filter);
+    // }
 
 
     if (globals.replaceStart &&
       (globals.start.oldx >= 0 && globals.start.oldx < this.length && globals.start.oldy >= 0 && globals.start.oldy < this.width)) {
-      this.grid[globals.start.oldy][globals.start.oldx].setCellType(CellType.air);
+      if (globals.start.oldx === globals.placeholders.startx && globals.start.oldy === globals.placeholders.starty) {
+        this.grid[globals.start.oldy][globals.start.oldx].setCellType(CellType.weighted);
+      }
+      else
+        this.grid[globals.start.oldy][globals.start.oldx].setCellType(CellType.air);
     }
 
     if (globals.replaceStart &&
       (globals.start.x >= 0 && globals.start.x < this.length && globals.start.y >= 0 && globals.start.y < this.width)) {
+      if (this.at(globals.start.x, globals.start.y)?.cellType === CellType.weighted) {
+        globals.placeholders.startx = globals.start.x;
+        globals.placeholders.starty = globals.start.y;
+        console.log("saved the weighted pos");
+      }
       this.grid[globals.start.y][globals.start.x].setCellType(CellType.start);
     }
 
     if (globals.replaceFinish &&
       (globals.finish.oldx >= 0 && globals.finish.oldx < this.length && globals.finish.oldy >= 0 && globals.finish.oldy < this.width)) {
-      this.grid[globals.finish.oldy][globals.finish.oldx].setCellType(CellType.air);
+      if (globals.finish.oldx === globals.placeholders.finishx && globals.finish.oldy === globals.placeholders.finishy) {
+        this.grid[globals.finish.oldy][globals.finish.oldx].setCellType(CellType.weighted);
+      }
+      else
+        this.grid[globals.finish.oldy][globals.finish.oldx].setCellType(CellType.air);
     }
 
     if (globals.replaceFinish &&
       (globals.finish.x >= 0 && globals.finish.x < this.length && globals.finish.y >= 0 && globals.finish.y < this.width)) {
+      if (this.at(globals.finish.x, globals.finish.y)?.cellType === CellType.weighted) {
+        globals.placeholders.finishx = globals.finish.x;
+        globals.placeholders.finishy = globals.finish.y;
+        console.log("saved the weighted pos");
+      }
       this.grid[globals.finish.y][globals.finish.x].setCellType(CellType.finish);
     }
 
     globals.mouseUpdating = false;
 
-    if (globals.reset) {
+    if (globals.reset && globals.hotReload === false) {
       this.resetPatternMKI();
     }
 

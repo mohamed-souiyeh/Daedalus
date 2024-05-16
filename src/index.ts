@@ -171,12 +171,12 @@ export function animation(dt: number) {
 
     startTime = performance.now();
 
-    if (globals.updateDepthFilter) {
+    if (globals.updateDepthFilter && globals.reset === false) {
       console.log("depth filter updated");
       globals.grid.depthFilter();
       globals.updateDepthFilter = false;
     }
-    if (counter % inputDefaults.ALGOSPEED === 0 && globals.reset === false) {
+    if ((counter % inputDefaults.ALGOSPEED === 0 || globals.hotReload) && globals.reset === false) {
       if (globals.startAlgo)
         globals.grid.launchAlgo();
       if (globals.animatePath)

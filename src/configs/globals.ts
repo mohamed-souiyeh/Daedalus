@@ -60,8 +60,10 @@ export const globals = {
   addWalls: false,
 
 
+  placeholders: { startx: -1, starty: -1, finishx: -1, finishy: -1, filterx: -1, filtery: -1 },
 
   reset: false as boolean,
+  hotReload: false as boolean,
 
   // HACK: this is weird i know
   setDisableLaunch: null as any,
