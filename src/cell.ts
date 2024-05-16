@@ -137,6 +137,14 @@ export class Cell {
     }
   }
 
+  public isNeighbor(cell: Cell | null): boolean {
+    if (cell === null) return false;
+
+    if (this.neighbors().find((neighbor) => neighbor === cell))
+      return true;
+    return false;
+  }
+
   public islinked(cell: Cell | null): boolean {
     if (cell === null) return false;
 
@@ -660,7 +668,7 @@ export class Cell {
       ctx.fillStyle = "#0072F5";
       ctx.fill(path)
     }
-    else if (this.#cellType === CellType.weighted) {
+    else if (this.#cellType === CellType.weighted && globals.depthFilterOn === false) {
       const path = new Path2D(svgPath.from(globals.weightedNodePath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.4), this.#y + this.#length * (WALL_PERSENTAGE * 1.4)).toString());
       ctx.fillStyle = "#0072F5";
       ctx.fill(path)

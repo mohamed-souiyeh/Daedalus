@@ -50,7 +50,6 @@ export function randomWalkDFS(grid: Grid): algoState {
   }
 
   if (currentFrame === undefined) {
-    globals.skipAlgoAnimaiton = false;
     return algoState.done;
   }
 

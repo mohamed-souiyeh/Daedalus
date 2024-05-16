@@ -4,6 +4,10 @@ import { inputDefaults } from "./defaults.ts";
 export let mouse: t_mouse = {
   x: 0,
   y: 0,
+  currentx: 0,
+  currenty: 0,
+  oldx: 0,
+  oldy: 0,
   dx: 0,
   dy: 0,
   bx: 0,

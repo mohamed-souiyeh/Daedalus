@@ -1,6 +1,6 @@
 import { mouse } from "../configs/input.config.ts";
 import { globals } from "../configs/globals.ts";
-import { CELLSIZE, CellType } from "../configs/cell.config.ts";
+import { CELLSIZE, CellStates, CellType } from "../configs/cell.config.ts";
 
 
 
@@ -13,6 +13,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
 
     const x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
     const y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
+
 
     if (mouseDown && globals.mouseUpdating === false) {
 
@@ -34,12 +35,46 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
         }
       }
       else {
+        if (globals.addWeights && globals.startAlgo === false && globals.animatePath === false &&
+          globals.reset === false && event.button === 0 &&
+          !(x === globals.finish.x && y === globals.finish.y) &&
+          !(x === globals.start.x && y === globals.start.y) &&
+          !(x === mouse.currentx && y === mouse.currenty)) {
+
+          const cell = globals.grid.at(x, y);
+
+
+          if (cell && cell.cellType === CellType.weighted) {
+            cell.setCellType(CellType.air)
+          }
+          else if (cell && cell.cellType !== CellType.weighted) {
+            cell.setCellType(CellType.weighted);
+          }
+        }
+        else if (globals.addWalls && globals.startAlgo === false && globals.animatePath === false &&
+          globals.reset === false && event.button === 0 &&
+          !(x === mouse.currentx && y === mouse.currenty)) {
+
+
+          const cell = globals.grid.at(x, y);
+          const prevCell = globals.grid.at(mouse.currentx, mouse.currenty);
+
+          // console.log("cell: ", cell);
+          // console.log("prevcell: ", prevCell);
+
+          if (cell && cell.isNeighbor(prevCell) && cell.islinked(prevCell)) {
+            cell.unlink(prevCell);
+          }
+          else if (cell && cell.isNeighbor(prevCell) && !cell.islinked(prevCell)) {
+            cell.link(prevCell);
+          }
+        }
+
         // console.log(globals.replaceStart)
         // console.log(globals.startAlgo === false)
         // console.log(globals.animatePath === false)
         // console.log(globals.reset === false)
         // console.log(!(Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE) === globals.finish.x && Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE) === globals.finish.y))
-        console.log(!(x === globals.finish.x && y === globals.finish.y))
 
         if (globals.replaceStart && globals.startAlgo === false && globals.animatePath === false && globals.reset === false &&
           !(x === globals.finish.x && y === globals.finish.y) && !(x === globals.start.x && y === globals.start.y) &&
@@ -66,7 +101,14 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
           globals.mouseUpdating = true;
         }
       }
+    }
 
+    if (!(x === mouse.currentx && y === mouse.currenty)) {
+      mouse.oldx = mouse.currentx;
+      mouse.currentx = x;
+
+      mouse.oldy = mouse.currenty;
+      mouse.currenty = y;
     }
 
     // console.log("mouse moved", mouse);
@@ -95,7 +137,6 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
       }
     }
     else {
-      console.log("mouse up event");
       if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 0) {
         globals.replaceStart = false;
       }
@@ -118,10 +159,8 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
 
 
 
-  //NOTE: - to lock mouse position
+  // NOTE: - to lock mouse position
   canvas.addEventListener('mousedown', async function (event: MouseEvent) {
-
-
     // globals.canvas!.width = this.#length * CELLSIZE;
     // globals.canvas!.height = this.#width * CELLSIZE;
 
@@ -143,6 +182,29 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
       }
     }
     else {
+      const cell = globals.grid.at(x, y);
+
+      if (globals.addWeights && globals.startAlgo === false && globals.animatePath === false &&
+        globals.reset === false && event.button === 0 &&
+        !(x === globals.finish.x && y === globals.finish.y) &&
+        !(x === globals.start.x && y === globals.start.y)) {
+
+
+
+        if (cell && cell.cellType === CellType.weighted) {
+          cell.setCellType(CellType.air)
+          mouseDown = true;
+        }
+        else if (cell && cell.cellType !== CellType.weighted) {
+          cell?.setCellType(CellType.weighted);
+          mouseDown = true;
+        }
+
+      }
+      if (globals.addWalls && globals.startAlgo === false && globals.animatePath === false &&
+        globals.reset === false && event.button === 0) {
+        mouseDown = true;
+      }
       if (globals.startAlgo === false && globals.animatePath === false &&
         globals.reset === false && event.button === 0 &&
         (x === globals.start.x && y === globals.start.y)) {

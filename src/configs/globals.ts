@@ -56,18 +56,23 @@ export const globals = {
   },
 
 
+  addWeights: false,
+  addWalls: false,
+
+
 
   reset: false as boolean,
 
   // HACK: this is weird i know
   setDisableLaunch: null as any,
   setDisableDepthFilter: null as any,
+  stopAddingWeightedAnimation: null as any,
   handleResetButton: null as any,
   handleAlgoLaunch: null as any,
   maxDepth: -1 as number,
 
   // NOTE: i will put them here untill further notice (aka maybe until next refactor XD)
-  skipAlgoAnimaiton: false as boolean,
+  skipAlgoAnimation: false as boolean,
   BuildStack: new Stack<Frame>(),
   searchQueue: new Queue<Frame>(),
   minQueue: new PriorityQueue<Cell>((rhs: Cell | number, lhs: Cell | number) => {

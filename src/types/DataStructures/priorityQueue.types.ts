@@ -110,7 +110,4 @@ export class PriorityQueue<T> {
     this.storage = [Infinity,];
   }
 
-  print() {
-    console.log("max queue elements: ", this.storage);
-  }
 }
