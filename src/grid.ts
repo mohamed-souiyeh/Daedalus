@@ -113,7 +113,7 @@ export class Grid {
       for (let x = 0; x < this.#length; x++) {
         let cellx = this.startX + x * CELLSIZE;
         let celly = this.startY + y * CELLSIZE;
-        let type: CellType = this.grid[y][x].cellType === CellType.weighted ? CellType.weighted : CellType.air;
+        let type: CellType = CellType.air;
         if (x === globals.start.x && y === globals.start.y) {
           type = CellType.start;
         }
@@ -251,13 +251,12 @@ export class Grid {
   public animatePath() {
     if (this.path.length === 0) {
       globals.animatePath = false;
-      globals.skipAlgoAnimaiton = false;
       globals.setDisableDepthFilter(false);
       this.gridState = gridState.IDLE;
       return;
     }
-    console.log("this is the skiping: ", globals.skipAlgoAnimaiton);
-    let howMany: number = globals.skipAlgoAnimaiton ? 10 : 1;
+    console.log("this is the skiping: ", globals.skipAlgoAnimation);
+    let howMany: number = globals.skipAlgoAnimation ? 7 : 1;
 
     while (howMany && this.path.length) {
       const cell = this.path.shift();
@@ -281,7 +280,7 @@ export class Grid {
       return;
     }
 
-    let howMany: number = globals.skipAlgoAnimaiton ? 18 : 1;
+    let howMany: number = globals.skipAlgoAnimation ? 13 : 1;
     let state: algoState = algoState.noState;
 
     while (howMany && (state === algoState.noState || state === algoState.building || state === algoState.searching)) {
@@ -290,7 +289,6 @@ export class Grid {
     }
     if (state === algoState.done) {
       console.log("done building");
-      globals.skipAlgoAnimaiton = false;
       globals.startAlgo = false;
       globals.updateDepthFilter = true;
       globals.needclear = true;
@@ -299,7 +297,6 @@ export class Grid {
       this.gridState = gridState.IDLE;
     }
     else if (state === algoState.foundPath || state === algoState.noPath) {
-      globals.skipAlgoAnimaiton = false;
       globals.needclear = true;
       globals.startAlgo = false;
       globals.updateDepthFilter = true;
@@ -361,6 +358,9 @@ export class Grid {
     }
     for (let cell of this.eachCell()) {
       cell.resetWallAndLinks(wallsState, this.currentAlgo);
+      cell.parrent = null;
+      cell.distenceFromStart = Infinity;
+
     }
   }
 
@@ -407,7 +407,6 @@ export class Grid {
       }
     }
     else {
-      globals.skipAlgoAnimaiton = false;
       globals.startAlgo = false;
       globals.updateDepthFilter = true;
       this.gridState = gridState.IDLE;

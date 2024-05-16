@@ -6,8 +6,6 @@ import { Grid } from "../grid";
 import { Frame, algoState } from "../types/algos.types";
 
 function preparePath(grid: Grid, currentCell: Cell) {
-  globals.skipAlgoAnimaiton = false;
-  console.log("yeeep there is a path");
   globals.animatePath = true;
   let cell = currentCell;
   while (!(cell.gridx === globals.start.x && cell.gridy === globals.start.y)) {
@@ -32,8 +30,6 @@ export function dijkstra(grid: Grid) {
   const currentCell = globals.minQueue.dequeue();
 
   if (currentCell === undefined || typeof currentCell === "number") {
-    globals.skipAlgoAnimaiton = false;
-    console.log("there is no cell here bro");
     toast.error("there is no path", {
       position: "top-center",
       autoClose: false,
@@ -72,8 +68,6 @@ export function dijkstra(grid: Grid) {
       nextCurrent.setState(CellStates.current);
   }
 
-  console.log("queue after operation: ", globals.minQueue);
-  // globals.isPaused = true;
   return algoState.searching;
 }
 

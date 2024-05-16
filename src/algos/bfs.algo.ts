@@ -9,7 +9,6 @@ import { Frame, algoState } from "../types/algos.types";
 export function bfs(grid: Grid) {
 
   if (globals.searchQueue.size() === 0) {
-    globals.skipAlgoAnimaiton = false;
     console.log("there is no Path");
     toast.error("there is no path", {
       position: "top-center",
@@ -29,14 +28,12 @@ export function bfs(grid: Grid) {
   const currentCell = grid.at(current!.x, current!.y);
 
   if (currentCell === null) {
-    globals.skipAlgoAnimaiton = false;
     console.log("there is no cell here bro");
     // globals.handletoast();
     return algoState.noPath;
   }
 
   if (currentCell.gridx === globals.finish.x && currentCell.gridy === globals.finish.y) {
-    globals.skipAlgoAnimaiton = false;
     console.log("yeeep there is a path");
     globals.animatePath = true;
     let cell = currentCell;

@@ -100,15 +100,18 @@ export const Navbar = () => {
     if (globals.setDisableLaunch)
       globals.setDisableLaunch(false);
     globals.depthFilterOn = false;
+    globals.addWeights = false;
+    setAnimateWeights(false);
     setDisableDepthFilter(true)
     // setDepthFilterColor(globals.depthFilterOn ? "primary" : "default");
   };
 
+  const [animateSkipButton, setAnimateSkipButton] = useState(globals.skipAlgoAnimation);
 
   const handleSkipButton = () => {
     console.log("skipping");
-    if (globals.startAlgo || globals.animatePath)
-      globals.skipAlgoAnimaiton = true;
+    globals.skipAlgoAnimation = !globals.skipAlgoAnimation;
+    setAnimateSkipButton(globals.skipAlgoAnimation);
   }
 
   const [depthFilterColor, setDepthFilterColor] = useState("primary");
@@ -130,6 +133,45 @@ export const Navbar = () => {
     globals.colorComposition.b = Math.random() - 0.5 > 0;
     globals.gridRedraw = true;
   };
+
+
+  const [animateWeights, setAnimateWeights] = useState(globals.addWeights);
+
+  const addWeights = () => {
+    if (globals.startAlgo) {
+      globals.addWeights = false;
+      setAnimateWeights(false);
+      // setDepthFilterColor(globals.depthFilterOn ? "primary" : "default");
+      return;
+    }
+    globals.addWeights = !globals.addWeights;
+    setAnimateWeights(globals.addWeights);
+    if (globals.addWeights) {
+      globals.addWalls = false;
+      setAnimateWallMod(globals.addWalls);
+    }
+    // setDepthFilterColor(globals.depthFilterOn ? "primary" : "default");
+  };
+
+  const [animateWallMod, setAnimateWallMod] = useState(globals.addWalls);
+
+  const addWalls = () => {
+    if (globals.startAlgo) {
+      globals.addWalls = false;
+      setAnimateWallMod(false);
+      // setDepthFilterColor(globals.depthFilterOn ? "primary" : "default");
+      return;
+    }
+    globals.addWalls = !globals.addWalls;
+    setAnimateWallMod(globals.addWalls);
+    if (globals.addWalls) {
+      globals.addWeights = false;
+      setAnimateWeights(globals.addWeights);
+    }
+    console.log("addWalls: ", globals.addWalls);
+    // setDepthFilterColor(globals.depthFilterOn ? "primary" : "default");
+  };
+
 
   useEffect(() => {
 
@@ -220,7 +262,9 @@ export const Navbar = () => {
 
   globals.handleResetButton = handleResetButton;
   globals.setDisableDepthFilter = setDisableDepthFilter;
-
+  globals.stopAddingWeightedAnimation = (state: boolean) => {
+    setAnimateWeights(!state);
+  }
   // NOTE: tutorial
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -693,7 +737,7 @@ export const Navbar = () => {
         </Tooltip>
         <Tooltip content="fast-forward" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
           <Button ref={skipButton} color="primary" isIconOnly size="sm" onClick={handleSkipButton}>
-            <FontAwesomeIcon icon={faForward} size="lg" />
+            <FontAwesomeIcon icon={faForward} size="lg" beat={animateSkipButton} />
           </Button>
         </Tooltip>
         <Tooltip content="Play-Pause" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
@@ -756,7 +800,20 @@ export const Navbar = () => {
             </Button>
           </Tooltip>
         }
-
+        {
+          <Tooltip content="Add/Remove Weighted Nodes" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+            <Button color="primary" isIconOnly size="sm" onClick={addWeights} >
+              <FontAwesomeIcon icon={faWeightHanging} size="lg" beat={animateWeights} />
+            </Button>
+          </Tooltip>
+        }
+        {
+          <Tooltip content="Build/Demolish walls" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+            <Button color="primary" isIconOnly size="sm" onClick={addWalls} >
+              <FontAwesomeIcon icon={faTrowelBricks} size="lg" beat={animateWallMod} />
+            </Button>
+          </Tooltip>
+        }
       </NavbarContent>
     </NextUINavbar >
   );
