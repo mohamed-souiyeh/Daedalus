@@ -357,7 +357,7 @@ export class Cell {
       b: this.#nextColor.b - this.#color.b,
       a: this.#nextColor.a - this.#color.a,
     };
-    if (this.animation === CellAnimation.STOPPED || this.animation === CellAnimation.STOPPING) {
+    if (globals.hotReload === false && (this.animation === CellAnimation.STOPPED || this.animation === CellAnimation.STOPPING)) {
       this.#setInwardsAnimationRequirements();
     }
   }
@@ -663,7 +663,7 @@ export class Cell {
       ctx.fillStyle = "#0072F5";
       ctx.fill(path)
     }
-    else if (this.gridx === globals.depthFilterPos.x && this.gridy === globals.depthFilterPos.y && globals.depthFilterOn) {
+    else if (globals.depthFilterOn && this.gridx === globals.depthFilterPos.x && this.gridy === globals.depthFilterPos.y && globals.depthFilterOn) {
       const path = new Path2D(svgPath.from(globals.depthFilterPath).translate(this.#x + this.#length * (WALL_PERSENTAGE * 1.4), this.#y + this.#length * (WALL_PERSENTAGE * 1.4)).toString());
       ctx.fillStyle = "#0072F5";
       ctx.fill(path)
@@ -684,7 +684,7 @@ export class Cell {
       fillStyle: "black"
     })
 
-    if (this.distenceFromStart !== Infinity && (this.state === CellStates.visited || this.state === CellStates.path)) {
+    if (this.distenceFromStart !== Infinity) {
       let dist: string;
       dist = `${this.distenceFromStart}`
       ctx.fillText(

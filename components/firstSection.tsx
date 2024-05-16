@@ -38,10 +38,12 @@ export const FirstSection = (props: any) => {
     if (mazeSolvingAlgorithms.find((item) => item.key === Array.from(algorithmValue)[0] as algosKeys)) {
       globals.mazeSolvingAlgorithm = Array.from(algorithmValue)[0] as algosKeys;
       globals.mazeBuildingAlgorithm = null;
+      globals.hotReload = false;
     }
     else if (mazeGenerationAlgorithms.find((item) => item.key === Array.from(algorithmValue)[0] as algosKeys)) {
       globals.mazeBuildingAlgorithm = Array.from(algorithmValue)[0] as algosKeys;
       globals.mazeSolvingAlgorithm = null;
+      globals.hotReload = false;
     }
 
     if (!globals.mazeSolvingAlgorithm && !globals.mazeBuildingAlgorithm)
