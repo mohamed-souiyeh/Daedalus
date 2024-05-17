@@ -1,3 +1,4 @@
+import { A_Star } from "./algos/A*.algo.ts";
 import { bfs } from "./algos/bfs.algo.ts";
 import { dijkstra } from "./algos/dijkstra.algo.ts";
 import { randomWalkDFS } from "./algos/randomWalkDFS.algo.ts";
@@ -166,6 +167,7 @@ export class Grid {
     this.#algos.set(algosKeys.recursiveDivider, recursiveDivider);
     this.#algos.set(algosKeys.BFS, bfs);
     this.#algos.set(algosKeys.Dijkstra, dijkstra);
+    this.#algos.set(algosKeys.Astar, A_Star);
   }
   //!SECTION
 
@@ -405,7 +407,7 @@ export class Grid {
       this.at(frame.x, frame.y)!.distenceFromStart = 0;
       globals.searchQueue.enqueue(frame);
 
-      if (this.currentAlgo === algosKeys.Dijkstra) {
+      if (this.currentAlgo === algosKeys.Dijkstra || this.currentAlgo === algosKeys.Astar) {
         for (let cell of this.eachCell()) {
           globals.minQueue.enqueue(cell);
         }

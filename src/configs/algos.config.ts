@@ -42,10 +42,11 @@ export const mazeSolvingAlgorithms = [
     It starts at the tree root (or some arbitrary node of a graph, sometimes referred to as a 'search key'[1]) and explores the neighbor nodes first, \
     before moving to the next level neighbors, untile it finds the wanted node.",
   },
-  // {
-  //   key: algosKeys.Astar,
-  //   name: "A* Algorithm",
-  // },
+  {
+    key: algosKeys.Astar,
+    name: "A* Algorithm",
+    description: "well it is A*",
+  },
   {
     key: algosKeys.Dijkstra,
     name: "Dijkstra's Algorithm",
