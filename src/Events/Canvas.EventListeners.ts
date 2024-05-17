@@ -46,9 +46,17 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
 
           if (cell && cell.cellType === CellType.weighted) {
             cell.setCellType(CellType.air)
+            if (globals.hotReload) {
+              globals.startAlgo = true;
+              globals.gridRedraw = true;
+            }
           }
           else if (cell && cell.cellType !== CellType.weighted) {
             cell.setCellType(CellType.weighted);
+            if (globals.hotReload) {
+              globals.startAlgo = true;
+              globals.gridRedraw = true;
+            }
           }
         }
         else if (globals.addWalls && globals.startAlgo === false && globals.animatePath === false &&
@@ -64,9 +72,17 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
 
           if (cell && cell.isNeighbor(prevCell) && cell.islinked(prevCell)) {
             cell.unlink(prevCell);
+            if (globals.hotReload) {
+              globals.startAlgo = true;
+              globals.gridRedraw = true;
+            }
           }
           else if (cell && cell.isNeighbor(prevCell) && !cell.islinked(prevCell)) {
             cell.link(prevCell);
+            if (globals.hotReload) {
+              globals.startAlgo = true;
+              globals.gridRedraw = true;
+            }
           }
         }
 
@@ -201,10 +217,18 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
 
         if (cell && cell.cellType === CellType.weighted) {
           cell.setCellType(CellType.air)
+          if (globals.hotReload) {
+            globals.startAlgo = true;
+            globals.gridRedraw = true;
+          }
           mouseDown = true;
         }
         else if (cell && cell.cellType !== CellType.weighted) {
           cell?.setCellType(CellType.weighted);
+          if (globals.hotReload) {
+            globals.startAlgo = true;
+            globals.gridRedraw = true;
+          }
           mouseDown = true;
         }
 
