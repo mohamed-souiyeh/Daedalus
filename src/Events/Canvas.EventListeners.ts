@@ -3,11 +3,9 @@ import { globals } from "../configs/globals.ts";
 import { CELLSIZE, CellStates, CellType } from "../configs/cell.config.ts";
 
 
-
 export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
   let mouseDown: boolean;
-  //NOTE: - to update mouse position if not locked
-  canvas.addEventListener("mousemove", async function (event: MouseEvent) {
+  const handlePointerMove = (event: any) => {
     mouse.x = event.x - canvas.offsetLeft;
     mouse.y = event.y - canvas.offsetTop;
 
@@ -60,7 +58,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
           }
         }
         else if (globals.addWalls && globals.startAlgo === false && globals.animatePath === false &&
-          globals.reset === false && event.button === 0 &&
+          globals.reset === false && event.button === 0 && !globals.replaceStart && !globals.replaceFinish &&
           !(x === mouse.currentx && y === mouse.currenty)) {
 
 
@@ -147,44 +145,8 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
       mouse.bx = event.x - canvas.offsetLeft;
       mouse.by = event.y - canvas.offsetTop;
     }
-  });
-
-  canvas.addEventListener('mouseup', async function (event: MouseEvent) {
-
-
-    // globals.canvas!.width = this.#length * CELLSIZE;
-    // globals.canvas!.height = this.#width * CELLSIZE;
-    mouseDown = false;
-    if (globals.depthFilterOn && globals.updateDepthFilter === false) {
-      if (globals.depthFilterOn && event.button === 0) {
-        globals.replaceDepthFilterPos = false;
-      }
-    }
-    else {
-      if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 0) {
-        globals.replaceStart = false;
-      }
-      if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 0) {
-        globals.replaceFinish = false;
-      }
-    }
-
-    if (event.button === 0 && event.shiftKey) {
-      globals.BookletMouseCellPosIsLocked = !globals.BookletMouseCellPosIsLocked;
-      mouse.bx = event.x - canvas.offsetLeft;
-      mouse.by = event.y - canvas.offsetTop;
-    }
-    if (event.button === 2 && event.shiftKey) {
-      globals.DebugMouseCellPosIsLocked = !globals.DebugMouseCellPosIsLocked;
-      mouse.dx = event.x - canvas.offsetLeft;
-      mouse.dy = event.y - canvas.offsetTop;
-    }
-  });
-
-
-
-  // NOTE: - to lock mouse position
-  canvas.addEventListener('mousedown', async function (event: MouseEvent) {
+  };
+  const handlePointerDown = (event: any) => {
     // globals.canvas!.width = this.#length * CELLSIZE;
     // globals.canvas!.height = this.#width * CELLSIZE;
 
@@ -273,7 +235,51 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
       mouse.dx = event.x - canvas.offsetLeft;
       mouse.dy = event.y - canvas.offsetTop;
     }
-  });
+  };
+  const handlePointerUp = (event: any) => {
+
+
+    // globals.canvas!.width = this.#length * CELLSIZE;
+    // globals.canvas!.height = this.#width * CELLSIZE;
+    mouseDown = false;
+    if (globals.depthFilterOn && globals.updateDepthFilter === false) {
+      if (globals.depthFilterOn && event.button === 0) {
+        globals.replaceDepthFilterPos = false;
+      }
+    }
+    else {
+      if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 0) {
+        globals.replaceStart = false;
+      }
+      if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 0) {
+        globals.replaceFinish = false;
+      }
+    }
+
+    if (event.button === 0 && event.shiftKey) {
+      globals.BookletMouseCellPosIsLocked = !globals.BookletMouseCellPosIsLocked;
+      mouse.bx = event.x - canvas.offsetLeft;
+      mouse.by = event.y - canvas.offsetTop;
+    }
+    if (event.button === 2 && event.shiftKey) {
+      globals.DebugMouseCellPosIsLocked = !globals.DebugMouseCellPosIsLocked;
+      mouse.dx = event.x - canvas.offsetLeft;
+      mouse.dy = event.y - canvas.offsetTop;
+    }
+  };
+
+  //NOTE: - to update mouse position if not locked
+  canvas.addEventListener("mousemove", handlePointerMove);
+  canvas.addEventListener("touchmove", handlePointerMove);
+
+  canvas.addEventListener('mouseup', handlePointerUp);
+  canvas.addEventListener('touchend', handlePointerUp);
+
+
+
+  // NOTE: - to lock mouse position
+  canvas.addEventListener('mousedown', handlePointerDown);
+  canvas.addEventListener('touchstart', handlePointerDown);
 
   //NOTE: - this to prevent the cotext menu from aprearing when we right click
   canvas.addEventListener('contextmenu', async function (event: MouseEvent) {
