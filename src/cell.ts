@@ -77,6 +77,7 @@ export class Cell {
 
   parrent: Cell | null = null;
   distenceFromStart: number = Infinity;
+  priority: number = Infinity;
 
   // NOTE: depth filter stuff
   weight: number = 1;
@@ -242,6 +243,7 @@ export class Cell {
 
     this.parrent = null;
     this.distenceFromStart = Infinity;
+    this.priority = Infinity;
 
     this.depth = Infinity;
 

@@ -24,8 +24,9 @@ function distanceEstimationToEnd(current: Cell, finish: Cell | null): number {
 
 function relax(current: Cell, next: Cell) {
   const finish = globals.grid.at(globals.finish.x, globals.finish.y);
-  if (next.distenceFromStart > current.distenceFromStart + next.weight + distanceEstimationToEnd(next, finish)) {
-    next.distenceFromStart = current.distenceFromStart + next.weight + distanceEstimationToEnd(next, finish);
+  if (next.distenceFromStart > current.distenceFromStart + next.weight) {
+    next.distenceFromStart = current.distenceFromStart + next.weight;
+    next.priority = current.distenceFromStart + next.weight + distanceEstimationToEnd(next, finish);
     next.parrent = current;
     return true;
   }
@@ -61,7 +62,7 @@ export function A_Star(grid: Grid) {
       continue;
 
     if (neighbor && currentCell.islinked(neighbor) && relax(currentCell, neighbor)) {
-      globals.minQueue.updatePriority(neighbor);
+      globals.minQueue.enqueue(neighbor);
       neighbor.setState(CellStates.inqueue);
       if (neighbor.cellType === CellType.finish) {
         preparePath(grid, neighbor);

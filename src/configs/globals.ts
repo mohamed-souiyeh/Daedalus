@@ -80,7 +80,7 @@ export const globals = {
   minQueue: new PriorityQueue<Cell>((rhs: Cell | number, lhs: Cell | number) => {
     if (typeof rhs === "number" || typeof lhs === "number")
       return false;
-    return rhs.distenceFromStart <= lhs.distenceFromStart;
+    return rhs.priority <= lhs.priority;
   }),
 
   // NOTE: SVGs
