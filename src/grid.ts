@@ -8,7 +8,7 @@ import { Cell } from "./cell.ts";
 import { algosKeys } from "./configs/algos.config.ts";
 import { CELLSIZE, CellAnimation, CellStates, CellType, Directions } from "./configs/cell.config.ts";
 import { inputDefaults } from "./configs/defaults.ts";
-import { globals } from "./configs/globals.ts";
+import { globals, iconsState } from "./configs/globals.ts";
 import { mouse } from "./configs/input.config.ts";
 import { WallState } from "./configs/wall.config.ts";
 import { Debuger } from "./debugger.ts";
@@ -452,26 +452,27 @@ export class Grid {
     // }
 
 
-    if (globals.replaceStart &&
+    if (globals.replaceStart === iconsState.replaced &&
       (globals.start.oldx >= 0 && globals.start.oldx < this.length && globals.start.oldy >= 0 && globals.start.oldy < this.width)) {
       if (globals.start.oldx === globals.placeholders.startx && globals.start.oldy === globals.placeholders.starty) {
         this.grid[globals.start.oldy][globals.start.oldx].setCellType(CellType.weighted);
       }
-      else
+      else {
         this.grid[globals.start.oldy][globals.start.oldx].setCellType(CellType.air);
+      }
     }
 
-    if (globals.replaceStart &&
+    if (globals.replaceStart === iconsState.replaced &&
       (globals.start.x >= 0 && globals.start.x < this.length && globals.start.y >= 0 && globals.start.y < this.width)) {
       if (this.at(globals.start.x, globals.start.y)?.cellType === CellType.weighted) {
         globals.placeholders.startx = globals.start.x;
         globals.placeholders.starty = globals.start.y;
-        console.log("saved the weighted pos");
       }
       this.grid[globals.start.y][globals.start.x].setCellType(CellType.start);
+      globals.replaceStart = iconsState.replacing;
     }
 
-    if (globals.replaceFinish &&
+    if (globals.replaceFinish === iconsState.replaced &&
       (globals.finish.oldx >= 0 && globals.finish.oldx < this.length && globals.finish.oldy >= 0 && globals.finish.oldy < this.width)) {
       if (globals.finish.oldx === globals.placeholders.finishx && globals.finish.oldy === globals.placeholders.finishy) {
         this.grid[globals.finish.oldy][globals.finish.oldx].setCellType(CellType.weighted);
@@ -480,14 +481,14 @@ export class Grid {
         this.grid[globals.finish.oldy][globals.finish.oldx].setCellType(CellType.air);
     }
 
-    if (globals.replaceFinish &&
+    if (globals.replaceFinish === iconsState.replaced &&
       (globals.finish.x >= 0 && globals.finish.x < this.length && globals.finish.y >= 0 && globals.finish.y < this.width)) {
       if (this.at(globals.finish.x, globals.finish.y)?.cellType === CellType.weighted) {
         globals.placeholders.finishx = globals.finish.x;
         globals.placeholders.finishy = globals.finish.y;
-        console.log("saved the weighted pos");
       }
       this.grid[globals.finish.y][globals.finish.x].setCellType(CellType.finish);
+      globals.replaceFinish = iconsState.replacing;
     }
 
     globals.mouseUpdating = false;
