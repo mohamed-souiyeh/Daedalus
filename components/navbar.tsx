@@ -97,6 +97,8 @@ export const Navbar = () => {
 
   const handleResetButton = () => {
     reset();
+    if (globals.isPaused)
+      handlePauseButton();
     if (globals.setDisableLaunch)
       globals.setDisableLaunch(false);
     globals.depthFilterOn = false;

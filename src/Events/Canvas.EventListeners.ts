@@ -6,21 +6,24 @@ import { CELLSIZE, CellStates, CellType } from "../configs/cell.config.ts";
 export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
   let mouseDown: boolean;
   const handlePointerMove = (event: any) => {
-    mouse.x = event.x - canvas.offsetLeft;
-    mouse.y = event.y - canvas.offsetTop;
+    if (event instanceof TouchEvent) {
+      mouse.x = Math.round(event.touches[0].clientX - canvas.offsetLeft);
+      mouse.y = Math.round(event.touches[0].clientY - canvas.offsetTop);
+    }
+    else {
+      mouse.x = event.x - canvas.offsetLeft;
+      mouse.y = event.y - canvas.offsetTop;
+    }
 
     const x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
     const y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
 
-
     if (mouseDown && globals.mouseUpdating === false) {
-
       if (globals.depthFilterOn && globals.updateDepthFilter === false) {
-        if (globals.depthFilterOn && event.button === 0 &&
+        if (globals.depthFilterOn &&
           !(x === globals.depthFilterPos.x && y === globals.depthFilterPos.y) &&
           (x >= 0 && x < globals.grid.length && y >= 0 && y < globals.grid.width)) {
 
-          console.log("updating depth filter pos and all");
           globals.depthFilterPos.oldx = globals.depthFilterPos.x;
           globals.depthFilterPos.x = x;
 
@@ -34,7 +37,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
       }
       else {
         if (globals.addWeights && globals.startAlgo === false && globals.animatePath === false &&
-          globals.reset === false && event.button === 0 && !globals.replaceStart && !globals.replaceFinish &&
+          globals.reset === false && !globals.replaceStart && !globals.replaceFinish &&
           !(x === globals.finish.x && y === globals.finish.y) &&
           !(x === globals.start.x && y === globals.start.y) &&
           !(x === mouse.currentx && y === mouse.currenty)) {
@@ -58,7 +61,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
           }
         }
         else if (globals.addWalls && globals.startAlgo === false && globals.animatePath === false &&
-          globals.reset === false && event.button === 0 && !globals.replaceStart && !globals.replaceFinish &&
+          globals.reset === false && !globals.replaceStart && !globals.replaceFinish &&
           !(x === mouse.currentx && y === mouse.currenty)) {
 
 
@@ -93,7 +96,6 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
         if (globals.replaceStart && globals.startAlgo === false && globals.animatePath === false && globals.reset === false &&
           !(x === globals.finish.x && y === globals.finish.y) && !(x === globals.start.x && y === globals.start.y) &&
           (x >= 0 && x < globals.grid.length && y >= 0 && y < globals.grid.width)) {
-          console.log("updating start pos");
           globals.start.oldx = globals.start.x;
           globals.start.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
 
@@ -109,7 +111,6 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
         if (globals.replaceFinish && globals.startAlgo === false && globals.animatePath === false && globals.reset === false &&
           !(x === globals.start.x && y === globals.start.y) && !(x === globals.finish.x && y === globals.finish.y) &&
           (x >= 0 && x < globals.grid.length && y >= 0 && y < globals.grid.width)) {
-          console.log("updating finish pos");
           globals.finish.oldx = globals.finish.x;
           globals.finish.x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
 
@@ -149,12 +150,19 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
   const handlePointerDown = (event: any) => {
     // globals.canvas!.width = this.#length * CELLSIZE;
     // globals.canvas!.height = this.#width * CELLSIZE;
-
+    if (event instanceof TouchEvent) {
+      mouse.x = Math.round(event.touches[0].clientX - canvas.offsetLeft);
+      mouse.y = Math.round(event.touches[0].clientY - canvas.offsetTop);
+    }
     const x = Math.floor((mouse.x - globals.gridOffsetLeft) / CELLSIZE);
     const y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
+    // console.log("this is the event: ", event);
+    // console.log("this is x and y: ", x, y);
+    // console.log("this is the start: ", globals.start);
+
 
     if (globals.depthFilterOn && globals.updateDepthFilter === false) {
-      if (globals.depthFilterOn && event.button === 0 &&
+      if (globals.depthFilterOn &&
         (x === globals.depthFilterPos.x && y === globals.depthFilterPos.y)) {
         globals.depthFilterPos.oldx = globals.depthFilterPos.x;
         globals.depthFilterPos.x = x;
@@ -171,7 +179,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
       const cell = globals.grid.at(x, y);
 
       if (globals.addWeights && globals.startAlgo === false && globals.animatePath === false &&
-        globals.reset === false && event.button === 0 &&
+        globals.reset === false &&
         !(x === globals.finish.x && y === globals.finish.y) &&
         !(x === globals.start.x && y === globals.start.y)) {
 
@@ -196,13 +204,12 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
 
       }
       if (globals.addWalls && globals.startAlgo === false && globals.animatePath === false &&
-        globals.reset === false && event.button === 0) {
+        globals.reset === false) {
         mouseDown = true;
       }
       if (globals.startAlgo === false && globals.animatePath === false &&
-        globals.reset === false && event.button === 0 &&
+        globals.reset === false &&
         (x === globals.start.x && y === globals.start.y)) {
-        console.log("mouse down event: ", event);
         globals.start.oldx = globals.start.x;
         globals.start.x = x;
 
@@ -213,7 +220,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
         mouseDown = true;
       }
       else if (globals.startAlgo === false && globals.animatePath === false &&
-        globals.reset === false && event.button === 0 &&
+        globals.reset === false &&
         (x === globals.finish.x && y === globals.finish.y)) {
         globals.finish.oldx = globals.finish.x;
         globals.finish.x = x;
@@ -243,15 +250,15 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
     // globals.canvas!.height = this.#width * CELLSIZE;
     mouseDown = false;
     if (globals.depthFilterOn && globals.updateDepthFilter === false) {
-      if (globals.depthFilterOn && event.button === 0) {
+      if (globals.depthFilterOn) {
         globals.replaceDepthFilterPos = false;
       }
     }
     else {
-      if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 0) {
+      if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false) {
         globals.replaceStart = false;
       }
-      if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false && event.button === 0) {
+      if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false) {
         globals.replaceFinish = false;
       }
     }

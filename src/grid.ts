@@ -349,6 +349,7 @@ export class Grid {
     for (let cell of this.eachCell()) {
       cell.parrent = null;
       cell.distenceFromStart = Infinity;
+      cell.priority = Infinity;
       if (globals.hotReload)
         cell.setState(CellStates.unvisited);
     }
@@ -368,7 +369,7 @@ export class Grid {
       cell.resetWallAndLinks(wallsState, this.currentAlgo);
       cell.parrent = null;
       cell.distenceFromStart = Infinity;
-
+      cell.priority = Infinity;
     }
   }
 
@@ -405,12 +406,19 @@ export class Grid {
 
       this.at(frame.x, frame.y)!.parrent = null;
       this.at(frame.x, frame.y)!.distenceFromStart = 0;
+      this.at(frame.x, frame.y)!.priority = 0;
+
       globals.searchQueue.enqueue(frame);
 
-      if (this.currentAlgo === algosKeys.Dijkstra || this.currentAlgo === algosKeys.Astar) {
+      if (this.currentAlgo === algosKeys.Dijkstra) {
         for (let cell of this.eachCell()) {
           globals.minQueue.enqueue(cell);
         }
+      }
+      if (this.currentAlgo === algosKeys.Astar) {
+        const cell = this.at(frame.x, frame.y);
+        if (cell)
+          globals.minQueue.enqueue(cell);
       }
     }
     else {
