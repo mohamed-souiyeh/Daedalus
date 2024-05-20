@@ -10,6 +10,13 @@ import { Grid } from "../grid";
 import { PriorityQueue } from "../types/DataStructures/priorityQueue.types";
 import { Cell } from "../cell";
 
+
+export enum iconsState {
+  nostate,
+  replacing,
+  replaced,
+};
+
 export const globals = {
   grid: new Grid(0, 0),
 
@@ -88,8 +95,8 @@ export const globals = {
   gridOffsetTop: 0,
   start: { x: 0, y: 0, oldx: 0, oldy: 0 } as Pos,
   finish: { x: 1, y: 1, oldx: 1, oldy: 1 } as Pos,
-  replaceStart: false,
-  replaceFinish: false,
+  replaceStart: iconsState.nostate,
+  replaceFinish: iconsState.nostate,
   homePath: svgPath,
   finishPath: svgPath,
   depthFilterPath: svgPath,

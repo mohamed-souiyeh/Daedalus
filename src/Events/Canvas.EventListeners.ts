@@ -1,5 +1,5 @@
 import { mouse } from "../configs/input.config.ts";
-import { globals } from "../configs/globals.ts";
+import { globals, iconsState } from "../configs/globals.ts";
 import { CELLSIZE, CellStates, CellType } from "../configs/cell.config.ts";
 
 
@@ -102,6 +102,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
           globals.start.oldy = globals.start.y;
           globals.start.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
 
+          globals.replaceStart = iconsState.replaced;
           globals.mouseUpdating = true;
           if (globals.hotReload) {
             globals.startAlgo = true;
@@ -117,6 +118,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
           globals.finish.oldy = globals.finish.y;
           globals.finish.y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
 
+          globals.replaceFinish = iconsState.replaced;
           globals.mouseUpdating = true;
           if (globals.hotReload) {
             globals.startAlgo = true;
@@ -216,7 +218,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
         globals.start.oldy = globals.start.y;
         globals.start.y = y;
 
-        globals.replaceStart = true;
+        globals.replaceStart = iconsState.replacing;
         mouseDown = true;
       }
       else if (globals.startAlgo === false && globals.animatePath === false &&
@@ -228,7 +230,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
         globals.finish.oldy = globals.finish.y;
         globals.finish.y = y;
 
-        globals.replaceFinish = true;
+        globals.replaceFinish = iconsState.replacing;
         mouseDown = true;
       }
     }
@@ -256,10 +258,10 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
     }
     else {
       if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false) {
-        globals.replaceStart = false;
+        globals.replaceStart = iconsState.nostate;
       }
       if (globals.startAlgo === false && globals.animatePath === false && globals.reset === false) {
-        globals.replaceFinish = false;
+        globals.replaceFinish = iconsState.nostate;
       }
     }
 
