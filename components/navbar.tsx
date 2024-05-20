@@ -103,6 +103,7 @@ export const Navbar = () => {
       globals.setDisableLaunch(false);
     globals.depthFilterOn = false;
     globals.addWeights = false;
+    globals.hotReload = false;
     setAnimateWeights(false);
     setDisableDepthFilter(true)
     // setDepthFilterColor(globals.depthFilterOn ? "primary" : "default");
