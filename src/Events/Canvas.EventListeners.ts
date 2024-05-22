@@ -35,7 +35,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
           globals.maxDepth = -1;
           globals.mouseUpdating = true;
         }
-        if (globals.addWalls && globals.startAlgo === false && globals.animatePath === false &&
+        else if (globals.addWalls && globals.startAlgo === false && globals.animatePath === false &&
           globals.reset === false && !globals.replaceStart && !globals.replaceFinish &&
           !(x === mouse.currentx && y === mouse.currenty)) {
 
@@ -210,10 +210,6 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
         globals.replaceDepthFilterPos = true;
         globals.updateDepthFilter = true;
         globals.maxDepth = -1;
-        mouseDown = true;
-      }
-      if (globals.addWalls && globals.startAlgo === false && globals.animatePath === false &&
-        globals.reset === false) {
         mouseDown = true;
       }
     }
