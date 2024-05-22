@@ -40,6 +40,8 @@ export function reset() {
   globals.grid.initialize(canvas.width, canvas.height, globals.WallsOn);
   globals.reset = true;
   globals.needclear = false;
+  globals.updateDepthFilter = true;
+  globals.setDisableDepthFilter(false);
 
   deltaTime.reset();
   counter = 0;
