@@ -25,13 +25,14 @@ export function reset() {
   globals.currentAnimation = 0;
 
   globals.startAlgo = false;
+  globals.braid = false;
   globals.animatePath = false;
   globals.mazeSolvingAlgorithm = null;
   globals.mazeBuildingAlgorithm = null;
 
   globals.depthFilterPos = {
-    x: Math.floor(Math.random() * globals.grid.length),
-    y: Math.floor(Math.random() * globals.grid.width),
+    x: Math.floor(globals.grid.length * 0.5),
+    y: Math.floor(globals.grid.width * 0.5),
     oldx: Math.floor(Math.random() * globals.grid.length),
     oldy: Math.floor(Math.random() * globals.grid.width),
   }
@@ -86,8 +87,8 @@ export function setup() {
   console.log(_lengthPos, _widthPos);
   console.log(globals.start, globals.finish);
   globals.depthFilterPos = {
-    x: Math.floor(Math.random() * globals.grid.length),
-    y: Math.floor(Math.random() * globals.grid.width),
+    x: Math.floor(globals.grid.length * 0.5),
+    y: Math.floor(globals.grid.width * 0.5),
     oldx: Math.floor(Math.random() * globals.grid.length),
     oldy: Math.floor(Math.random() * globals.grid.width),
   }
@@ -171,16 +172,18 @@ export function animation(dt: number) {
 
     startTime = performance.now();
 
-    if (globals.updateDepthFilter && globals.reset === false) {
+    if ((counter % globals.algoSpeed === 0 || globals.hotReload) && globals.reset === false) {
+      if (globals.braid && globals.startAlgo === false)
+        globals.grid.braid();
+      if (globals.startAlgo && globals.animatePath === false)
+        globals.grid.launchAlgo();
+      if (globals.animatePath && globals.startAlgo === false)
+        globals.grid.animatePath();
+    }
+    if (globals.updateDepthFilter && globals.reset === false && globals.startAlgo === false) {
       console.log("depth filter updated");
       globals.grid.depthFilter();
       globals.updateDepthFilter = false;
-    }
-    if ((counter % inputDefaults.ALGOSPEED === 0 || globals.hotReload) && globals.reset === false) {
-      if (globals.startAlgo)
-        globals.grid.launchAlgo();
-      if (globals.animatePath)
-        globals.grid.animatePath();
     }
     counter++;
     elapsedTime = performance.now() - startTime;
