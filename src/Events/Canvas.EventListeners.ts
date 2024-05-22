@@ -32,6 +32,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
 
           globals.replaceDepthFilterPos = true;
           globals.updateDepthFilter = true;
+          globals.maxDepth = -1;
           globals.mouseUpdating = true;
         }
       }
@@ -77,6 +78,8 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
               globals.startAlgo = true;
               globals.gridRedraw = true;
             }
+            globals.updateDepthFilter = true;
+            globals.maxDepth = -1;
           }
           else if (cell && cell.isNeighbor(prevCell) && !cell.islinked(prevCell)) {
             cell.link(prevCell);
@@ -84,6 +87,8 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
               globals.startAlgo = true;
               globals.gridRedraw = true;
             }
+            globals.updateDepthFilter = true;
+            globals.maxDepth = -1;
           }
         }
 
@@ -174,6 +179,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
 
         globals.replaceDepthFilterPos = true;
         globals.updateDepthFilter = true;
+        globals.maxDepth = -1;
         mouseDown = true;
       }
     }

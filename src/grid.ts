@@ -309,8 +309,10 @@ export class Grid {
     if (state === algoState.done) {
       console.log("done building");
       globals.startAlgo = false;
-      if (globals.braid === false)
+      if (globals.braid === false){
         globals.updateDepthFilter = true;
+        globals.maxDepth = -1;
+      }
       globals.needclear = true;
       globals.setDisableLaunch(false);
       globals.setDisableDepthFilter(false);
@@ -354,6 +356,7 @@ export class Grid {
       globals.startAlgo = false;
       globals.braid = false;
       globals.updateDepthFilter = true;
+      globals.maxDepth = -1;
       if (globals.hotReload) {
         console.log("updating the path after braiding");
         globals.startAlgo = true;
@@ -372,6 +375,7 @@ export class Grid {
         this.#resetPatternDirection = this.#resetPatternDirection * -1;
         globals.reset = false;
         globals.updateDepthFilter = true;
+        globals.maxDepth = -1;
         globals.setDisableDepthFilter(false);
       }
       return;
@@ -382,6 +386,7 @@ export class Grid {
         this.#resetPatternDirection = this.#resetPatternDirection * -1;
         globals.reset = false;
         globals.updateDepthFilter = true;
+        globals.maxDepth = -1;
         globals.setDisableDepthFilter(false);
       }
       return;

@@ -41,6 +41,7 @@ export function reset() {
   globals.reset = true;
   globals.needclear = false;
   globals.updateDepthFilter = true;
+  globals.maxDepth = -1;
   globals.setDisableDepthFilter(false);
 
   deltaTime.reset();
@@ -100,7 +101,8 @@ export function setup() {
   globals.animatePath = false;
   globals.startAlgo = false;
   globals.needclear = false;
-  globals.updateDepthFilter = false;
+  globals.updateDepthFilter = true;
+  globals.maxDepth = -1;
 
   globals.gridOffsetLeft = Math.floor((canvas.width - (globals.grid.length * CELLSIZE)) / 2);
   globals.gridOffsetTop = Math.floor((canvas.height - (globals.grid.width * CELLSIZE)) * 0.5);
