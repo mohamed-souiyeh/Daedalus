@@ -19,7 +19,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
     const y = Math.floor((mouse.y - globals.gridOffsetTop) / CELLSIZE);
 
     if (mouseDown && globals.mouseUpdating === false) {
-      if (globals.depthFilterOn && globals.updateDepthFilter === false) {
+      if (globals.replaceDepthFilterPos && globals.depthFilterOn && globals.updateDepthFilter === false) {
         if (globals.depthFilterOn &&
           !(x === globals.depthFilterPos.x && y === globals.depthFilterPos.y) &&
           (x >= 0 && x < globals.grid.length && y >= 0 && y < globals.grid.width)) {
