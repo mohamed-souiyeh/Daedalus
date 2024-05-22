@@ -212,6 +212,10 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
         globals.maxDepth = -1;
         mouseDown = true;
       }
+      if (globals.addWalls && globals.startAlgo === false && globals.animatePath === false &&
+        globals.reset === false) {
+        mouseDown = true;
+      }
     }
     else {
       const cell = globals.grid.at(x, y);
