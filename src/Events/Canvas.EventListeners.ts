@@ -35,6 +35,36 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
           globals.maxDepth = -1;
           globals.mouseUpdating = true;
         }
+        if (globals.addWalls && globals.startAlgo === false && globals.animatePath === false &&
+          globals.reset === false && !globals.replaceStart && !globals.replaceFinish &&
+          !(x === mouse.currentx && y === mouse.currenty)) {
+
+
+          const cell = globals.grid.at(x, y);
+          const prevCell = globals.grid.at(mouse.currentx, mouse.currenty);
+
+          // console.log("cell: ", cell);
+          // console.log("prevcell: ", prevCell);
+
+          if (cell && cell.isNeighbor(prevCell) && cell.islinked(prevCell)) {
+            cell.unlink(prevCell);
+            if (globals.hotReload) {
+              globals.startAlgo = true;
+              globals.gridRedraw = true;
+            }
+            globals.updateDepthFilter = true;
+            globals.maxDepth = -1;
+          }
+          else if (cell && cell.isNeighbor(prevCell) && !cell.islinked(prevCell)) {
+            cell.link(prevCell);
+            if (globals.hotReload) {
+              globals.startAlgo = true;
+              globals.gridRedraw = true;
+            }
+            globals.updateDepthFilter = true;
+            globals.maxDepth = -1;
+          }
+        }
       }
       else {
         if (globals.addWeights && globals.startAlgo === false && globals.animatePath === false &&
@@ -180,6 +210,10 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
         globals.replaceDepthFilterPos = true;
         globals.updateDepthFilter = true;
         globals.maxDepth = -1;
+        mouseDown = true;
+      }
+      if (globals.addWalls && globals.startAlgo === false && globals.animatePath === false &&
+        globals.reset === false) {
         mouseDown = true;
       }
     }
