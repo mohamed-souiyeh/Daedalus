@@ -372,6 +372,7 @@ export class Grid {
         this.#resetPatternDirection = this.#resetPatternDirection * -1;
         globals.reset = false;
         globals.updateDepthFilter = true;
+        globals.setDisableDepthFilter(false);
       }
       return;
     }
@@ -381,6 +382,7 @@ export class Grid {
         this.#resetPatternDirection = this.#resetPatternDirection * -1;
         globals.reset = false;
         globals.updateDepthFilter = true;
+        globals.setDisableDepthFilter(false);
       }
       return;
     }
