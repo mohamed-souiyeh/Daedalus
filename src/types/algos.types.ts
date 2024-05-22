@@ -49,7 +49,7 @@ export class Frame {
     this.indexInQueue = index;
 
     // console.log(algo);
-    if (algo === algosKeys.RandomWalkDFS)
+    if (algo === algosKeys.RandomWalkDFS || algo === algosKeys.prim)
       this.moves = shuffleCellDirections(shuffleCellDirections([Directions.NORTH, Directions.EAST, Directions.SOUTH, Directions.WEST]));
     else if (algo === algosKeys.BFS || algo === algosKeys.Dijkstra)
       this.moves = [Directions.EAST, Directions.SOUTH, Directions.WEST, Directions.NORTH];

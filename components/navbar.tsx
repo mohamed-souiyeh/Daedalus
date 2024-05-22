@@ -245,6 +245,7 @@ export const Navbar = () => {
   const [braid, setBraid] = useState(globals.activateBraiding);
 
   const toggelBraiding = (state: boolean) => {
+    if (globals.startAlgo || globals.animatePath || globals.braid) return;
     globals.activateBraiding = !globals.activateBraiding;
     setBraid(globals.activateBraiding);
     if (globals.braid === false)

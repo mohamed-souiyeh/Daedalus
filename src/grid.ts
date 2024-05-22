@@ -319,6 +319,8 @@ export class Grid {
     }
     else if (state === algoState.foundPath || state === algoState.noPath) {
       console.log("done searching for a path");
+      if (state === algoState.foundPath)
+        globals.algoSpeed = 2; // NOTE: for path animation speed
       globals.needclear = true;
       globals.startAlgo = false;
       globals.setDisableLaunch(false);
@@ -352,6 +354,11 @@ export class Grid {
       globals.startAlgo = false;
       globals.braid = false;
       globals.updateDepthFilter = true;
+      if (globals.hotReload) {
+        console.log("updating the path after braiding");
+        globals.startAlgo = true;
+        globals.gridRedraw = true;
+      }
     }
   }
 
@@ -424,7 +431,7 @@ export class Grid {
       this.currentAlgo = globals.mazeBuildingAlgorithm;
       globals.mazeBuildingAlgorithm = null;
       globals.BuildStack.clear();
-      globals.BuildQueue.clear();
+      globals.BuildArray = [];
       this.deadEnds = [];
       globals.kruskalNeighbors = [];
       globals.cellsInSet.clear();
@@ -443,7 +450,7 @@ export class Grid {
         frame = new Frame(x, y, this.currentAlgo, this.at(x, y));
 
       globals.BuildStack.push(frame);
-      globals.BuildQueue.enqueue(frame);
+      globals.BuildArray.push(frame);
       if (this.currentAlgo === algosKeys.Kruskal) {
         for (let cell of this.eachCell()) {
           const setId = globals.setForCell.size;

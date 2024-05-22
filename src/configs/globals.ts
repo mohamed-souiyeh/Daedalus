@@ -47,6 +47,8 @@ export const globals = {
   mazeBuildingAlgorithm: null as algosKeys | null,
   mazeSolvingAlgorithm: null as algosKeys | null,
 
+  algoSpeed: 0,
+
   braid: false,
   braidingChance: 1.0,
   activateBraiding: false,
@@ -88,7 +90,7 @@ export const globals = {
   // NOTE: i will put them here untill further notice (aka maybe until next refactor XD)
   skipAlgoAnimation: false,
   BuildStack: new Stack<Frame>(),
-  BuildQueue: new Queue<Frame>(),
+  BuildArray: [] as Frame[],
   searchQueue: new Queue<Frame>(),
   minQueue: new PriorityQueue<Cell>((rhs: Cell | number, lhs: Cell | number) => {
     if (typeof rhs === "number" || typeof lhs === "number")

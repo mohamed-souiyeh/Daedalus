@@ -172,18 +172,18 @@ export function animation(dt: number) {
 
     startTime = performance.now();
 
-    if (globals.updateDepthFilter && globals.reset === false && globals.startAlgo === false) {
-      console.log("depth filter updated");
-      globals.grid.depthFilter();
-      globals.updateDepthFilter = false;
-    }
-    if ((counter % inputDefaults.ALGOSPEED === 0 || globals.hotReload) && globals.reset === false) {
+    if ((counter % globals.algoSpeed === 0 || globals.hotReload) && globals.reset === false) {
+      if (globals.braid && globals.startAlgo === false)
+        globals.grid.braid();
       if (globals.startAlgo && globals.animatePath === false)
         globals.grid.launchAlgo();
       if (globals.animatePath && globals.startAlgo === false)
         globals.grid.animatePath();
-      if (globals.braid && globals.startAlgo === false)
-        globals.grid.braid();
+    }
+    if (globals.updateDepthFilter && globals.reset === false && globals.startAlgo === false) {
+      console.log("depth filter updated");
+      globals.grid.depthFilter();
+      globals.updateDepthFilter = false;
     }
     counter++;
     elapsedTime = performance.now() - startTime;

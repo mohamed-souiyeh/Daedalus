@@ -687,7 +687,7 @@ export class Cell {
       fillStyle: "black"
     })
 
-    if (this.distenceFromStart !== Infinity) {
+    if (this.distenceFromStart !== Infinity && globals.depthFilterOn === false) {
       let dist: string;
       dist = `${this.distenceFromStart}`
       ctx.fillText(

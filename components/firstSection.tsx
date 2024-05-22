@@ -38,9 +38,20 @@ export const FirstSection = (props: any) => {
     [algosKeys.RandomWalkDFS]: 1.0,
     [algosKeys.recursiveDivider]: 0.7,
     [algosKeys.Kruskal]: 0.35,
+    [algosKeys.prim]: 0.1,
     [algosKeys.BFS]: 1.0,
     [algosKeys.Dijkstra]: 1.0,
     [algosKeys.Astar]: 1.0,
+  };
+
+  const algoSpeeds: { [key in algosKeys]: number } = {
+    [algosKeys.RandomWalkDFS]: 3,
+    [algosKeys.recursiveDivider]: 2,
+    [algosKeys.Kruskal]: 1,
+    [algosKeys.prim]: 1,
+    [algosKeys.BFS]: 2,
+    [algosKeys.Dijkstra]: 2,
+    [algosKeys.Astar]: 2,
   };
 
   // NOTE: this need ot be used in it's apropriate place after patching the reset button and priseajur
@@ -51,6 +62,7 @@ export const FirstSection = (props: any) => {
       globals.mazeSolvingAlgorithm = Array.from(algorithmValue)[0] as algosKeys;
       globals.mazeBuildingAlgorithm = null;
       globals.hotReload = false;
+      globals.algoSpeed = algoSpeeds[globals.mazeSolvingAlgorithm];
     }
     else if (mazeGenerationAlgorithms.find((item) => item.key === Array.from(algorithmValue)[0] as algosKeys)) {
       globals.mazeBuildingAlgorithm = Array.from(algorithmValue)[0] as algosKeys;
@@ -59,6 +71,7 @@ export const FirstSection = (props: any) => {
       globals.braid = globals.activateBraiding;
 
       globals.braidingChance = braidingChance[globals.mazeBuildingAlgorithm];
+      globals.algoSpeed = algoSpeeds[globals.mazeBuildingAlgorithm];
     }
 
     if (!globals.mazeSolvingAlgorithm && !globals.mazeBuildingAlgorithm)
