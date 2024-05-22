@@ -1,7 +1,10 @@
 import { A_Star } from "./algos/A*.algo.ts";
 import { bfs } from "./algos/bfs.algo.ts";
 import { dijkstra } from "./algos/dijkstra.algo.ts";
+import { kruskal } from "./algos/kruskal.algo.ts";
+import { prim } from "./algos/prim.algo.ts";
 import { randomWalkDFS } from "./algos/randomWalkDFS.algo.ts";
+import { shuffleCellDirections } from "./algos/randomWalkDFS.utils.ts";
 import { recursiveDivider } from "./algos/recursiveDivider.algo.ts";
 import { resetShadowStyle, setShadowStyle } from "./canvas_ctx_style_manipulation/shadows.ts";
 import { Cell } from "./cell.ts";
@@ -110,6 +113,7 @@ export class Grid {
 
 
     this.path = [];
+    this.deadEnds = [];
     for (let y = 0; y < this.#width; y++) {
       for (let x = 0; x < this.#length; x++) {
         let cellx = this.startX + x * CELLSIZE;
@@ -165,6 +169,8 @@ export class Grid {
   #initAlgos() {
     this.#algos.set(algosKeys.RandomWalkDFS, randomWalkDFS);
     this.#algos.set(algosKeys.recursiveDivider, recursiveDivider);
+    this.#algos.set(algosKeys.Kruskal, kruskal);
+    this.#algos.set(algosKeys.prim, prim);
     this.#algos.set(algosKeys.BFS, bfs);
     this.#algos.set(algosKeys.Dijkstra, dijkstra);
     this.#algos.set(algosKeys.Astar, A_Star);
@@ -207,6 +213,7 @@ export class Grid {
 
   // NOTE: algos section
   path: Cell[] = [];
+  deadEnds: Cell[] = [];
 
 
   public depthFilter() {
@@ -266,15 +273,23 @@ export class Grid {
       howMany--;
     }
   }
+  private scanDeadEnds() {
+    console.log("scaning for dead ends.");
+    for (let cell of this.eachCell()) {
+      if (cell.links().size === 1)
+        this.deadEnds.push(cell);
+    }
+    console.log("deadEnds size: ", this.deadEnds.length);
+  }
 
   public launchAlgo() {
     if (this.gridState === gridState.IDLE) {
       this.prepAlgo();
-      console.log("finished preparing for search");
       // if (this.gridState === gridState.SEARCHING)
       // globals.startAlgo = false;
       if (globals.hotReload === false)
         return;
+      console.log("finished preparing for search");
     }
     if (!this.#algos.has(this.currentAlgo)) {
       console.log("ma guy we aint have an algo for what u chose");
@@ -294,11 +309,13 @@ export class Grid {
     if (state === algoState.done) {
       console.log("done building");
       globals.startAlgo = false;
-      globals.updateDepthFilter = true;
+      if (globals.braid === false)
+        globals.updateDepthFilter = true;
       globals.needclear = true;
       globals.setDisableLaunch(false);
       globals.setDisableDepthFilter(false);
       this.gridState = gridState.IDLE;
+      this.scanDeadEnds();
     }
     else if (state === algoState.foundPath || state === algoState.noPath) {
       console.log("done searching for a path");
@@ -307,6 +324,34 @@ export class Grid {
       globals.setDisableLaunch(false);
       globals.setDisableDepthFilter(false);
       this.gridState = gridState.IDLE;
+    }
+  }
+
+  public braid() {
+    console.log("braiding...");
+    let howMany: number = globals.skipAlgoAnimation ? 13 : 1;
+
+    while (howMany) {
+      howMany--;
+      const cell = this.deadEnds.pop();
+      if (cell === undefined)
+        continue;
+      if (cell.links().size === 1 && Math.random() < globals.braidingChance) {
+        if (cell.islinked(cell.north))
+          cell.link(cell.south);
+        if (cell.islinked(cell.south))
+          cell.link(cell.north);
+        if (cell.islinked(cell.west))
+          cell.link(cell.east);
+        if (cell.islinked(cell.east))
+          cell.link(cell.west);
+      }
+    }
+    if (this.deadEnds.length === 0) {
+      console.log("done braiding");
+      globals.startAlgo = false;
+      globals.braid = false;
+      globals.updateDepthFilter = true;
     }
   }
 
@@ -379,18 +424,41 @@ export class Grid {
       this.currentAlgo = globals.mazeBuildingAlgorithm;
       globals.mazeBuildingAlgorithm = null;
       globals.BuildStack.clear();
+      globals.BuildQueue.clear();
+      this.deadEnds = [];
+      globals.kruskalNeighbors = [];
+      globals.cellsInSet.clear();
+      globals.setForCell.clear();
       // if (globals.needclear) {
       globals.reset = true;
       // }
       this.resetForBuildAlgo();
 
       let frame: Frame;
+      const x = Math.floor(this.length * Math.random());
+      const y = Math.floor(this.width * Math.random());
       if (this.currentAlgo === algosKeys.recursiveDivider)
         frame = new Frame(0, 0, this.currentAlgo, this.at(0, 0), this.length, this.width);
       else
-        frame = new Frame(globals.depthFilterPos.x, globals.depthFilterPos.y, this.currentAlgo, this.at(globals.depthFilterPos.x, globals.depthFilterPos.y));
+        frame = new Frame(x, y, this.currentAlgo, this.at(x, y));
 
       globals.BuildStack.push(frame);
+      globals.BuildQueue.enqueue(frame);
+      if (this.currentAlgo === algosKeys.Kruskal) {
+        for (let cell of this.eachCell()) {
+          const setId = globals.setForCell.size;
+
+          globals.setForCell.set(cell, setId);
+          globals.cellsInSet.set(setId, [cell]);
+
+
+          if (cell.north)
+            globals.kruskalNeighbors.push([cell, cell.north]);
+          if (cell.east)
+            globals.kruskalNeighbors.push([cell, cell.east]);
+        }
+        globals.kruskalNeighbors.sort(() => Math.random() - 0.5);
+      }
     }
     else if (globals.mazeSolvingAlgorithm && this.gridState === gridState.IDLE) {
       this.gridState = gridState.SEARCHING;

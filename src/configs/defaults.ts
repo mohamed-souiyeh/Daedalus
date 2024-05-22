@@ -21,7 +21,7 @@ export enum inputDefaults {
   DELAY = 8,
   MINDELAY = 8,
   MAXDELAY = 1000,
-  ALGOSPEED = 4, // NOTE: the higher this number the slower it is XD
+  ALGOSPEED = 2, // NOTE: the higher this number the slower it is XD
   ISPAUSED = false as unknown as number,
   DEBUGMODEON = false as unknown as number,
   DEBUGBOOKLETISON = false as unknown as number,

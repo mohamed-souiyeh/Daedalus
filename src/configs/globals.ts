@@ -24,9 +24,9 @@ export const globals = {
 
   ctx: null as CanvasRenderingContext2D | null,
 
-  setup: false as boolean,
+  setup: false,
 
-  currentAnimation: 0 as number,
+  currentAnimation: 0,
 
   delay: inputDefaults.DELAY as unknown as number,  // globals.delay in ms
 
@@ -46,16 +46,21 @@ export const globals = {
 
   mazeBuildingAlgorithm: null as algosKeys | null,
   mazeSolvingAlgorithm: null as algosKeys | null,
-  startAlgo: false as boolean,
-  animatePath: false as boolean,
-  needclear: false as boolean,
 
-  depthFilterOn: false as boolean,
+  braid: false,
+  braidingChance: 1.0,
+  activateBraiding: false,
+
+  startAlgo: false,
+  animatePath: false,
+  needclear: false,
+
+  depthFilterOn: false,
   depthNumbers: inputDefaults.DEPTHNUMBERS as unknown as boolean,
   depthFilterPos: { x: 0, y: 0, oldx: 0, oldy: 0 } as Pos,
-  replaceDepthFilterPos: false as boolean,
-  updateDepthFilter: true as boolean,
-  gridRedraw: false as boolean,
+  replaceDepthFilterPos: false,
+  updateDepthFilter: true,
+  gridRedraw: false,
   colorComposition: {
     r: false,
     g: false,
@@ -69,8 +74,8 @@ export const globals = {
 
   placeholders: { startx: -1, starty: -1, finishx: -1, finishy: -1, filterx: -1, filtery: -1 },
 
-  reset: false as boolean,
-  hotReload: false as boolean,
+  reset: false,
+  hotReload: false,
 
   // HACK: this is weird i know
   setDisableLaunch: null as any,
@@ -81,14 +86,18 @@ export const globals = {
   maxDepth: -1 as number,
 
   // NOTE: i will put them here untill further notice (aka maybe until next refactor XD)
-  skipAlgoAnimation: false as boolean,
+  skipAlgoAnimation: false,
   BuildStack: new Stack<Frame>(),
+  BuildQueue: new Queue<Frame>(),
   searchQueue: new Queue<Frame>(),
   minQueue: new PriorityQueue<Cell>((rhs: Cell | number, lhs: Cell | number) => {
     if (typeof rhs === "number" || typeof lhs === "number")
       return false;
     return rhs.priority <= lhs.priority;
   }),
+  kruskalNeighbors: [] as (Cell[])[],
+  setForCell: new Map<Cell, number>,
+  cellsInSet: new Map<number, Cell[]>,
 
   // NOTE: SVGs
   gridOffsetLeft: 0,

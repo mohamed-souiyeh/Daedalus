@@ -8,7 +8,7 @@ import { Key, createRef, use, useEffect, useRef, useState } from "react";
 import { subtitle, title } from "./primitives";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAddressCard, faBookBookmark, faBookOpen, faBug, faBugSlash, faCaretLeft, faCaretRight, faCircleInfo, faCircleQuestion, faCodeBranch, faForward, faGear, faGraduationCap, faInfoCircle, faLink, faMagnifyingGlassLocation, faMinus, faPause, faPlay, faPlus, faRepeat, faRocket, faRoute, faStreetView, faTextSlash, faTrowelBricks, faWeightHanging } from "@fortawesome/free-solid-svg-icons";
+import { faAddressCard, faBookBookmark, faBookOpen, faBridgeCircleCheck, faBug, faBugSlash, faCaretLeft, faCaretRight, faCircleInfo, faCircleQuestion, faCodeBranch, faForward, faGear, faGraduationCap, faInfoCircle, faLink, faMagnifyingGlassLocation, faMinus, faPause, faPlay, faPlus, faRepeat, faRocket, faRoute, faStreetView, faTextSlash, faTrowelBricks, faWeightHanging } from "@fortawesome/free-solid-svg-icons";
 import { inputDefaults } from "@/src/configs/defaults";
 import { DELAYSTEP, updateDelay } from "@/src/Events/Delay.EventListeners";
 import { reset } from "@/src";
@@ -240,7 +240,21 @@ export const Navbar = () => {
     setDepthNumbers(globals.depthNumbers);
     if (globals.depthFilterOn)
       globals.gridRedraw = true;
-  }
+  };
+
+  const [braid, setBraid] = useState(globals.activateBraiding);
+
+  const toggelBraiding = (state: boolean) => {
+    globals.activateBraiding = !globals.activateBraiding;
+    setBraid(globals.activateBraiding);
+    if (globals.braid === false)
+      globals.braid = true;
+  };
+
+
+
+
+
 
   // NOTE:to be used in the next implementation of weighted nodes
   //
@@ -724,15 +738,15 @@ export const Navbar = () => {
               <Checkbox aria-label="depth value" isSelected={depthNumbers} onValueChange={addDepthNumbers} size="sm">Depth Value</Checkbox>
             </DropdownItem>
             {
-              // <DropdownItem
-              //   isReadOnly
-              //   textValue="add whieghted Nodes to the grid"
-              //   aria-label="add whieghted Nodes to the grid"
-              //   key="addWhieghtedNodes"
-              //   description="Add whieghted Nodes to the grid"
-              //   endContent={<FontAwesomeIcon icon={faWeightHanging} size="lg" />}>
-              //   <Checkbox aria-label="addWhieghtedNodes" isSelected={weightedNodes} onValueChange={addWhieghtedNodes} size="sm">add weighted nodes</Checkbox>
-              // </DropdownItem>
+              <DropdownItem
+                isReadOnly
+                textValue="Reduce DeadEnds"
+                aria-label="Reduce DeadEnds"
+                key="Reduce dead ends"
+                description="Reduce the number of DeadEnds"
+                endContent={<FontAwesomeIcon icon={faBridgeCircleCheck} size="lg" />}>
+                <Checkbox aria-label="Reduce DeadEnds" isSelected={braid} onValueChange={toggelBraiding} size="sm">Reduce DeadEnds</Checkbox>
+              </DropdownItem>
             }
           </DropdownMenu>
         </Dropdown>

@@ -3,7 +3,7 @@ import { MyAvatar } from "./avatar";
 import { Button, Popover, PopoverContent, PopoverTrigger, Select, SelectItem, SelectSection, Selection } from "@nextui-org/react";
 import { AlgorithmDescription } from "./algorithmDescription";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfo, faInfoCircle, faRocket, faRoute, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
+import { faInfo, faInfoCircle, faRocket, faRoute, faSpinner, faTrowelBricks } from "@fortawesome/free-solid-svg-icons";
 import { JSXElementConstructor, Key, PromiseLikeOfReactNode, ReactElement, ReactNode, createRef, use, useEffect, useRef, useState } from "react";
 import { color } from "@/types";
 import { globals } from "@/src/configs/globals";
@@ -31,10 +31,22 @@ export const FirstSection = (props: any) => {
   }, [algorithmValue]);
 
   const [disableLaunch, setDisableLaunch] = useState<boolean>(globals.startAlgo);
+  const [launchIcon, setLaunchIcon] = useState<any>(faRocket);
+  const [launchAnimation, setLaunchAnimation] = useState<boolean>(launchIcon === faRocket ? false : true);
+
+  const braidingChance: { [key in algosKeys]: number } = {
+    [algosKeys.RandomWalkDFS]: 1.0,
+    [algosKeys.recursiveDivider]: 0.7,
+    [algosKeys.Kruskal]: 0.35,
+    [algosKeys.BFS]: 1.0,
+    [algosKeys.Dijkstra]: 1.0,
+    [algosKeys.Astar]: 1.0,
+  };
 
   // NOTE: this need ot be used in it's apropriate place after patching the reset button and priseajur
   // to take into account the algorithms launching
   const handleAlgoLaunch = () => {
+    if (globals.startAlgo === true) return;
     if (mazeSolvingAlgorithms.find((item) => item.key === Array.from(algorithmValue)[0] as algosKeys)) {
       globals.mazeSolvingAlgorithm = Array.from(algorithmValue)[0] as algosKeys;
       globals.mazeBuildingAlgorithm = null;
@@ -44,6 +56,9 @@ export const FirstSection = (props: any) => {
       globals.mazeBuildingAlgorithm = Array.from(algorithmValue)[0] as algosKeys;
       globals.mazeSolvingAlgorithm = null;
       globals.hotReload = false;
+      globals.braid = globals.activateBraiding;
+
+      globals.braidingChance = braidingChance[globals.mazeBuildingAlgorithm];
     }
 
     if (!globals.mazeSolvingAlgorithm && !globals.mazeBuildingAlgorithm)
@@ -51,14 +66,23 @@ export const FirstSection = (props: any) => {
 
     globals.startAlgo = true;
     globals.animatePath = false;
-    setDisableLaunch(true);
+    setLaunchIcon(faSpinner);
+    setLaunchAnimation(true);
+
+    // setDisableLaunch(true);
 
     globals.depthFilterOn = false;
     globals.setDisableDepthFilter(true)
     console.log("algorithmValue => ", Array.from(algorithmValue)[0]);
   }
 
-  globals.setDisableLaunch = setDisableLaunch;
+  // globals.setDisableLaunch = setDisableLaunch;
+  globals.setDisableLaunch = (state: boolean) => {
+    if (state === false) {
+      setLaunchAnimation(false);
+      setLaunchIcon(faRocket);
+    }
+  };
   globals.handleAlgoLaunch = handleAlgoLaunch;
 
   return (
@@ -111,7 +135,7 @@ export const FirstSection = (props: any) => {
           </Select>
           <Tooltip content="algorithms launching" showArrow={true} color={"primary"} delay={tooltipDelay} closeDelay={200}>
             <Button id="algo-launch" ref={mazeLaunching} isIconOnly size="sm" color="primary" isDisabled={disableLaunch} onClick={handleAlgoLaunch}>
-              <FontAwesomeIcon icon={faRocket} size="lg" />
+              <FontAwesomeIcon icon={launchIcon} spinPulse={launchAnimation} size="lg" />
             </Button>
           </Tooltip>
         </div>

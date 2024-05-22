@@ -348,6 +348,7 @@ export class Cell {
   }
 
   setState(state: CellStates) {
+    if (state === CellStates.visited && this.#state === CellStates.visited) return;
     // console.log("gridx: ", this.gridx);
     // console.log("gridy: ", this.gridy);
     // console.log("animation: ", this.animation);

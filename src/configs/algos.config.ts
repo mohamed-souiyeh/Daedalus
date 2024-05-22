@@ -1,9 +1,10 @@
 
 
 export enum algosKeys {
-  Random = "Random",
   RandomWalkDFS = "RandomWalkDFS",
   recursiveDivider = "recursiveDivider",
+  Kruskal = "kruskal",
+  prim = "Prim",
   BFS = "BFS",
   Astar = "Astar",
   Dijkstra = "Dijkstra",
@@ -12,10 +13,6 @@ export enum algosKeys {
 
 // NOTE: add a highlight of the skills needed in the footer of the algorithm description card.
 export const mazeGenerationAlgorithms = [
-  // {
-  //   key: algosKeys.Random,
-  //   name: "Random",
-  // },
   {
     key: algosKeys.RandomWalkDFS,
     name: "Random Walk DFS",
@@ -26,15 +23,21 @@ export const mazeGenerationAlgorithms = [
     key: algosKeys.recursiveDivider,
     name: "Recursive Divider (wall adder)",
     description: "It is an algorithm that generates mazes through adding walls to an impety space, it is unconvetional compared to all the other algorithms\
-    since they take the oposit approuach and carve the walls in the space",
+    since they take the oposit approuach and carve the walls in the space.",
+  },
+  {
+    key: algosKeys.Kruskal,
+    name: "Randomized Kruskal",
+    description: "It is an algorithm that create an MST (minimum spanning tree) through randomized edge selection."
+  },
+  {
+    key: algosKeys.prim,
+    name: "Simplified Prim",
+    description: "It is an algorithm that create an MST (minimum spanning tree) through simple first in first out order."
   },
 ];
 
 export const mazeSolvingAlgorithms = [
-  // {
-  //   key: algosKeys.Random,
-  //   name: "Random",
-  // },
   {
     key: algosKeys.BFS,
     name: "Breadth first search (BFS)",
