@@ -48,6 +48,7 @@ export const globals = {
   mazeSolvingAlgorithm: null as algosKeys | null,
 
   algoSpeed: 0,
+  algoSkipSpeed: 1,
 
   braid: false,
   braidingChance: 1.0,
@@ -56,6 +57,9 @@ export const globals = {
   startAlgo: false,
   animatePath: false,
   needclear: false,
+
+  searchDistance: false,
+
 
   depthFilterOn: false,
   depthNumbers: inputDefaults.DEPTHNUMBERS as unknown as boolean,

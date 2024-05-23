@@ -217,7 +217,6 @@ export class Grid {
 
 
   public depthFilter() {
-    console.log("updating depth filter");
     const gridcp = Array<CellStates[]>(this.width);
 
     for (let y = 0; y < this.#width; y++) {
@@ -254,7 +253,6 @@ export class Grid {
     }
     if (globals.depthFilterOn)
       globals.gridRedraw = true;
-    console.log("done updating depth filter");
   }
 
   public animatePath() {
@@ -274,12 +272,10 @@ export class Grid {
     }
   }
   private scanDeadEnds() {
-    console.log("scaning for dead ends.");
     for (let cell of this.eachCell()) {
       if (cell.links().size === 1)
         this.deadEnds.push(cell);
     }
-    console.log("deadEnds size: ", this.deadEnds.length);
   }
 
   public launchAlgo() {
@@ -289,7 +285,6 @@ export class Grid {
       // globals.startAlgo = false;
       if (globals.hotReload === false)
         return;
-      console.log("finished preparing for search");
     }
     if (!this.#algos.has(this.currentAlgo)) {
       console.log("ma guy we aint have an algo for what u chose");
@@ -298,18 +293,16 @@ export class Grid {
       return;
     }
 
-    let howMany: number = globals.skipAlgoAnimation ? 13 : 1;
+    let howMany: number = globals.skipAlgoAnimation ? globals.algoSkipSpeed : 1;
     let state: algoState = algoState.noState;
-    console.log("sarting the algo");
 
     while ((howMany || globals.hotReload) && (state === algoState.noState || state === algoState.building || state === algoState.searching)) {
       state = this.#algos.get(this.currentAlgo)!(this);
       howMany--;
     }
     if (state === algoState.done) {
-      console.log("done building");
       globals.startAlgo = false;
-      if (globals.braid === false){
+      if (globals.braid === false) {
         globals.updateDepthFilter = true;
         globals.maxDepth = -1;
       }
@@ -320,9 +313,10 @@ export class Grid {
       this.scanDeadEnds();
     }
     else if (state === algoState.foundPath || state === algoState.noPath) {
-      console.log("done searching for a path");
       if (state === algoState.foundPath)
         globals.algoSpeed = 2; // NOTE: for path animation speed
+      if (state === algoState.noPath)
+        globals.hotReload = true;
       globals.needclear = true;
       globals.startAlgo = false;
       globals.setDisableLaunch(false);
@@ -332,8 +326,7 @@ export class Grid {
   }
 
   public braid() {
-    console.log("braiding...");
-    let howMany: number = globals.skipAlgoAnimation ? 13 : 1;
+    let howMany: number = globals.skipAlgoAnimation ? 7 : 1;
 
     while (howMany) {
       howMany--;
@@ -352,13 +345,11 @@ export class Grid {
       }
     }
     if (this.deadEnds.length === 0) {
-      console.log("done braiding");
       globals.startAlgo = false;
       globals.braid = false;
       globals.updateDepthFilter = true;
       globals.maxDepth = -1;
       if (globals.hotReload) {
-        console.log("updating the path after braiding");
         globals.startAlgo = true;
         globals.gridRedraw = true;
       }
@@ -376,7 +367,8 @@ export class Grid {
         globals.reset = false;
         globals.updateDepthFilter = true;
         globals.maxDepth = -1;
-        globals.setDisableDepthFilter(false);
+        if (globals.startAlgo === false)
+          globals.setDisableDepthFilter(false);
       }
       return;
     }
@@ -387,7 +379,8 @@ export class Grid {
         globals.reset = false;
         globals.updateDepthFilter = true;
         globals.maxDepth = -1;
-        globals.setDisableDepthFilter(false);
+        if (globals.startAlgo === false)
+          globals.setDisableDepthFilter(false);
       }
       return;
     }
@@ -422,7 +415,6 @@ export class Grid {
     if (this.currentAlgo === algosKeys.recursiveDivider) {
       wallsState = WallState.ABSENT;
       globals.reset = true;
-      console.log("reseting for wall adder");
     }
     for (let cell of this.eachCell()) {
       cell.resetWallAndLinks(wallsState, this.currentAlgo);

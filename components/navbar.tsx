@@ -112,7 +112,6 @@ export const Navbar = () => {
   const [animateSkipButton, setAnimateSkipButton] = useState(globals.skipAlgoAnimation);
 
   const handleSkipButton = () => {
-    console.log("skipping");
     globals.skipAlgoAnimation = !globals.skipAlgoAnimation;
     setAnimateSkipButton(globals.skipAlgoAnimation);
   }
@@ -241,6 +240,17 @@ export const Navbar = () => {
     if (globals.depthFilterOn)
       globals.gridRedraw = true;
   };
+
+  const [searchDistance, setSearchDistance] = useState(globals.searchDistance);
+
+  const addSearchDistance = (state: boolean) => {
+    // console.log(state);
+    // console.log("type of state: ", typeof state);
+    globals.searchDistance = state;
+    setSearchDistance(globals.searchDistance);
+    globals.gridRedraw = true;
+  };
+
 
   const [braid, setBraid] = useState(globals.activateBraiding);
 
@@ -731,22 +741,30 @@ export const Navbar = () => {
           <DropdownMenu variant="light">
             <DropdownItem
               isReadOnly
-              textValue="toggle numbers for exact distances"
-              aria-label="Depth numbers"
+              textValue="toggle numbers for exact distances in depth filter"
               key="DepthNumbers"
               description="toggle numbers for exact distances"
               endContent={<FontAwesomeIcon icon={faStreetView} size="lg" />}>
-              <Checkbox aria-label="depth value" isSelected={depthNumbers} onValueChange={addDepthNumbers} size="sm">Depth Value</Checkbox>
+              <Checkbox isSelected={depthNumbers} onValueChange={addDepthNumbers} size="sm">Depth Value</Checkbox>
             </DropdownItem>
             {
               <DropdownItem
                 isReadOnly
                 textValue="Reduce DeadEnds"
-                aria-label="Reduce DeadEnds"
                 key="Reduce dead ends"
                 description="Reduce the number of DeadEnds"
                 endContent={<FontAwesomeIcon icon={faBridgeCircleCheck} size="lg" />}>
-                <Checkbox aria-label="Reduce DeadEnds" isSelected={braid} onValueChange={toggelBraiding} size="sm">Reduce DeadEnds</Checkbox>
+                <Checkbox isSelected={braid} onValueChange={toggelBraiding} size="sm">Reduce DeadEnds</Checkbox>
+              </DropdownItem>
+            }
+            {
+              <DropdownItem
+                isReadOnly
+                textValue="Toggle distance values for path algorithms"
+                key="search distance values"
+                description="toggle numbers for exact distances"
+                endContent={<FontAwesomeIcon icon={faRoute} size="lg" />}>
+                <Checkbox isSelected={searchDistance} onValueChange={addSearchDistance} size="sm">Search Distance</Checkbox>
               </DropdownItem>
             }
           </DropdownMenu>

@@ -7,14 +7,12 @@ import { Frame, algoState } from "../types/algos.types";
 
 export function randomWalkDFS(grid: Grid): algoState {
 
-  // console.log("globals: ", globals);
   let currentFrame: Frame | undefined = undefined;
   let nextCell: Cell | null = null;
   let currentCell: Cell | null = null;
 
   while (nextCell === null) {
     currentFrame = globals.BuildStack.peek();
-    // console.log("currentFrame: ", currentFrame);
     if (!currentFrame)
       break;
 

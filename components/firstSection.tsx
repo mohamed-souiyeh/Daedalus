@@ -25,11 +25,6 @@ export const FirstSection = (props: any) => {
 
   const [algorithmValue, setAlgorithmValue] = useState<Selection>(new Set([]));
 
-
-  useEffect(() => {
-    console.log("mazeBuildingAlgorithmValue => ", Array.from(algorithmValue)[0]);
-  }, [algorithmValue]);
-
   const [disableLaunch, setDisableLaunch] = useState<boolean>(globals.startAlgo);
   const [launchIcon, setLaunchIcon] = useState<any>(faRocket);
   const [launchAnimation, setLaunchAnimation] = useState<boolean>(launchIcon === faRocket ? false : true);
@@ -54,6 +49,15 @@ export const FirstSection = (props: any) => {
     [algosKeys.Astar]: 2,
   };
 
+  const algoSkipingSpeeds: { [key in algosKeys]: number } = {
+    [algosKeys.RandomWalkDFS]: 13,
+    [algosKeys.recursiveDivider]: 15,
+    [algosKeys.Kruskal]: 13,
+    [algosKeys.prim]: 8,
+    [algosKeys.BFS]: 7,
+    [algosKeys.Dijkstra]: 7,
+    [algosKeys.Astar]: 7,
+  };
   // NOTE: this need ot be used in it's apropriate place after patching the reset button and priseajur
   // to take into account the algorithms launching
   const handleAlgoLaunch = () => {
@@ -63,6 +67,7 @@ export const FirstSection = (props: any) => {
       globals.mazeBuildingAlgorithm = null;
       globals.hotReload = false;
       globals.algoSpeed = algoSpeeds[globals.mazeSolvingAlgorithm];
+      globals.algoSkipSpeed = algoSkipingSpeeds[globals.mazeSolvingAlgorithm];
     }
     else if (mazeGenerationAlgorithms.find((item) => item.key === Array.from(algorithmValue)[0] as algosKeys)) {
       globals.mazeBuildingAlgorithm = Array.from(algorithmValue)[0] as algosKeys;
@@ -72,6 +77,7 @@ export const FirstSection = (props: any) => {
 
       globals.braidingChance = braidingChance[globals.mazeBuildingAlgorithm];
       globals.algoSpeed = algoSpeeds[globals.mazeBuildingAlgorithm];
+      globals.algoSkipSpeed = algoSkipingSpeeds[globals.mazeBuildingAlgorithm];
     }
 
     if (!globals.mazeSolvingAlgorithm && !globals.mazeBuildingAlgorithm)
@@ -86,7 +92,6 @@ export const FirstSection = (props: any) => {
 
     globals.depthFilterOn = false;
     globals.setDisableDepthFilter(true)
-    console.log("algorithmValue => ", Array.from(algorithmValue)[0]);
   }
 
   // globals.setDisableLaunch = setDisableLaunch;

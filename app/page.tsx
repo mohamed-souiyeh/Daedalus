@@ -25,10 +25,10 @@ export default function Home() {
     if (!globals.ctx)
       return;
 
-    console.log("setup");
-    console.log("canvaRef => ", canvaRef);
-    console.log("globals canvas => ", globals.canvas);
-    console.log("globals ctx =>", globals.ctx);
+    // console.log("setup");
+    // console.log("canvaRef => ", canvaRef);
+    // console.log("globals canvas => ", globals.canvas);
+    // console.log("globals ctx =>", globals.ctx);
     setupEventListners();
 
     setup();

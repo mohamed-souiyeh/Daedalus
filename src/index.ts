@@ -87,8 +87,6 @@ export function setup() {
     oldy: globals.finish.y,
   }
 
-  console.log(_lengthPos, _widthPos);
-  console.log(globals.start, globals.finish);
   globals.depthFilterPos = {
     x: Math.floor(globals.grid.length * 0.5),
     y: Math.floor(globals.grid.width * 0.5),
@@ -125,27 +123,6 @@ export function setup() {
   globals.setup = true;
   globals.currentAnimation = requestAnimationFrame(animation);
 
-  // interface test {
-  //   i: number,
-  //   index: number,
-  // }
-  // let array: test[] = [{ i: 6, index: 0 }, { i: 5, index: 0 }, { i: 4, index: 0 }, { i: 3, index: 0 }, { i: 2, index: 0 }, { i: 1, index: 0 },];
-  // const queue: PriorityQueue<test> = new PriorityQueue<test>((lhs: test, rhs: test) => lhs.i < rhs.i);
-  //
-  // queue.enqueue(array[5]);
-  // queue.print();
-  // queue.enqueue(array[4]);
-  // queue.print();
-  // queue.enqueue(array[3]);
-  // queue.print();
-  // queue.enqueue(array[2]);
-  // queue.print();
-  // queue.enqueue(array[1]);
-  // queue.print();
-  // queue.enqueue(array[0]);
-  // queue.print();
-  // queue.updatePriority(array[2], (item: test) => item.i = 0);
-  // queue.print();
 }
 
 export function animation(dt: number) {
@@ -185,7 +162,6 @@ export function animation(dt: number) {
         globals.grid.animatePath();
     }
     if (globals.updateDepthFilter && globals.reset === false && globals.startAlgo === false) {
-      console.log("depth filter updated");
       globals.grid.depthFilter();
       globals.updateDepthFilter = false;
     }
