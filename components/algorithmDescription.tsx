@@ -10,7 +10,6 @@ export const AlgorithmDescription = (props: { algo: any }) => {
   const [algorithmName, setAlgorithmName] = useState<string | undefined>("");
 
   useEffect(() => {
-    console.log("algorithm description is mounted: ", Array.from(props.algo)[0]);
     if (mazeSolvingAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)) {
       setAlgorithmDescription(mazeSolvingAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.description);
       setAlgorithmName(`Name: ${mazeSolvingAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.name}`);
@@ -20,14 +19,12 @@ export const AlgorithmDescription = (props: { algo: any }) => {
       setAlgorithmName(`Name: ${mazeGenerationAlgorithms.find((item) => item.key === Array.from(props.algo)[0] as algosKeys)?.name}`);
     }
 
-    console.log("algo discreption: ", algorithmDescription);
     if (algorithmDescription === undefined)
       setAlgorithmDescription("chouse an algorithm first");
     if (algorithmName === undefined)
       setAlgorithmName("");
   }, [props.algo, algorithmDescription, algorithmName])
 
-  console.log("outside algorithn discreption useEffect");
 
   return (
     <>

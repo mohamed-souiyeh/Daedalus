@@ -5,18 +5,6 @@ import { globals } from "../configs/globals";
 import { Grid } from "../grid";
 import { Frame, SplitDirection, algoState } from "../types/algos.types";
 
-function reversePolarity(direction: Directions): Directions {
-  if (direction === Directions.NORTH)
-    return Directions.SOUTH;
-  if (direction === Directions.SOUTH)
-    return Directions.NORTH;
-  if (direction === Directions.EAST)
-    return Directions.WEST;
-  if (direction === Directions.WEST)
-    return Directions.EAST;
-  return direction;
-}
-
 function skipDoor(frame: Frame) {
   if (frame.buildingWall.dx)
     return (frame.buildingWall.x - frame.x === frame.buildingWall.doorIndex);
@@ -24,7 +12,7 @@ function skipDoor(frame: Frame) {
     return (frame.buildingWall.y - frame.y === frame.buildingWall.doorIndex);
 }
 
-// NOTE: this function is a tribute to Elcy my dear friend. 😂reverse polarity
+// NOTE: this function is a tribute to Elcy my dear friend. 😂
 function bobaTheBuilder(grid: Grid, frame: Frame) {
 
   let x = frame.buildingWall.x;
@@ -32,14 +20,10 @@ function bobaTheBuilder(grid: Grid, frame: Frame) {
 
   if (x - frame.x >= frame.length || y - frame.y >= frame.width) {
     frame.buildingWall.state = algoState.done;
-    console.log("the x: ", x);
-    console.log("the y: ", y);
-    console.log("done building the wall");
     return;
   }
 
   if (skipDoor(frame)) {
-    console.log("skipping door: ", skipDoor(frame));
     frame.buildingWall.x += frame.buildingWall.dx;
     frame.buildingWall.y += frame.buildingWall.dy;
     x = frame.buildingWall.x;
@@ -55,7 +39,6 @@ function bobaTheBuilder(grid: Grid, frame: Frame) {
   if (currentCell!.islinked(neighbor) === false)
     return;
 
-  console.log("building at x: ", x, ", y: ", y);
   currentCell!.unlink(neighbor);
   frame.buildingWall.x += frame.buildingWall.dx;
   frame.buildingWall.y += frame.buildingWall.dy;
@@ -63,7 +46,6 @@ function bobaTheBuilder(grid: Grid, frame: Frame) {
 
 export function recursiveDivider(grid: Grid) {
 
-  console.log("in recursive divider");
 
   let currentFrame: Frame | undefined = globals.BuildStack.peek();
 
@@ -71,7 +53,6 @@ export function recursiveDivider(grid: Grid) {
     return algoState.done;
 
   while (currentFrame.width <= 1 || currentFrame.length <= 1) {
-    console.log("small frame: ", currentFrame);
     globals.BuildStack.pop();
     currentFrame = globals.BuildStack.peek();
     if (currentFrame === undefined)
@@ -83,7 +64,6 @@ export function recursiveDivider(grid: Grid) {
     return algoState.building;
   }
   else if (currentFrame.buildingWall.state === algoState.done) {
-    console.log("the old push: ", globals.BuildStack.peek());
 
     globals.BuildStack.pop();
 
@@ -93,7 +73,6 @@ export function recursiveDivider(grid: Grid) {
 
     globals.BuildStack.push(new Frame(currentFrame.x, currentFrame.y, algosKeys.recursiveDivider, grid.at(currentFrame.x, currentFrame.y), _length, _width));
 
-    console.log("the first push: ", globals.BuildStack.peek());
 
     _length = currentFrame.buildingWall.splitDirection === SplitDirection.V ? currentFrame.length - _length : currentFrame.length;
     _width = currentFrame.buildingWall.splitDirection === SplitDirection.V ? currentFrame.width : currentFrame.width - _width;
@@ -103,7 +82,6 @@ export function recursiveDivider(grid: Grid) {
 
 
     globals.BuildStack.push(new Frame(x, y, algosKeys.recursiveDivider, grid.at(x, y), _length, _width));
-    console.log("the second push: ", globals.BuildStack.peek());
     return algoState.building;
   }
 
@@ -137,6 +115,5 @@ export function recursiveDivider(grid: Grid) {
     dy: dy,
   });
 
-  console.log("the frame: ", currentFrame);
   return algoState.building;
 }

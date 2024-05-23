@@ -26,22 +26,22 @@ function relax(current: Cell, next: Cell) {
 }
 
 export function dijkstra(grid: Grid) {
-  // console.log("queue before operation: ", globals.minQueue);
 
   const currentCell = globals.minQueue.dequeue();
 
-  if (currentCell === undefined || typeof currentCell === "number") {
-    toast.error("there is no path", {
-      position: "top-center",
-      autoClose: false,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
+  if (currentCell === undefined || typeof currentCell === "number" || (currentCell && currentCell.distenceFromStart === Infinity)) {
+    if (globals.hotReload === false)
+      toast.error("No Path Found", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
     return algoState.noPath;
   }
 
@@ -58,6 +58,18 @@ export function dijkstra(grid: Grid) {
       neighbor.setState(CellStates.inqueue);
       if (neighbor.cellType === CellType.finish) {
         preparePath(grid, neighbor);
+        if (globals.hotReload === false)
+          toast.success("Path Found", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            transition: Bounce,
+          });
         return algoState.foundPath;
       }
     }
@@ -65,7 +77,7 @@ export function dijkstra(grid: Grid) {
   currentCell.setState(CellStates.visited);
   if (globals.minQueue.size() - 1) {
     const nextCurrent = globals.minQueue.peek();
-    if (nextCurrent instanceof Cell)
+    if (nextCurrent instanceof Cell && nextCurrent.distenceFromStart !== Infinity)
       nextCurrent.setState(CellStates.current);
   }
 

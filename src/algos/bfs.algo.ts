@@ -9,18 +9,18 @@ import { Frame, algoState } from "../types/algos.types";
 export function bfs(grid: Grid) {
 
   if (globals.searchQueue.size() === 0) {
-    console.log("there is no Path");
-    toast.error("there is no path", {
-      position: "top-center",
-      autoClose: false,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
+    if (globals.hotReload === false)
+      toast.error("No Path Found", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
     return algoState.noPath;
   }
 
@@ -28,13 +28,22 @@ export function bfs(grid: Grid) {
   const currentCell = grid.at(current!.x, current!.y);
 
   if (currentCell === null) {
-    console.log("there is no cell here bro");
-    // globals.handletoast();
+    if (globals.hotReload === false)
+      toast.error("No Path Found", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
     return algoState.noPath;
   }
 
   if (currentCell.gridx === globals.finish.x && currentCell.gridy === globals.finish.y) {
-    console.log("yeeep there is a path");
     globals.animatePath = true;
     let cell = currentCell;
     while (!(cell.gridx === globals.start.x && cell.gridy === globals.start.y)) {
@@ -42,6 +51,18 @@ export function bfs(grid: Grid) {
       cell = cell.parrent as unknown as Cell;
     }
     grid.path.push(cell);
+    if (globals.hotReload === false)
+      toast.success("Path Found", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
     return algoState.foundPath;
   }
 
