@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.sliderThing {
+  display: flex;
+  min-width: 250px;
+}
 
 .min-w-h-tuto-project-menu {
     min-width: 300px;

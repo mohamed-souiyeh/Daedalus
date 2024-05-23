@@ -13,7 +13,7 @@ import { inputDefaults } from "@/src/configs/defaults";
 import { DELAYSTEP, updateDelay } from "@/src/Events/Delay.EventListeners";
 import { reset } from "@/src";
 import { globals } from "@/src/configs/globals";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Select, SelectItem, Selection, Popover, PopoverTrigger, PopoverContent, DropdownSection, Checkbox, Tabs, Tab, Card, CardBody, SelectSection, Avatar } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Select, SelectItem, Selection, Popover, PopoverTrigger, PopoverContent, DropdownSection, Checkbox, Tabs, Tab, Card, CardBody, SelectSection, Avatar, Slider } from "@nextui-org/react";
 import { FirstSection } from "./firstSection";
 import { mazeGenerationAlgorithms, mazeSolvingAlgorithms } from "@/src/configs/algos.config";
 import { AlgorithmDescription } from "./algorithmDescription";
@@ -755,6 +755,28 @@ export const Navbar = () => {
                 description="Reduce the number of DeadEnds"
                 endContent={<FontAwesomeIcon icon={faBridgeCircleCheck} size="lg" />}>
                 <Checkbox isSelected={braid} onValueChange={toggelBraiding} size="sm">Reduce DeadEnds</Checkbox>
+              </DropdownItem>
+            }
+            {
+              <DropdownItem
+                isReadOnly
+                textValue="DeadEnds Reduction Percentage"
+                key="Reduce dead ends percentage"
+                description="the percentage of removed DeadEnds"
+              >
+                <Slider
+                  className="sliderThing"
+                  label="Temperature"
+                  formatOptions={{ style: "percent" }}
+                  startContent={<FontAwesomeIcon icon={faBridgeCircleCheck} size="xs" />}
+                  endContent={<FontAwesomeIcon icon={faBridgeCircleCheck} size="lg" />}
+                  step={0.01}
+                  maxValue={1}
+                  minValue={0}
+                  defaultValue={0.4}
+                  size="sm"
+                  radius="md"
+                />
               </DropdownItem>
             }
             {
