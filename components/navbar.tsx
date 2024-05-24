@@ -43,7 +43,6 @@ export const Navbar = () => {
   }, [inputValue]);
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("e.target.value => ", e.target.value);
     const newValue = e.target.value;
     if (!/^\d*$/.test(newValue) || newValue === "") {
       updateDelay(inputDefaults.DELAY, setInputValue);
@@ -131,7 +130,6 @@ export const Navbar = () => {
       return;
     globals.depthFilterOn = !globals.depthFilterOn;
     // setDepthFilterColor(globals.depthFilterOn ? "primary" : "default");
-    console.log("addDepthFilter: ", globals.depthFilterOn);
     globals.colorComposition.r = Math.random() - 0.5 > 0;
     globals.colorComposition.g = Math.random() - 0.5 > 0;
     globals.colorComposition.b = Math.random() - 0.5 > 0;
@@ -172,7 +170,6 @@ export const Navbar = () => {
       globals.addWeights = false;
       setAnimateWeights(globals.addWeights);
     }
-    console.log("addWalls: ", globals.addWalls);
     // setDepthFilterColor(globals.depthFilterOn ? "primary" : "default");
   };
 
@@ -189,14 +186,12 @@ export const Navbar = () => {
         handleSkipButton();
       }
       if (event.code === 'KeyL') {
-        console.log("event => ", event);
         globals.handleAlgoLaunch();
       }
       if (event.code === 'KeyR' && !event.ctrlKey) {
         handleResetButton();
       }
       if (event.code === 'KeyP') {
-        console.log("pauseButton.current => ");
         handlePauseButton();
       }
       if (event.code === 'KeyD') {
@@ -252,17 +247,15 @@ export const Navbar = () => {
   };
 
 
-  const [braid, setBraid] = useState(globals.activateBraiding);
+  const [braidAnimation, setBraidAnimation] = useState(globals.braid);
 
-  const toggelBraiding = (state: boolean) => {
-    if (globals.startAlgo || globals.animatePath || globals.braid) return;
-    globals.activateBraiding = !globals.activateBraiding;
-    setBraid(globals.activateBraiding);
-    if (globals.braid === false)
-      globals.braid = true;
+  const toggelBraiding = () => {
+    if (globals.startAlgo || globals.animatePath || globals.reset || globals.braid) return;
+    globals.braid = true;
+    setBraidAnimation(true);
   };
 
-
+  globals.setBraidingAnimation = setBraidAnimation;
 
 
 
@@ -284,7 +277,6 @@ export const Navbar = () => {
   // }
 
   const handleProjectMenu = (e: Key) => {
-    console.log("e => ", e);
     if (e === "Tooltips") {
       setTooltipDelay(tooltipDelayRef.current === inputDefaults.TOOLTIPDELAY ? inputDefaults.DISABLETOOLTIP : inputDefaults.TOOLTIPDELAY);
     }
@@ -308,11 +300,9 @@ export const Navbar = () => {
 
   const nextPage = () => {
     setTutorialPages(tutorialPagesRef.current++);
-    console.log("current page: ", tutorialPagesRef.current);
   };
   const prevPage = () => {
     setTutorialPages(tutorialPagesRef.current--);
-    console.log("current page: ", tutorialPagesRef.current);
   };
 
 
@@ -323,6 +313,15 @@ export const Navbar = () => {
 
 
   const [algorithmValue, setAlgorithmValue] = useState<Selection>(new Set([]));
+
+  const [braidingChance, setBraidingChance] = useState(globals.braidingChance);
+
+  const setBraiding = (value: any) => {
+    if (globals.startAlgo || globals.braid || typeof value !== "number") return;
+
+    setBraidingChance(value);
+    globals.braidingChance = value;
+  }
 
 
 
@@ -750,30 +749,22 @@ export const Navbar = () => {
             {
               <DropdownItem
                 isReadOnly
-                textValue="Reduce DeadEnds"
-                key="Reduce dead ends"
-                description="Reduce the number of DeadEnds"
-                endContent={<FontAwesomeIcon icon={faBridgeCircleCheck} size="lg" />}>
-                <Checkbox isSelected={braid} onValueChange={toggelBraiding} size="sm">Reduce DeadEnds</Checkbox>
-              </DropdownItem>
-            }
-            {
-              <DropdownItem
-                isReadOnly
                 textValue="DeadEnds Reduction Percentage"
                 key="Reduce dead ends percentage"
                 description="the percentage of removed DeadEnds"
               >
                 <Slider
                   className="sliderThing"
-                  label="Temperature"
+                  label="DeadEnds to remove"
                   formatOptions={{ style: "percent" }}
                   startContent={<FontAwesomeIcon icon={faBridgeCircleCheck} size="xs" />}
                   endContent={<FontAwesomeIcon icon={faBridgeCircleCheck} size="lg" />}
                   step={0.01}
                   maxValue={1}
                   minValue={0}
-                  defaultValue={0.4}
+                  defaultValue={0.5}
+                  value={braidingChance}
+                  onChange={setBraiding}
                   size="sm"
                   radius="md"
                 />
@@ -858,6 +849,13 @@ export const Navbar = () => {
           <Tooltip content="Depth Filter" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
             <Button ref={depthFilterButton} color="primary" isIconOnly size="sm" onClick={addDepthFilter} isDisabled={disableDepthFilter}>
               <FontAwesomeIcon icon={faStreetView} size="lg" />
+            </Button>
+          </Tooltip>
+        }
+        {
+          <Tooltip content="Reduce DeadEnds" showArrow={true} color="primary" delay={tooltipDelay} closeDelay={200}>
+            <Button color="primary" isIconOnly size="sm" onClick={toggelBraiding}>
+              <FontAwesomeIcon icon={faBridgeCircleCheck} beat={braidAnimation} size="lg" />
             </Button>
           </Tooltip>
         }

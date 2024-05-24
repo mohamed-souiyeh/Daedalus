@@ -42,11 +42,6 @@ export const AlgorithmDescription = (props: { algo: any }) => {
           </p>
         </CardBody>
         <Divider />
-        <CardFooter>
-          <p>
-            Skills Needed for implementing the algo.
-          </p>
-        </CardFooter>
       </Card >
     </>
   );
