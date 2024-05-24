@@ -291,6 +291,7 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
     // globals.canvas!.width = this.#length * CELLSIZE;
     // globals.canvas!.height = this.#width * CELLSIZE;
     mouseDown = false;
+    globals.placeholders = { startx: -1, starty: -1, finishx: -1, finishy: -1, filterx: -1, filtery: -1 }
     if (globals.depthFilterOn && globals.updateDepthFilter === false) {
       if (globals.depthFilterOn) {
         globals.replaceDepthFilterPos = false;

@@ -26,6 +26,7 @@ export function reset() {
 
   globals.startAlgo = false;
   globals.braid = false;
+  globals.setBraidingAnimation(globals.braid);
   globals.animatePath = false;
   globals.mazeSolvingAlgorithm = null;
   globals.mazeBuildingAlgorithm = null;
@@ -76,15 +77,15 @@ export function setup() {
   globals.start = {
     x: Math.floor(globals.grid.length * _lengthPos),
     y: Math.floor(globals.grid.width * _widthPos),
-    oldx: globals.start.x,
-    oldy: globals.start.y,
+    oldx: -1,
+    oldy: -1,
   }
 
   globals.finish = {
     x: Math.floor(globals.grid.length * (1 - _lengthPos)),
     y: Math.floor(globals.grid.width * (1 - _widthPos)),
-    oldx: globals.finish.x,
-    oldy: globals.finish.y,
+    oldx: -1,
+    oldy: -1,
   }
 
   globals.depthFilterPos = {
@@ -101,6 +102,7 @@ export function setup() {
   globals.needclear = false;
   globals.updateDepthFilter = true;
   globals.maxDepth = -1;
+  globals.setBraidingAnimation(globals.braid);
 
   globals.gridOffsetLeft = Math.floor((canvas.width - (globals.grid.length * CELLSIZE)) / 2);
   globals.gridOffsetTop = Math.floor((canvas.height - (globals.grid.width * CELLSIZE)) * 0.5);

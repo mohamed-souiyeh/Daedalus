@@ -47,12 +47,13 @@ export const globals = {
   mazeBuildingAlgorithm: null as algosKeys | null,
   mazeSolvingAlgorithm: null as algosKeys | null,
 
-  algoSpeed: 0,
+  algoSpeed: 1,
   algoSkipSpeed: 1,
 
   braid: false,
-  braidingChance: 1.0,
+  braidingChance: 0.5,
   activateBraiding: false,
+  setBraidingAnimation: null as any,
 
   startAlgo: false,
   animatePath: false,

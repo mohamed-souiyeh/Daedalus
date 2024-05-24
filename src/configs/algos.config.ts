@@ -15,13 +15,14 @@ export enum algosKeys {
 export const mazeGenerationAlgorithms = [
   {
     key: algosKeys.RandomWalkDFS,
-    name: "Random Walk DFS",
-    description: "It is a maze generation algorithm that uses a randomized version of the depth-first search algorithm to generate a maze.\
-    It is also known as the recursive backtracker algorithm.",
+    name: "Recursive Backtracker",
+    description: "This algorithm is tweeked implementation of the graphs algorithm DFS (depth first search), \
+    It explors the graph as deep as it can before backtracking to the last place where it can continue \
+    exploring until the graph is fully explored.",
   },
   {
     key: algosKeys.recursiveDivider,
-    name: "Recursive Divider (wall adder)",
+    name: "Recursive Divider",
     description: "It is an algorithm that generates mazes through adding walls to an impety space, it is unconvetional compared to all the other algorithms\
     since they take the oposit approuach and carve the walls in the space.",
   },

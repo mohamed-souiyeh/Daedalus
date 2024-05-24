@@ -16,7 +16,7 @@ function preparePath(grid: Grid, currentCell: Cell) {
 }
 
 function relax(current: Cell, next: Cell) {
-  if (next.distenceFromStart > current.distenceFromStart + next.weight) {
+  if (next.distenceFromStart >= current.distenceFromStart + next.weight) {
     next.distenceFromStart = current.distenceFromStart + next.weight;
     next.priority = current.distenceFromStart + next.weight;
     next.parrent = current;

@@ -20,7 +20,7 @@ import { Stack } from "./types/DataStructures/stack.type.ts";
 import { Frame, algoState } from "./types/algos.types.ts";
 import { gridState } from "./types/grid.types.ts";
 
-
+let first: boolean = true;
 
 export class Grid {
   #startX: number;
@@ -310,7 +310,6 @@ export class Grid {
       globals.setDisableLaunch(false);
       globals.setDisableDepthFilter(false);
       this.gridState = gridState.IDLE;
-      this.scanDeadEnds();
     }
     else if (state === algoState.foundPath || state === algoState.noPath) {
       if (state === algoState.foundPath)
@@ -326,6 +325,10 @@ export class Grid {
   }
 
   public braid() {
+    if (first) {
+      this.scanDeadEnds();
+      first = false
+    }
     let howMany: number = globals.skipAlgoAnimation ? 7 : 1;
 
     while (howMany) {
@@ -344,15 +347,19 @@ export class Grid {
           cell.link(cell.west);
       }
     }
-    if (this.deadEnds.length === 0) {
+    if (this.deadEnds.length === 0 || globals.braidingChance === 0.0) {
+      if (globals.braidingChance === 0.0)
+        this.deadEnds = [];
       globals.startAlgo = false;
       globals.braid = false;
+      globals.setBraidingAnimation(globals.braid);
       globals.updateDepthFilter = true;
       globals.maxDepth = -1;
       if (globals.hotReload) {
         globals.startAlgo = true;
         globals.gridRedraw = true;
       }
+      first = true;
     }
   }
 
