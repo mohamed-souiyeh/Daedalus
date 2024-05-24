@@ -24,7 +24,7 @@ function distanceEstimationToEnd(current: Cell, finish: Cell | null): number {
 
 function relax(current: Cell, next: Cell) {
   const finish = globals.grid.at(globals.finish.x, globals.finish.y);
-  if (next.distenceFromStart > current.distenceFromStart + next.weight) {
+  if (next.distenceFromStart >= current.distenceFromStart + next.weight) {
     next.distenceFromStart = current.distenceFromStart + next.weight;
     next.priority = current.distenceFromStart + next.weight + distanceEstimationToEnd(next, finish);
     next.parrent = current;

@@ -29,15 +29,15 @@ export const FirstSection = (props: any) => {
   const [launchIcon, setLaunchIcon] = useState<any>(faRocket);
   const [launchAnimation, setLaunchAnimation] = useState<boolean>(launchIcon === faRocket ? false : true);
 
-  const braidingChance: { [key in algosKeys]: number } = {
-    [algosKeys.RandomWalkDFS]: 1.0,
-    [algosKeys.recursiveDivider]: 0.7,
-    [algosKeys.Kruskal]: 0.35,
-    [algosKeys.prim]: 0.1,
-    [algosKeys.BFS]: 1.0,
-    [algosKeys.Dijkstra]: 1.0,
-    [algosKeys.Astar]: 1.0,
-  };
+  // const braidingChance: { [key in algosKeys]: number } = {
+  //   [algosKeys.RandomWalkDFS]: 1.0,
+  //   [algosKeys.recursiveDivider]: 0.7,
+  //   [algosKeys.Kruskal]: 0.35,
+  //   [algosKeys.prim]: 0.1,
+  //   [algosKeys.BFS]: 1.0,
+  //   [algosKeys.Dijkstra]: 1.0,
+  //   [algosKeys.Astar]: 1.0,
+  // };
 
   const algoSpeeds: { [key in algosKeys]: number } = {
     [algosKeys.RandomWalkDFS]: 3,
@@ -75,7 +75,6 @@ export const FirstSection = (props: any) => {
       globals.hotReload = false;
       globals.braid = globals.activateBraiding;
 
-      globals.braidingChance = braidingChance[globals.mazeBuildingAlgorithm];
       globals.algoSpeed = algoSpeeds[globals.mazeBuildingAlgorithm];
       globals.algoSkipSpeed = algoSkipingSpeeds[globals.mazeBuildingAlgorithm];
     }
