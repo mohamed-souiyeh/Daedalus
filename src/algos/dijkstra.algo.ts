@@ -45,6 +45,24 @@ export function dijkstra(grid: Grid) {
     return algoState.noPath;
   }
 
+  if (currentCell.cellType === CellType.finish) {
+    preparePath(grid, currentCell);
+    if (globals.hotReload === false)
+      toast.success("Path Found", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+    return algoState.foundPath;
+  }
+
+
   let neighbors: (Cell | null)[] = currentCell.neighbors();
 
   while (neighbors.length) {
@@ -56,22 +74,6 @@ export function dijkstra(grid: Grid) {
     if (neighbor && currentCell.islinked(neighbor) && relax(currentCell, neighbor)) {
       globals.minQueue.updatePriority(neighbor);
       neighbor.setState(CellStates.inqueue);
-      if (neighbor.cellType === CellType.finish) {
-        preparePath(grid, neighbor);
-        if (globals.hotReload === false)
-          toast.success("Path Found", {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            transition: Bounce,
-          });
-        return algoState.foundPath;
-      }
     }
   }
   currentCell.setState(CellStates.visited);

@@ -37,9 +37,15 @@ export const AlgorithmDescription = (props: { algo: any }) => {
           <p>
             {algorithmName}
           </p>
-          <p>
-            {algorithmDescription}
-          </p>
+          <br />
+          {
+            (() => {
+              const paragraphs = algorithmDescription?.split("@");
+              if (paragraphs)
+                return paragraphs.map((para, index, array) => <><p>{para}</p>{index !== array.length - 1 ? <br /> : ""}</>)
+              return "";
+            })()
+          }
         </CardBody>
         <Divider />
       </Card >
