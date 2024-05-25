@@ -56,7 +56,7 @@ export const FirstSection = (props: any) => {
     [algosKeys.prim]: 8,
     [algosKeys.BFS]: 7,
     [algosKeys.Dijkstra]: 7,
-    [algosKeys.Astar]: 7,
+    [algosKeys.Astar]: 5,
   };
   // NOTE: this need ot be used in it's apropriate place after patching the reset button and priseajur
   // to take into account the algorithms launching
