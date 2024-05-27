@@ -320,7 +320,9 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
 
   //NOTE: - to update mouse position if not locked
   canvas.addEventListener("mousemove", handlePointerMove);
-  canvas.addEventListener("touchmove", handlePointerMove);
+  canvas.addEventListener("touchmove", handlePointerMove, {
+    passive: true,
+  });
 
   canvas.addEventListener('mouseup', handlePointerUp);
   canvas.addEventListener('touchend', handlePointerUp);
