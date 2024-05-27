@@ -329,7 +329,9 @@ export async function addCanvasEventListeners(canvas: HTMLCanvasElement) {
 
   // NOTE: - to lock mouse position
   canvas.addEventListener('mousedown', handlePointerDown);
-  canvas.addEventListener('touchstart', handlePointerDown);
+  canvas.addEventListener('touchstart', handlePointerDown, {
+    passive: true,
+  });
 
   //NOTE: - this to prevent the cotext menu from aprearing when we right click
   canvas.addEventListener('contextmenu', async function (event: MouseEvent) {
