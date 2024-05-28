@@ -247,6 +247,14 @@ export const Navbar = () => {
     globals.gridRedraw = true;
   };
 
+  const [resetAnimation, setResetAnimation] = useState(globals.resetAnimation);
+
+  const toggelResetAnimation = (state: boolean) => {
+    // console.log(state);
+    // console.log("type of state: ", typeof state);
+    globals.resetAnimation = state;
+    setResetAnimation(globals.resetAnimation);
+  };
 
   const [braidAnimation, setBraidAnimation] = useState(globals.braid);
 
@@ -836,6 +844,26 @@ export const Navbar = () => {
                 endContent={<FontAwesomeIcon icon={faRoute} size="lg" />}>
                 <Checkbox isSelected={searchDistance} onValueChange={addSearchDistance} size="sm">Search Distance</Checkbox>
               </DropdownItem>
+            }
+            {
+              <DropdownItem
+                isReadOnly
+                textValue="Toggle reset animation"
+                key="reset animation"
+                description="toggle reset animation"
+                endContent={<FontAwesomeIcon icon={faRepeat} size="lg" />}>
+                <Checkbox isSelected={resetAnimation} onValueChange={toggelResetAnimation} size="sm">Reset Animation</Checkbox>
+              </DropdownItem>
+            }
+            {
+              // <DropdownItem
+              //   isReadOnly
+              //   textValue="Toggle algorithms animation"
+              //   key="search distance values"
+              //   description="toggle numbers for exact distances"
+              //   endContent={<FontAwesomeIcon icon={faRoute} size="lg" />}>
+              //   <Checkbox isSelected={searchDistance} onValueChange={addSearchDistance} size="sm">Search Distance</Checkbox>
+              // </DropdownItem>
             }
           </DropdownMenu>
         </Dropdown>

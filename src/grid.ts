@@ -574,7 +574,17 @@ export class Grid {
 
     globals.mouseUpdating = false;
 
-    if (globals.reset && globals.hotReload === false) {
+    if (globals.reset && globals.resetAnimation === false && globals.hotReload === false) {
+        for (let cell of this.eachCell()) {
+          cell.setState(CellStates.unvisited);
+        }
+        globals.reset = false;
+        globals.updateDepthFilter = true;
+        globals.maxDepth = -1;
+        if (globals.startAlgo === false)
+          globals.setDisableDepthFilter(false);
+    }
+    else if (globals.reset && globals.resetAnimation && globals.hotReload === false) {
       this.resetPatternMKI();
     }
 

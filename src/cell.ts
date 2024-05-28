@@ -360,7 +360,10 @@ export class Cell {
       b: this.#nextColor.b - this.#color.b,
       a: this.#nextColor.a - this.#color.a,
     };
-    if (globals.hotReload === false && (this.animation === CellAnimation.STOPPED || this.animation === CellAnimation.STOPPING)) {
+    if (globals.resetAnimation === false) {
+      this.#redraw = true;
+    }
+    if (globals.hotReload === false && globals.resetAnimation && (this.animation === CellAnimation.STOPPED || this.animation === CellAnimation.STOPPING)) {
       this.#setInwardsAnimationRequirements();
     }
   }
