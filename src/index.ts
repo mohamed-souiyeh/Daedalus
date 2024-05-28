@@ -155,7 +155,7 @@ export function animation(dt: number) {
 
     startTime = performance.now();
 
-    if ((counter % globals.algoSpeed === 0 || globals.hotReload) && globals.reset === false) {
+    if ((counter % globals.algoSpeed === 0 || globals.hotReload || globals.algoAnimation === false) && globals.reset === false) {
       if (globals.braid && globals.startAlgo === false)
         globals.grid.braid();
       if (globals.startAlgo && globals.animatePath === false)

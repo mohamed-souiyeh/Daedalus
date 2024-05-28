@@ -256,6 +256,18 @@ export const Navbar = () => {
     setResetAnimation(globals.resetAnimation);
   };
 
+  const [algoAnimation, setAlgoAnimation] = useState(globals.algoAnimation);
+
+  const toggelAlgoAnimation = (state: boolean) => {
+    // console.log(state);
+    // console.log("type of state: ", typeof state);
+    globals.algoAnimation = state;
+    setAlgoAnimation(globals.algoAnimation);
+    if (state === false)
+      toggelResetAnimation(state);
+  };
+
+
   const [braidAnimation, setBraidAnimation] = useState(globals.braid);
 
   const toggelBraiding = () => {
@@ -856,14 +868,14 @@ export const Navbar = () => {
               </DropdownItem>
             }
             {
-              // <DropdownItem
-              //   isReadOnly
-              //   textValue="Toggle algorithms animation"
-              //   key="search distance values"
-              //   description="toggle numbers for exact distances"
-              //   endContent={<FontAwesomeIcon icon={faRoute} size="lg" />}>
-              //   <Checkbox isSelected={searchDistance} onValueChange={addSearchDistance} size="sm">Search Distance</Checkbox>
-              // </DropdownItem>
+              <DropdownItem
+                isReadOnly
+                textValue="Toggle algorithms animation"
+                key="Toggle algorims animation"
+                description="toggle algorithm animation"
+                endContent={<FontAwesomeIcon icon={faRocket} size="lg" />}>
+                <Checkbox isSelected={algoAnimation} onValueChange={toggelAlgoAnimation} size="sm">Algo animation</Checkbox>
+              </DropdownItem>
             }
           </DropdownMenu>
         </Dropdown>

@@ -362,7 +362,7 @@ export class Cell {
     };
     if (globals.resetAnimation === false) {
       this.#redraw = true;
-      this.#setStoppedAnimationRequirements();
+      this.#setToOrigineAnimationRequirementsFromInside();
     }
     else if (globals.hotReload === false && globals.resetAnimation && (this.animation === CellAnimation.STOPPED || this.animation === CellAnimation.STOPPING)) {
       this.#setInwardsAnimationRequirements();

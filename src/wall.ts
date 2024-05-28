@@ -189,6 +189,10 @@ export class Wall {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
+    // console.log("this is the wall: ", this.#color);
+    // console.log("this is the animation: ", this.#animation);
+    // console.log("this is the targeted alpha: ", this.#targetedAlpha);
+    // console.log("this is the state: ", this.#state);
     ctx.fillStyle = `rgba(${this.#color.r},${this.#color.g},${this.#color.b},${this.#color.a})`;
     ctx.fillRect(this.#x, this.#y, this.#length, this.#width);
   }
