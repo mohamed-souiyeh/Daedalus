@@ -503,7 +503,7 @@ export const Navbar = () => {
                               <ReactPlayer
                                 width={600}
                                 height={320}
-                                url="/overview.mp4"
+                                url="/Daedalus/overview.mp4"
                                 controls={true}
                                 light={false}
                                 pip={false}
@@ -535,7 +535,7 @@ export const Navbar = () => {
                               <ReactPlayer
                                 width={600}
                                 height={320}
-                                url="/depth-filter.mp4"
+                                url="/Daedalus/depth-filter.mp4"
                                 controls={true}
                                 light={false}
                                 pip={false}
@@ -602,7 +602,7 @@ export const Navbar = () => {
                               <ReactPlayer
                                 width={600}
                                 height={320}
-                                url="/walls.mp4"
+                                url="/Daedalus/walls.mp4"
                                 controls={true}
                                 light={false}
                                 pip={false}
@@ -634,7 +634,7 @@ export const Navbar = () => {
                               <ReactPlayer
                                 width={600}
                                 height={320}
-                                url="/weights.mp4"
+                                url="/Daedalus/weights.mp4"
                                 controls={true}
                                 light={false}
                                 pip={false}
