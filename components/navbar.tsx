@@ -498,8 +498,8 @@ export const Navbar = () => {
                             </div>
                           }
                         >
-                          <Card>
-                            <CardBody className="flex flex-col content-between">
+                          <div className="flex flex-col content-between">
+                            <div>
                               <ReactPlayer
                                 width={600}
                                 height={320}
@@ -513,13 +513,13 @@ export const Navbar = () => {
                                 muted={true}
                                 playsinline={true}
                               />
-                              <div className="flex flex-col justify-between text-center">
-                                <p>
-                                  For more details check the rest of the tutorial.<br />
-                                </p>
-                              </div>
-                            </CardBody>
-                          </Card>
+                            </div>
+                            <div className="flex flex-col justify-between text-center">
+                              <p>
+                                For more details check the rest of the tutorial.<br />
+                              </p>
+                            </div>
+                          </div>
                         </Tab>
                         <Tab
                           key="Depth Filter"
@@ -530,28 +530,127 @@ export const Navbar = () => {
                             </div>
                           }
                         >
-                          <Card>
-                            <CardBody className="flex flex-col content-between">
-                              <div className=" flex flex-row-reverse gap-2 items-center justify-center">
-                                <Tooltip content="Depth Filter" showArrow={true} color="primary" delay={100} closeDelay={200}>
-                                  <Button color="primary" isIconOnly size="sm" >
-                                    <FontAwesomeIcon icon={faStreetView} size="lg" />
-                                  </Button>
-                                </Tooltip>
-                              </div>
-                              <div className="flex flex-col justify-between text-center">
-                                <br />
-                                <br />
-                                <p>
-                                  The depth filter is like an X-Ray for mazes, it gives you a much clearer view of the structure of the maze
-                                  and the algorithm that generated it .<br />
-                                  <br />
-                                  The color gets darker the farther away you are from the starting point (the little icon).<br />
-                                  <br />
-                                </p>
-                              </div>
-                            </CardBody>
-                          </Card>
+                          <div className="flex flex-col content-between items-center p-0">
+                            <div className="items-center">
+                              <ReactPlayer
+                                width={600}
+                                height={320}
+                                url="/depth-filter.mp4"
+                                controls={true}
+                                light={false}
+                                pip={false}
+                                playing={true}
+                                loop={true}
+                                volume={0}
+                                muted={true}
+                                playsinline={true}
+                              />
+                            </div>
+                            <div className="flex flex-col justify-between text-center">
+                              <p>
+                                The depth filter is like an X-Ray for mazes, it gives you a much clearer view of the structure of the maze
+                                and the algorithm that generated it .<br />
+                              </p>
+                            </div>
+                          </div>
+                        </Tab>
+                        {
+                          // <Tab
+                          //   key="dead-ends reduction"
+                          //   title={
+                          //     <div className="flex items-center space-x-2">
+                          //       <FontAwesomeIcon icon={faBridgeCircleCheck} size="sm" />
+                          //       <span>Dead-ends</span>
+                          //     </div>
+                          //   }
+                          // >
+                          //   <div className="flex flex-col content-between items-center p-0">
+                          //     <div className="items-center">
+                          //       <ReactPlayer
+                          //         width={600}
+                          //         height={320}
+                          //         url="/dead-ends.mp4"
+                          //         controls={true}
+                          //         light={false}
+                          //         pip={false}
+                          //         playing={true}
+                          //         loop={true}
+                          //         volume={0}
+                          //         muted={true}
+                          //         playsinline={true}
+                          //       />
+                          //     </div>
+                          //     <div className="flex flex-col justify-between text-center">
+                          //       <p>
+                          //         You can reduce the number of dead-ends in the maze.
+                          //       </p>
+                          //     </div>
+                          //   </div>
+                          // </Tab>
+                        }
+                        <Tab
+                          key="walls"
+                          title={
+                            <div className="flex items-center space-x-2">
+                              <FontAwesomeIcon icon={faTrowelBricks} size="sm" />
+                              <span>Walls</span>
+                            </div>
+                          }
+                        >
+                          <div className="flex flex-col content-between items-center p-0">
+                            <div className="items-center">
+                              <ReactPlayer
+                                width={600}
+                                height={320}
+                                url="/walls.mp4"
+                                controls={true}
+                                light={false}
+                                pip={false}
+                                playing={true}
+                                loop={true}
+                                volume={0}
+                                muted={true}
+                                playsinline={true}
+                              />
+                            </div>
+                            <div className="flex flex-col justify-between text-center">
+                              <p>
+                                You can add/remove walls by clicking and draging between the wanted cells.
+                              </p>
+                            </div>
+                          </div>
+                        </Tab>
+                        <Tab
+                          key="weights"
+                          title={
+                            <div className="flex items-center space-x-2">
+                              <FontAwesomeIcon icon={faWeightHanging} size="sm" />
+                              <span>Weights</span>
+                            </div>
+                          }
+                        >
+                          <div className="flex flex-col content-between items-center p-0">
+                            <div className="items-center">
+                              <ReactPlayer
+                                width={600}
+                                height={320}
+                                url="/weights.mp4"
+                                controls={true}
+                                light={false}
+                                pip={false}
+                                playing={true}
+                                loop={true}
+                                volume={0}
+                                muted={true}
+                                playsinline={true}
+                              />
+                            </div>
+                            <div className="flex flex-col justify-between text-center">
+                              <p>
+                                You can add/remove weights in the maze.
+                              </p>
+                            </div>
+                          </div>
                         </Tab>
                         <Tab
                           key="controls"
@@ -607,9 +706,9 @@ export const Navbar = () => {
                                 <p>
                                   This is the control section.<br />
                                   <br />
-                                  Here you can play, pause and fast-forward the algorithms.<br />
-                                  <br />
                                   The delay input lets you lengthen the delay between frames algorithms.<br />
+                                  <br />
+                                  Here you can play, pause and fast-forward the algorithms.<br />
                                   <br />
                                   The reset button resets the state of the grid.<br />
                                 </p>
@@ -617,32 +716,34 @@ export const Navbar = () => {
                             </CardBody>
                           </Card>
                         </Tab>
-                        <Tab
-                          key="about me"
-                          title={
-                            <div className="flex items-center space-x-2">
-                              <FontAwesomeIcon icon={faAddressCard} size="sm" />
-                              <span>About me</span>
-                            </div>
-                          }
-                        >
-                          <Card>
-                            <CardBody className="flex flex-col content-between">
-                              <div className=" flex flex-row-reverse gap-2 items-center justify-center">
-                                <MyAvatar />
-                              </div>
-                              <div className="flex flex-col justify-between text-center">
-                                <br />
-                                <br />
-                                <p>
-                                  My portfolio, GitHub, and LinkedIn are this avatar dropDown menu.
-                                  Feel free to reach out with any questions or suggestions!<br />
-                                  <br />
-                                </p>
-                              </div>
-                            </CardBody>
-                          </Card>
-                        </Tab>
+                        {
+                          // <Tab
+                          //   key="about me"
+                          //   title={
+                          //     <div className="flex items-center space-x-2">
+                          //       <FontAwesomeIcon icon={faAddressCard} size="sm" />
+                          //       <span>About me</span>
+                          //     </div>
+                          //   }
+                          // >
+                          //   <Card>
+                          //     <CardBody className="flex flex-col content-between">
+                          //       <div className=" flex flex-row-reverse gap-2 items-center justify-center">
+                          //         <MyAvatar />
+                          //       </div>
+                          //       <div className="flex flex-col justify-between text-center">
+                          //         <br />
+                          //         <br />
+                          //         <p>
+                          //           My portfolio, GitHub, and LinkedIn are this avatar dropDown menu.
+                          //           Feel free to reach out with any questions or suggestions!<br />
+                          //           <br />
+                          //         </p>
+                          //       </div>
+                          //     </CardBody>
+                          //   </Card>
+                          // </Tab>
+                        }
                       </Tabs>
                     </ModalBody>
                     {
