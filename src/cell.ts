@@ -460,7 +460,10 @@ export class Cell {
 
     if (this.walls[wallpos].setWallState(state)) {
       // this.#setOutwardsAnimationRequirements();
-      this.#setInwardsAnimationRequirements();
+      if (globals.algoAnimation)
+        this.#setInwardsAnimationRequirements();
+      else
+        this.#setToOrigineAnimationRequirementsFromInside();
       // if (this.#decideCornerState(wallRelations[wallpos].first, state)) {
       //   this.corners[wallRelations[wallpos].first].setcornerState(state);
       // }
