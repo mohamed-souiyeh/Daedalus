@@ -413,6 +413,10 @@ export class Cell {
     this.#velocity = this.#velocity < 0 ? this.#velocity : -this.#velocity;
   }
 
+  setStoppedAnimationRequirements() {
+    this.#setStoppedAnimationRequirements();
+  }
+
   #setStoppedAnimationRequirements() {
     if (this.animation === CellAnimation.STOPPED) return;
 
