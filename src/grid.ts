@@ -577,7 +577,6 @@ export class Grid {
     if (globals.reset && globals.resetAnimation === false && globals.hotReload === false) {
         for (let cell of this.eachCell()) {
           cell.setState(CellStates.unvisited);
-          cell.setStoppedAnimationRequirements();
         }
         globals.reset = false;
         globals.updateDepthFilter = true;

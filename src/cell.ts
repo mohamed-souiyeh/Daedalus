@@ -362,8 +362,9 @@ export class Cell {
     };
     if (globals.resetAnimation === false) {
       this.#redraw = true;
+      this.#setStoppedAnimationRequirements();
     }
-    if (globals.hotReload === false && globals.resetAnimation && (this.animation === CellAnimation.STOPPED || this.animation === CellAnimation.STOPPING)) {
+    else if (globals.hotReload === false && globals.resetAnimation && (this.animation === CellAnimation.STOPPED || this.animation === CellAnimation.STOPPING)) {
       this.#setInwardsAnimationRequirements();
     }
   }
@@ -413,9 +414,6 @@ export class Cell {
     this.#velocity = this.#velocity < 0 ? this.#velocity : -this.#velocity;
   }
 
-  setStoppedAnimationRequirements() {
-    this.#setStoppedAnimationRequirements();
-  }
 
   #setStoppedAnimationRequirements() {
     if (this.animation === CellAnimation.STOPPED) return;
@@ -532,7 +530,6 @@ export class Cell {
     let step = this.#velocity;
 
     if (this.animation === CellAnimation.STOPPING) {
-
       this.#setStoppedAnimationRequirements();
       return;
     }
