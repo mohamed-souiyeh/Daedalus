@@ -265,7 +265,7 @@ export class Grid {
     }
     let howMany: number = globals.skipAlgoAnimation ? 7 : 1;
 
-    while ((howMany || globals.hotReload) && this.path.length) {
+    while ((howMany || globals.hotReload || globals.algoAnimation === false) && this.path.length) {
       const cell = this.path.shift();
       cell!.setState(CellStates.path);
       howMany--;
@@ -296,7 +296,7 @@ export class Grid {
     let howMany: number = globals.skipAlgoAnimation ? globals.algoSkipSpeed : 1;
     let state: algoState = algoState.noState;
 
-    while ((howMany || globals.hotReload) && (state === algoState.noState || state === algoState.building || state === algoState.searching)) {
+    while ((howMany || globals.hotReload || globals.algoAnimation === false) && (state === algoState.noState || state === algoState.building || state === algoState.searching)) {
       state = this.#algos.get(this.currentAlgo)!(this);
       howMany--;
     }
@@ -331,11 +331,11 @@ export class Grid {
     }
     let howMany: number = globals.skipAlgoAnimation ? 7 : 1;
 
-    while (howMany) {
+    while (howMany || globals.algoAnimation === false) {
       howMany--;
       const cell = this.deadEnds.pop();
       if (cell === undefined)
-        continue;
+        break;
       if (cell.links().size === 1 && Math.random() < globals.braidingChance) {
         if (cell.islinked(cell.north))
           cell.link(cell.south);
@@ -575,14 +575,14 @@ export class Grid {
     globals.mouseUpdating = false;
 
     if (globals.reset && globals.resetAnimation === false && globals.hotReload === false) {
-        for (let cell of this.eachCell()) {
-          cell.setState(CellStates.unvisited);
-        }
-        globals.reset = false;
-        globals.updateDepthFilter = true;
-        globals.maxDepth = -1;
-        if (globals.startAlgo === false)
-          globals.setDisableDepthFilter(false);
+      for (let cell of this.eachCell()) {
+        cell.setState(CellStates.unvisited);
+      }
+      globals.reset = false;
+      globals.updateDepthFilter = true;
+      globals.maxDepth = -1;
+      if (globals.startAlgo === false)
+        globals.setDisableDepthFilter(false);
     }
     else if (globals.reset && globals.resetAnimation && globals.hotReload === false) {
       this.resetPatternMKI();
