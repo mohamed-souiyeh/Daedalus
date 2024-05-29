@@ -577,7 +577,9 @@ export class Grid {
     if (globals.reset && globals.resetAnimation === false && globals.hotReload === false) {
       for (let cell of this.eachCell()) {
         cell.setState(CellStates.unvisited);
+        cell.setToOrigineAnimationRequirementsFromInside();
       }
+      globals.gridRedraw = true;
       globals.reset = false;
       globals.updateDepthFilter = true;
       globals.maxDepth = -1;
