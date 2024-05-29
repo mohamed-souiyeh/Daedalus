@@ -250,6 +250,7 @@ export const Navbar = () => {
   const [resetAnimation, setResetAnimation] = useState(globals.resetAnimation);
 
   const toggelResetAnimation = (state: boolean) => {
+    if (globals.algoAnimation === false) return;
     // console.log(state);
     // console.log("type of state: ", typeof state);
     globals.resetAnimation = state;
@@ -263,8 +264,10 @@ export const Navbar = () => {
     // console.log("type of state: ", typeof state);
     globals.algoAnimation = state;
     setAlgoAnimation(globals.algoAnimation);
-    if (state === false)
-      toggelResetAnimation(state);
+    if (state === false) {
+      globals.resetAnimation = state;
+      setResetAnimation(globals.resetAnimation);
+    }
   };
 
 

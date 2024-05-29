@@ -347,6 +347,11 @@ export class Cell {
     }
   }
 
+
+  setToOrigineAnimationRequirementsFromInside() {
+    this.#setToOrigineAnimationRequirementsFromInside();
+  }
+
   setState(state: CellStates) {
     if (state === CellStates.visited && this.#state === CellStates.visited) return;
     // console.log("gridx: ", this.gridx);
@@ -360,12 +365,12 @@ export class Cell {
       b: this.#nextColor.b - this.#color.b,
       a: this.#nextColor.a - this.#color.a,
     };
-    if (globals.resetAnimation === false) {
-      this.#redraw = true;
-      this.#setToOrigineAnimationRequirementsFromInside();
-    }
-    else if (globals.hotReload === false && globals.resetAnimation && (this.animation === CellAnimation.STOPPED || this.animation === CellAnimation.STOPPING)) {
+    if (globals.hotReload === false && (this.animation === CellAnimation.STOPPED || this.animation === CellAnimation.STOPPING)) {
       this.#setInwardsAnimationRequirements();
+    }
+    if (globals.algoAnimation === false) {
+      this.setToOrigineAnimationRequirementsFromInside();
+      this.#redraw = true;
     }
   }
 
