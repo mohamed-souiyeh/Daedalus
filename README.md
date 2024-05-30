@@ -1,7 +1,5 @@
-<h1 align="center">Daedalus 🧭</h1>
-<div align="center">
-  <p align="center">Daedalus brings mazes to life! ✨<br/> 
-  Watch as intricate mazes are generated and solved step-by-step 👣. It's like magic, but it's algorithms! 🧠</p>
+<h1 align="center">Daedalus 🧭: brings mazes to life! ✨</h1>
+<div align="center">Watch as intricate mazes are generated and solved step-by-step 👣. It's like magic, but it's algorithms! 🧠
 </div>
 
 ## 📖 Introduction
