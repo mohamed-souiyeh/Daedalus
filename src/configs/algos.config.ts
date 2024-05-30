@@ -45,7 +45,7 @@ export const mazeGenerationAlgorithms = [
 export const mazeSolvingAlgorithms = [
   {
     key: algosKeys.Dijkstra,
-    name: "Dijkstra's Algorithm",
+    name: "Dijkstra",
     description: "This algorithm ensures the shortest path and supports weighted graphs.@\
     It works by expanding outward from the starting node, \
     visiting nodes closer to the start first while taking into account the additional cost imposed by the weighted cells.@\
@@ -53,7 +53,7 @@ export const mazeSolvingAlgorithms = [
   },
   {
     key: algosKeys.Astar,
-    name: "A* Algorithm",
+    name: "A* (A-star)",
     description: "This graph search algorithm ensures the shortest path and supports weighted graphs.@\
     It combines aspects of Dijkstra's algorithm and a heuristic function to find the shortest path between two nodes in a graph. \
     It prioritizes the nodes that are estimated to be closer to the goal based on a heuristic (estimation function). \
