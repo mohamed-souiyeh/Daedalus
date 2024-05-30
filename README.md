@@ -1,5 +1,5 @@
+<h1 align="center">Daedalus 🧭</h1>
 <div align="center">
-  <h1 align="center">Daedalus 🧭</h1>
   <p align="center">Daedalus brings mazes to life! ✨<br/> 
   Watch as intricate mazes are generated and solved step-by-step 👣. It's like magic, but it's algorithms! 🧠</p>
 </div>
